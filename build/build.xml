@@ -26,8 +26,6 @@
             <arg line="CONFIGURATION_BUILD_DIR=${ios.temp.path}"/>
         </exec>
 
-        <copy file="${ios.temp.path}/lib${name}.a" todir="../temp/ios" overwrite="true"/>
-
         <exec executable="xcodebuild" failonerror="true" dir="../ios/">
             <arg line="-project ${name}Air.xcodeproj"/>
             <arg line="-alltargets clean"/>
@@ -46,7 +44,9 @@
             <arg line="${ios.temp.path}"/>
         </exec>
 
-        <!--<delete dir="${ios.temp.path}"/>-->
+        <copy file="${ios.temp.path}/lib${name}AirMerged.a" todir="../temp/ios" overwrite="true"/>
+
+        <delete dir="${ios.temp.path}"/>
     </target>
 
     <!-- Android -->
@@ -54,7 +54,7 @@
         <exec executable="gradle" failonerror="true" dir="../../teak-android/">
             <arg line="assemble"/>
         </exec>
-        <copy file="../../teak-android/build/libs/teak-android.jar" tofile="../android/libs/${name}.jar" overwrite="true"/>
+        <copy file="../../teak-android/build/libs/teak.jar" tofile="../android/libs/${name}.jar" overwrite="true"/>
     </target>
 
     <!-- Android -->

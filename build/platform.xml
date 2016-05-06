@@ -1,7 +1,7 @@
 <platform xmlns="http://ns.adobe.com/air/extension/3.8">
     <sdkVersion>9.0</sdkVersion>
     <linkerOptions>
-        <option>-framework Security</option>
-        <option>-weak_framework AdSupport</option>
+        <option>-framework AdSupport</option>
+        <option>-lsqlite3</option>
     </linkerOptions> 
 </platform>

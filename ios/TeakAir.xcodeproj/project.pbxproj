@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		43263B781CDBEAA400501244 /* TeakAir.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 43263B771CDBEAA400501244 /* TeakAir.h */; };
 		43263B7A1CDBEAA400501244 /* TeakAir.m in Sources */ = {isa = PBXBuildFile; fileRef = 43263B791CDBEAA400501244 /* TeakAir.m */; };
 /* End PBXBuildFile section */
 
@@ -18,7 +17,6 @@
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
 			files = (
-				43263B781CDBEAA400501244 /* TeakAir.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -26,7 +24,6 @@
 
 /* Begin PBXFileReference section */
 		43263B741CDBEAA300501244 /* libTeakAir.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libTeakAir.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		43263B771CDBEAA400501244 /* TeakAir.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TeakAir.h; sourceTree = "<group>"; };
 		43263B791CDBEAA400501244 /* TeakAir.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TeakAir.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -60,7 +57,6 @@
 		43263B761CDBEAA400501244 /* TeakAir */ = {
 			isa = PBXGroup;
 			children = (
-				43263B771CDBEAA400501244 /* TeakAir.h */,
 				43263B791CDBEAA400501244 /* TeakAir.m */,
 			);
 			path = TeakAir;
