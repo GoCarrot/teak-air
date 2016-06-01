@@ -16,8 +16,6 @@
 #import <Foundation/Foundation.h>
 #import "FlashRuntimeExtensions.h"
 
-@import UIKit; // Hax
-
 #define DEFINE_ANE_FUNCTION(fn) FREObject (fn)(FREContext context, void* functionData, uint32_t argc, FREObject argv[])
 
 // From TeakHooks.m
@@ -46,24 +44,15 @@ DEFINE_ANE_FUNCTION(identifyUser)
    return nil;
 }
 
-DEFINE_ANE_FUNCTION(_init)
-{
-   return nil;
-}
-
 void AirTeakContextInitializer(void* extData, const uint8_t* ctxType, FREContext ctx, uint32_t* numFunctionsToTest, const FRENamedFunction** functionsToSet)
 {
-   uint32_t numFunctions = 2;
+   uint32_t numFunctions = 1;
    *numFunctionsToTest = numFunctions;
    FRENamedFunction* func = (FRENamedFunction*) malloc(sizeof(FRENamedFunction) * numFunctions);
 
    func[0].name = (const uint8_t*)"identifyUser";
    func[0].functionData = NULL;
    func[0].function = &identifyUser;
-
-   func[1].name = (const uint8_t*)"_init";
-   func[1].functionData = NULL;
-   func[1].function = &_init;
 
    *functionsToSet = func;
 }

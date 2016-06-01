@@ -21,12 +21,6 @@ import com.adobe.fre.FREExtension;
 
 public class Extension implements FREExtension
 {
-    static {
-        // TODO: Find if debug build or something
-        Teak.isDebug = true;
-        Teak.forceDebug = true;
-    }
-
     public static FREContext context;
 
     public FREContext createContext(String extId)
@@ -37,12 +31,10 @@ public class Extension implements FREExtension
 
     public void dispose()
     {
-        Log.d(Teak.LOG_TAG, "Extension disposed.");
         context = null;
     }
     
     public void initialize()
     {
-        Log.d(Teak.LOG_TAG, "Extension initialized.");
     }
 }
