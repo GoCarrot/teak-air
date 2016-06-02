@@ -57,6 +57,9 @@
             <arg line="assemble"/>
         </exec>
         <copy file="../../teak-android/build/libs/teak.jar" tofile="../android/libs/${name}.jar" overwrite="true"/>
+        <copy todir="../temp/android/res/">
+            <fileset dir="../../teak-android/src/main/res"/>
+        </copy>
     </target>
 
     <!-- Android -->
@@ -67,6 +70,7 @@
         <javac target="1.6" source="1.6" srcdir="../android/src" destdir="../android/temp/classes" includeantruntime="false">
             <classpath>
                 <pathelement location="${android.sdk}/android.jar"/>
+                <pathelement location="${android.sdk}/../../extras/android/support/v4/android-support-v4.jar"/>
                 <pathelement location="${flex.sdk}/lib/android/lib/runtimeClasses.jar"/>
                 <pathelement location="${flex.sdk}/lib/android/FlashRuntimeExtensions.jar"/>
                 <pathelement location="../android/libs/Teak.jar"/>
@@ -75,7 +79,12 @@
 
         <mkdir dir="../android/temp/zip"/>
         <unzip src="../android/libs/Teak.jar" dest="../android/temp/zip"/>
-        <copydir src="../android/temp/zip/io" dest="../android/temp/classes/io"/>
+        <copy todir="../android/temp/classes/io">
+            <fileset dir="../android/temp/zip/io">
+                <exclude name="**/R.class"/>
+                <exclude name="**/R$*.class"/>
+            </fileset>
+        </copy>
 
         <mkdir dir="../temp/android/"/>
         <jar basedir="../android/temp/classes" destfile="../temp/android/lib${name}Air.jar"/>
@@ -121,8 +130,8 @@
             <arg value="io.teak.sdk.${name}.ane"/>
             <arg value="../build/extension.xml"/>
             <arg line="-swc swc/${name}.swc"/>
-            <arg line="-platform iPhone-ARM -platformoptions ../build/platform.xml -C ios/ ."/>
-            <arg line="-platform Android-ARM -C android/ ."/>
+            <arg line="-platform iPhone-ARM -platformoptions ../ios/platform.xml -C ios/ ."/>
+            <arg line="-platform Android-ARM -platformoptions ../android/platform.xml -C android/ ."/>
             <arg line="-platform default -C default/ ."/>
         </exec>
 
