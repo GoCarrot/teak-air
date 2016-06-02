@@ -4,6 +4,8 @@
     <!-- Config -->
     <property file="build.config"/>
 
+    <loadfile property="sdk.version" srcFile="../VERSION"/>
+
     <!-- All -->
     <target name="all" depends="ios,android_native,android,swc,package" description="Full build of extension"/>
 
@@ -109,6 +111,9 @@
 
     <!-- Package -->
     <target name="package" description="Create the extension package">
+        <copy file="../build/extension.xml.template" tofile="../build/extension.xml" overwrite="true"/>
+        <replace file="../build/extension.xml" token="@@@" value="${sdk.version}"/>
+
         <exec executable="${flex.sdk}/bin/adt${bin.ext}" failonerror="true" dir="../temp">
             <arg value="-package"/>
             <arg value="-target"/>
