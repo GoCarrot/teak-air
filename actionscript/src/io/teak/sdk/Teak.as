@@ -16,7 +16,14 @@ package io.teak.sdk
 {
 	import flash.external.ExtensionContext;
 
-	public class Teak
+	import flash.filesystem.File;
+	import flash.filesystem.FileMode;
+	import flash.filesystem.FileStream;
+
+	import flash.events.EventDispatcher;
+	import flash.events.StatusEvent;
+
+	public class Teak extends EventDispatcher
 	{
 		public function Teak()
 		{
@@ -24,7 +31,21 @@ package io.teak.sdk
 
 			_context = ExtensionContext.createExtensionContext(EXTENSION_ID, null);
 			if(!_context) throw new Error("ERROR - Extension context is null. Please check if extension.xml is setup correctly.");
+			_context.addEventListener(StatusEvent.STATUS, onStatus);
 			_instance = this;
+
+			// Get version and output it
+			var ext_dir:File = ExtensionContext.getExtensionDirectory(EXTENSION_ID);
+			var ane_dir:File = ext_dir.resolvePath("META-INF/ANE/");
+			var ext_stream:FileStream = new FileStream();
+			ext_stream.open(ane_dir.resolvePath("extension.xml"), FileMode.READ);
+			var ext_xml:XML = XML(ext_stream.readUTFBytes(ext_stream.bytesAvailable));
+			ext_stream.close();
+			_context.call("_log", ext_xml.toXMLString());
+			var ns:Namespace = ext_xml.namespace();
+			_versionNumber = ext_xml.ns::versionNumber.toString();
+
+			_context.call("_log", "AIR SDK Version: " + _versionNumber);
 		}
 
 		public static function get instance():Teak
@@ -32,9 +53,9 @@ package io.teak.sdk
 			return _instance ? _instance : new Teak();
 		}
 
-		public function init(appId:String, apiKey:String):void
+		public function get version():String
 		{
-			_context.call("_init", appId, apiKey);
+			return _versionNumber;
 		}
 
 		public function identifyUser(userIdentifier:String):void
@@ -42,9 +63,28 @@ package io.teak.sdk
 			_context.call("identifyUser", userIdentifier);
 		}
 
-		private static var _instance:Teak;
-		private static const EXTENSION_ID : String = "io.teak.sdk.Teak";
+		private function onStatus(event:StatusEvent):void
+		{
+			trace(event);
+			var e:TeakEvent;
+			switch(event.code)
+			{
+				case "LAUNCHED_FROM_NOTIFICATION":
+					e = new TeakEvent(TeakEvent.LAUNCHED_FROM_NOTIFICATION, event.level);
+					break;
+				default:
+					break;
+			}
+			if(e)
+			{
+				this.dispatchEvent(e);
+			}
+		}
 
-		private var _context : ExtensionContext;
+		private static var _instance:Teak;
+		private static const EXTENSION_ID:String = "io.teak.sdk.Teak";
+
+		private var _context:ExtensionContext;
+		private var _versionNumber:String;
 	}
 }

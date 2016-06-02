@@ -12,28 +12,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.teak.sdk;
+package io.teak.sdk
+{
+	import flash.events.Event;
+	
+	public class TeakEvent extends Event
+	{
+		public static const LAUNCHED_FROM_NOTIFICATION:String = "launchedFromNotification";
 
-import android.util.Log;
+		public var data:String;
 
-import com.adobe.fre.FREContext;
-import com.adobe.fre.FREExtension;
-
-public class Extension implements FREExtension {
-    public static FREContext context;
-
-    @Override
-    public FREContext createContext(String extId) {
-        context = new ExtensionContext();
-        return context;
-    }
-
-    @Override
-    public void dispose() {
-        context = null;
-    }
-
-    @Override
-    public void initialize() {
-    }
+		public function TeakEvent(type:String, data:String = null, bubbles:Boolean=false, cancelable:Boolean=false)
+		{
+			this.data = data;
+			super(type, bubbles, cancelable);
+		}
+	}
 }

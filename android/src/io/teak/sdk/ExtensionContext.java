@@ -14,36 +14,79 @@
  */
 package io.teak.sdk;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.HashMap;
+import java.util.concurrent.Future;
 
 import android.util.Log;
 
 import android.content.Intent;
-import android.content.res.Configuration;
+import android.content.Context;
+import android.content.IntentFilter;
+import android.content.BroadcastReceiver;
+
+import android.support.v4.content.LocalBroadcastManager;
 
 import com.adobe.fre.FREContext;
 import com.adobe.fre.FREFunction;
 
-public class ExtensionContext extends FREContext
-{
-    public ExtensionContext() {
-        if (Teak.isDebug) {
-            Log.d(Teak.LOG_TAG, "ANE Context created.");
+public class ExtensionContext extends FREContext {
+
+    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (TeakNotification.TEAK_INBOX_HAS_NOTIFICATIONS_INTENT.equals(action)) {
+                try {
+                    if(Teak.launchedFromTeakNotifId != null) {
+                        TeakNotification notif = TeakNotification.byTeakNotifId(Teak.launchedFromTeakNotifId);
+                        if(notif != null) {
+                            // Always call consume() to remove from cache
+                            final Future<TeakNotification.Reward> rewardFuture = notif.consumeNotification();
+                            if(notif.hasReward() && rewardFuture != null) {
+                                new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        String eventData = "";
+                                        try {
+                                            TeakNotification.Reward reward = rewardFuture.get();
+                                            if(reward != null && reward.status == TeakNotification.Reward.GRANT_REWARD && reward.reward != null) {
+                                                eventData = reward.reward.toString();
+                                            }
+                                        } catch(Exception e) {
+                                            Log.e(Teak.LOG_TAG, Log.getStackTraceString(e));
+                                        } finally {
+                                            Extension.context.dispatchStatusEventAsync("LAUNCHED_FROM_NOTIFICATION", eventData);
+                                        }
+                                    }
+                                }).start();
+                            } else {
+                                Extension.context.dispatchStatusEventAsync("LAUNCHED_FROM_NOTIFICATION", "");
+                            }
+                        }
+                    }
+                } catch(Exception e) {
+                    Log.e(Teak.LOG_TAG, Log.getStackTraceString(e));
+                }
+            }
         }
+    };
+
+    public ExtensionContext() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(TeakNotification.TEAK_INBOX_HAS_NOTIFICATIONS_INTENT);
+        LocalBroadcastManager.getInstance(Teak.mainActivity).registerReceiver(broadcastReceiver, filter);
     }
     
     @Override
     public Map<String, FREFunction> getFunctions() {
         Map<String, FREFunction> functionMap = new HashMap<String, FREFunction>();
         functionMap.put("identifyUser", new IdentifyUserFunction());
+        functionMap.put("_log", new LogFunction());
         return functionMap;
     }
 
     @Override 
     public void dispose() {
-        if (Teak.isDebug) {
-            Log.d(Teak.LOG_TAG, "ANE Context destroyed.");
-        }
     }
 }

@@ -15,25 +15,18 @@
 package io.teak.sdk;
 
 import android.util.Log;
-
 import com.adobe.fre.FREContext;
-import com.adobe.fre.FREExtension;
+import com.adobe.fre.FREFunction;
+import com.adobe.fre.FREObject;
 
-public class Extension implements FREExtension {
-    public static FREContext context;
-
+public class LogFunction implements FREFunction {
     @Override
-    public FREContext createContext(String extId) {
-        context = new ExtensionContext();
-        return context;
-    }
-
-    @Override
-    public void dispose() {
-        context = null;
-    }
-
-    @Override
-    public void initialize() {
+    public FREObject call(FREContext context, FREObject[] argv) {
+        try {
+            Log.d(Teak.LOG_TAG, argv[0].getAsString());
+        } catch(Exception e) {
+            Log.e(Teak.LOG_TAG, Log.getStackTraceString(e));
+        }
+        return null;
     }
 }
