@@ -25,7 +25,6 @@
             <string value="${android.manifest.package}" />
             <filterchain>
                 <replaceregex pattern="\." replace="/" flags="g" />
-                <!--<replaceregex pattern="$" replace="/AppEntry.smali" />-->
              </filterchain>
         </loadresource>
 
@@ -52,18 +51,18 @@
 
     <target name="debug_sign" description="Sign APK file with debug credentials.">
         <signjar jar="${temp.apk}"
-            storetype="${debug.storetype}"
-            keystore="${debug.keystore}"
-            storepass="${debug.keypass}"
-            alias="${debug.alias}"/>
+                 storetype="${debug.storetype}"
+                 keystore="${debug.keystore}"
+                 storepass="${debug.keypass}"
+                 alias="${debug.alias}"/>
     </target>
 
     <target name="release_sign" description="Sign APK file with release credentials.">
         <signjar jar="${temp.apk}"
-            storetype="${release.storetype}"
-            keystore="${release.keystore}"
-            storepass="${release.keypass}"
-            alias="${release.alias}"/>
+                 storetype="${release.storetype}"
+                 keystore="${release.keystore}"
+                 storepass="${release.keypass}"
+                 alias="${release.alias}"/>
     </target>
 
     <target name="zipalign" description="Zipalign final APK.">
