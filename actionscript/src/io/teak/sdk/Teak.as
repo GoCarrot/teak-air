@@ -41,7 +41,6 @@ package io.teak.sdk
 			ext_stream.open(ane_dir.resolvePath("extension.xml"), FileMode.READ);
 			var ext_xml:XML = XML(ext_stream.readUTFBytes(ext_stream.bytesAvailable));
 			ext_stream.close();
-			_context.call("_log", ext_xml.toXMLString());
 			var ns:Namespace = ext_xml.namespace();
 			_versionNumber = ext_xml.ns::versionNumber.toString();
 
