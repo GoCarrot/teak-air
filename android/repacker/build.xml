@@ -31,7 +31,6 @@
 
         <exec dir="${temp.path}/smali/${temp.path.patch.destination}" executable="patch" input="TeakAppEntry.patch">
             <arg line="-p0"/>
-            <arg line="--dry-run"/>
         </exec>
     </target>
 
@@ -80,5 +79,13 @@
     <target name="clean" description="Clean temporary files and directories.">
         <delete dir="${temp.path}"/>
         <delete file="${temp.apk}"/>
+    </target>
+
+    <target name="install" description="Use ADB to install the APK on a connected device">
+        <exec executable="${android.platform-tools}/adb">
+            <arg line="install"/>
+            <arg line="-r"/>
+            <arg line="${output.apk}"/>
+        </exec>
     </target>
 </project>

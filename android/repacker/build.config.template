@@ -1,7 +1,11 @@
 # Location of the Android build tools e.g. android-sdk/build-tools/20.0.0/
 android.build-tools =
 
-# Path to the input APK and output APK (this can be the same path).
+# Location of the Android platform tools e.g. android-sdk/platform-tools/
+# NOTE: This is only used for 'install' task
+android.platform-tools =
+
+# Path to the input APK and output APK (this can be the same path)
 input.apk =
 output.apk =
 
