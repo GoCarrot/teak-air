@@ -3,6 +3,9 @@
 bin/
 android/temp/
 android/libs/
+android/repacker/build.config
+android/repacker/_temp.apk
+android/repacker/_apktemp/
 temp/
 ios/TeakAir.xcodeproj/project.xcworkspace/xcuserdata/
 ios/TeakAir.xcodeproj/xcuserdata

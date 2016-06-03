@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="io_teak_app_id">@TeakAppId@</string>
+    <string name="io_teak_api_key">@TeakApiKey@</string>
+    <string name="io_teak_gcm_sender_id">@TeakGcmSenderId@</string>
+</resources>

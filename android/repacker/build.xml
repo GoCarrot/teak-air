@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Teak APK repacker for Adobe AIR" default="debug">
+    <property file="build.config"/>
+
+    <property name="temp.path" location="./_apktemp"/>
+    <property name="temp.apk" location="./_temp.apk"/>
+
+    <target name="debug" depends="unpack,patch,copy_res,repack,debug_sign,zipalign" description="Prepare APK for debug distribution."/>
+
+    <target name="release" depends="unpack,patch,copy_res,repack,release_sign,zipalign" description="Prepare APK for debug distribution."/>
+
+    <target name="unpack" description="Unpack APK file.">
+        <java jar="apktool_2.1.0.jar" fork="true" failonerror="true">
+            <arg value="d"/>
+            <arg value="-f"/>
+            <arg value="-o"/>
+            <arg value="${temp.path}"/>
+            <arg value="${input.apk}"/>
+        </java>
+    </target>
+
+    <target name="patch" description="Patch the AppEntry.smali file to call Teak.">
+        <xmlproperty file="${temp.path}/AndroidManifest.xml" prefix="android" collapseAttributes="true"/>
+        <loadresource property="temp.path.patch.destination">
+            <string value="${android.manifest.package}" />
+            <filterchain>
+                <replaceregex pattern="\." replace="/" flags="g" />
+                <!--<replaceregex pattern="$" replace="/AppEntry.smali" />-->
+             </filterchain>
+        </loadresource>
+
+        <exec dir="${temp.path}/smali/${temp.path.patch.destination}" executable="patch" input="TeakAppEntry.patch">
+            <arg line="-p0"/>
+            <arg line="--dry-run"/>
+        </exec>
+    </target>
+
+    <target name="copy_res" description="Add res/values/teak.xml to the APK.">
+        <copy file="teak.xml.template" tofile="${temp.path}/res/values/teak.xml" overwrite="true"/>
+        <replace file="${temp.path}/res/values/teak.xml" token="@TeakAppId@" value="${teak.app_id}"/>
+        <replace file="${temp.path}/res/values/teak.xml" token="@TeakApiKey@" value="${teak.api_key}"/>
+        <replace file="${temp.path}/res/values/teak.xml" token="@TeakGcmSenderId@" value="${teak.gcm_sender_id}"/>
+    </target>
+
+    <target name="repack" description="Repack APK file.">
+        <java jar="apktool_2.1.0.jar" fork="true" failonerror="true">
+            <arg value="b"/>
+            <arg value="-o"/>
+            <arg value="${temp.apk}"/>
+            <arg value="${temp.path}"/>
+        </java>
+    </target>
+
+    <target name="debug_sign" description="Sign APK file with debug credentials.">
+        <signjar jar="${temp.apk}"
+            storetype="${debug.storetype}"
+            keystore="${debug.keystore}"
+            storepass="${debug.keypass}"
+            alias="${debug.alias}"/>
+    </target>
+
+    <target name="release_sign" description="Sign APK file with release credentials.">
+        <signjar jar="${temp.apk}"
+            storetype="${release.storetype}"
+            keystore="${release.keystore}"
+            storepass="${release.keypass}"
+            alias="${release.alias}"/>
+    </target>
+
+    <target name="zipalign" description="Zipalign final APK.">
+        <exec executable="${android.build-tools}/zipalign">
+            <arg line="-f"/>
+            <arg line="-v"/>
+            <arg line="4"/>
+            <arg line="${temp.apk}"/>
+            <arg line="${output.apk}"/>
+        </exec>
+    </target>
+
+    <target name="clean" description="Clean temporary files and directories.">
+        <delete dir="${temp.path}"/>
+        <delete file="${temp.apk}"/>
+    </target>
+</project>

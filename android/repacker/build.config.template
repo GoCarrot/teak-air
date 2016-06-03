@@ -1,0 +1,23 @@
+# Location of the Android build tools e.g. android-sdk/build-tools/20.0.0/
+android.build-tools =
+
+# Path to the input APK and output APK (this can be the same path).
+input.apk =
+output.apk =
+
+# Teak App Id, API Key and your GCM Sender Id
+teak.app_id =
+teak.api_key =
+teak.gcm_sender_id =
+
+# Debug keystore properties
+debug.storetype = pkcs12
+debug.keystore =
+debug.keypass =
+debug.alias = alias_name
+
+# Release keystore properties
+release.storetype = pkcs12
+release.keystore =
+release.keypass =
+release.alias = alias_name
