@@ -62,6 +62,16 @@ package io.teak.sdk
 			_context.call("identifyUser", userIdentifier);
 		}
 
+		public function scheduleNotification(creativeId:String, defaultMessage:String, delayInSeconds:Number):void
+		{
+			_context.call("scheduleNotification", creativeId, defaultMessage, delayInSeconds);
+		}
+
+		public function cancelNotification(scheduleId:String):void
+		{
+			_context.call("cancelNotification", scheduleId);
+		}
+
 		private function onStatus(event:StatusEvent):void
 		{
 			trace(event);
@@ -70,6 +80,12 @@ package io.teak.sdk
 			{
 				case "LAUNCHED_FROM_NOTIFICATION":
 					e = new TeakEvent(TeakEvent.LAUNCHED_FROM_NOTIFICATION, event.level);
+					break;
+				case "NOTIFICATION_SCHEDULED":
+					e = new TeakEvent(TeakEvent.NOTIFICATION_SCHEDULED, event.level);
+					break;
+				case "NOTIFICATION_CANCELED":
+					e = new TeakEvent(TeakEvent.NOTIFICATION_CANCELED, event.level);
 					break;
 				default:
 					break;

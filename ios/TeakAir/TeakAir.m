@@ -30,6 +30,10 @@ extern void* TeakNotificationConsume(void* notif);
 extern BOOL TeakRewardIsCompleted(void* notif);
 extern int TeakRewardGetStatus(void* reward);
 extern const char* TeakRewardGetJson(void* reward);
+extern void* TeakNotificationSchedule(const char* creativeId, const char* message, uint64_t delay);
+extern void* TeakNotificationCancel(const char* scheduleId);
+extern BOOL TeakNotificationIsCompleted(void* notif);
+extern const char* TeakNotificationGetTeakNotifId(void* notif);
 
 // From Teak.m
 extern NSString* const TeakNotificationAppLaunch;
@@ -66,6 +70,51 @@ DEFINE_ANE_FUNCTION(_log)
    return nil;
 }
 
+void waitOnNotifFuture(void* future, const uint8_t* eventName, FREContext context)
+{
+   if(future != nil)
+   {
+      dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
+         while(!TeakNotificationIsCompleted(future))
+         {
+            sleep(1);
+         }
+         const uint8_t* notifId = (const uint8_t*)TeakNotificationGetTeakNotifId(future);
+         FREDispatchStatusEventAsync(context, eventName, notifId);
+      });
+   }
+}
+
+DEFINE_ANE_FUNCTION(scheduleNotification)
+{
+   uint32_t stringLength;
+   const uint8_t* creativeId;
+   const uint8_t* message;
+   double delay;
+   if(FREGetObjectAsUTF8(argv[0], &stringLength, &creativeId) == FRE_OK &&
+      FREGetObjectAsUTF8(argv[1], &stringLength, &message) == FRE_OK &&
+      FREGetObjectAsDouble(argv[2], &delay) == FRE_OK)
+   {
+      void* notif = TeakNotificationSchedule((const char*)creativeId, (const char*)message, (uint64_t)delay);
+      waitOnNotifFuture(notif, (const uint8_t*)"SCHEDULE_NOTIFICATION", context);
+   }
+
+   return nil;
+}
+
+DEFINE_ANE_FUNCTION(cancelNotification)
+{
+   uint32_t stringLength;
+   const uint8_t* notifId;
+   if(FREGetObjectAsUTF8(argv[0], &stringLength, &notifId) == FRE_OK)
+   {
+      void* notif = TeakNotificationCancel((const char*)notifId);
+      waitOnNotifFuture(notif, (const uint8_t*)"CANCEL_NOTIFICATION", context);
+   }
+
+   return nil;
+}
+
 void checkTeakNotifLaunch(FREContext context)
 {
    const uint8_t* eventCode = (const uint8_t*)"LAUNCHED_FROM_NOTIFICATION";
@@ -92,7 +141,6 @@ void checkTeakNotifLaunch(FREContext context)
                   {
                      const uint8_t* rewardJson = (const uint8_t*)TeakRewardGetJson(reward);
                      FREDispatchStatusEventAsync(context, eventCode, rewardJson);
-                     NSLog(@"Dispatching WITH reward json: %s", rewardJson);
                   }
                   else
                   {
@@ -115,7 +163,7 @@ void checkTeakNotifLaunch(FREContext context)
 
 void AirTeakContextInitializer(void* extData, const uint8_t* ctxType, FREContext ctx, uint32_t* numFunctionsToTest, const FRENamedFunction** functionsToSet)
 {
-   uint32_t numFunctions = 2;
+   uint32_t numFunctions = 4;
    *numFunctionsToTest = numFunctions;
    FRENamedFunction* func = (FRENamedFunction*) malloc(sizeof(FRENamedFunction) * numFunctions);
 
@@ -126,6 +174,14 @@ void AirTeakContextInitializer(void* extData, const uint8_t* ctxType, FREContext
    func[1].name = (const uint8_t*)"_log";
    func[1].functionData = NULL;
    func[1].function = &_log;
+
+   func[2].name = (const uint8_t*)"scheduleNotification";
+   func[2].functionData = NULL;
+   func[2].function = &scheduleNotification;
+
+   func[3].name = (const uint8_t*)"cancelNotification";
+   func[3].functionData = NULL;
+   func[3].function = &cancelNotification;
 
    *functionsToSet = func;
 

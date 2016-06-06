@@ -83,6 +83,8 @@ public class ExtensionContext extends FREContext {
         Map<String, FREFunction> functionMap = new HashMap<String, FREFunction>();
         functionMap.put("identifyUser", new IdentifyUserFunction());
         functionMap.put("_log", new LogFunction());
+        functionMap.put("scheduleNotification", new ScheduleNotificationFunction(false));
+        functionMap.put("cancelNotification", new ScheduleNotificationFunction(true));
         return functionMap;
     }
 
