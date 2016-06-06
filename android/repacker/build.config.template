@@ -1,4 +1,5 @@
 # Location of the Android build tools e.g. android-sdk/build-tools/20.0.0/
+# NOTE: This is only used for the 'zipalign' task and is optional for development
 android.build-tools =
 
 # Location of the Android platform tools e.g. android-sdk/platform-tools/

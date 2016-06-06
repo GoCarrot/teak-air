@@ -66,6 +66,16 @@
     </target>
 
     <target name="zipalign" description="Zipalign final APK.">
+        <condition property="android.zipalign.available">
+            <and>
+                <isset property="android.build-tools"/>
+                <available file="${android.build-tools}/zipalign"/>
+            </and>
+        </condition>
+        <antcall target="do-zipalign-if-available"/>
+    </target>
+
+    <target name="do-zipalign-if-available" if="android.zipalign.available">
         <exec executable="${android.build-tools}/zipalign">
             <arg line="-f"/>
             <arg line="-v"/>
