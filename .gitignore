@@ -9,4 +9,5 @@ android/repacker/_apktemp/
 temp/
 ios/TeakAir.xcodeproj/project.xcworkspace/xcuserdata/
 ios/TeakAir.xcodeproj/xcuserdata
+ios/build
 build/extension.xml
