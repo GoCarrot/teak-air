@@ -23,6 +23,8 @@ package io.teak.sdk
 	import flash.events.EventDispatcher;
 	import flash.events.StatusEvent;
 
+	import flash.system.Capabilities;
+
 	public class Teak extends EventDispatcher
 	{
 		public function Teak()
@@ -44,7 +46,7 @@ package io.teak.sdk
 			var ns:Namespace = ext_xml.namespace();
 			_versionNumber = ext_xml.ns::versionNumber.toString();
 
-			_context.call("_log", "AIR SDK Version: " + _versionNumber);
+			log("AIR SDK Version: " + _versionNumber);
 		}
 
 		public static function get instance():Teak
@@ -59,22 +61,48 @@ package io.teak.sdk
 
 		public function identifyUser(userIdentifier:String):void
 		{
-			_context.call("identifyUser", userIdentifier);
+			if(useNativeExtension())
+			{
+				_context.call("identifyUser", userIdentifier);
+			}
+			else
+			{
+				trace("[Teak] Identifying user: " + userIdentifier);
+			}
 		}
 
 		public function scheduleNotification(creativeId:String, defaultMessage:String, delayInSeconds:Number):void
 		{
-			_context.call("scheduleNotification", creativeId, defaultMessage, delayInSeconds);
+			if(useNativeExtension())
+			{
+				_context.call("scheduleNotification", creativeId, defaultMessage, delayInSeconds);
+			}
+			else
+			{
+				trace("[Teak] Scheduling notification (" + creativeId + ") \"" + defaultMessage + "\" for " + delayInSeconds + " from now.");
+
+				var e:TeakEvent = new TeakEvent(TeakEvent.NOTIFICATION_SCHEDULED, "DEBUG-SCHEDULE-ID");
+				this.dispatchEvent(e);
+			}
 		}
 
 		public function cancelNotification(scheduleId:String):void
 		{
-			_context.call("cancelNotification", scheduleId);
+			if(useNativeExtension())
+			{
+				_context.call("cancelNotification", scheduleId);
+			}
+			else
+			{
+				trace("[Teak] Canceling notification: " + scheduleId);
+
+				var e:TeakEvent = new TeakEvent(TeakEvent.NOTIFICATION_CANCELED, scheduleId);
+				this.dispatchEvent(e);
+			}
 		}
 
 		private function onStatus(event:StatusEvent):void
 		{
-			trace(event);
 			var e:TeakEvent;
 			switch(event.code)
 			{
@@ -93,6 +121,24 @@ package io.teak.sdk
 			if(e)
 			{
 				this.dispatchEvent(e);
+			}
+		}
+
+		private function useNativeExtension():Boolean
+		{
+			return Capabilities.manufacturer.indexOf("iOS") > -1 ||
+					Capabilities.manufacturer.indexOf("Android") > -1;
+		}
+
+		private function log(message:String):void
+		{
+			if(useNativeExtension())
+			{
+				_context.call("_log", message);
+			}
+			else
+			{
+				trace(message);
 			}
 		}
 
