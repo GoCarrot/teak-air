@@ -36,7 +36,7 @@ public class ExtensionContext extends FREContext {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if (TeakNotification.TEAK_INBOX_HAS_NOTIFICATIONS_INTENT.equals(action)) {
+            if (TeakNotification.LAUNCHED_FROM_NOTIFICATION_INTENT.equals(action)) {
                 try {
                     if(Teak.launchedFromTeakNotifId != null) {
                         TeakNotification notif = TeakNotification.byTeakNotifId(Teak.launchedFromTeakNotifId);
@@ -74,7 +74,7 @@ public class ExtensionContext extends FREContext {
 
     public ExtensionContext() {
         IntentFilter filter = new IntentFilter();
-        filter.addAction(TeakNotification.TEAK_INBOX_HAS_NOTIFICATIONS_INTENT);
+        filter.addAction(TeakNotification.LAUNCHED_FROM_NOTIFICATION_INTENT);
         LocalBroadcastManager.getInstance(Teak.mainActivity).registerReceiver(broadcastReceiver, filter);
     }
     
