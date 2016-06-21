@@ -74,13 +74,16 @@ void waitOnNotifFuture(void* future, const uint8_t* eventName, FREContext contex
 {
    if(future != nil)
    {
+      __block NSObject* o = (__bridge NSObject*)(future);
       dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
+         NSLog(@"%@", o);
          while(!TeakNotificationIsCompleted(future))
          {
             sleep(1);
          }
          const uint8_t* notifId = (const uint8_t*)TeakNotificationGetTeakNotifId(future);
          FREDispatchStatusEventAsync(context, eventName, notifId);
+         CFBridgingRelease(future);
       });
    }
 }
@@ -131,7 +134,9 @@ void checkTeakNotifLaunch(FREContext context)
             void* reward = TeakNotificationConsume(notif);
             if(reward != nil)
             {
+               __block NSObject* o = (__bridge NSObject*)(reward);
                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
+                  NSLog(@"%@", o);
                   while(!TeakRewardIsCompleted(reward))
                   {
                      sleep(1);
@@ -146,6 +151,7 @@ void checkTeakNotifLaunch(FREContext context)
                   {
                      FREDispatchStatusEventAsync(context, eventCode, eventLevelEmpty);
                   }
+                  CFBridgingRelease(reward);
                });
             }
             else
