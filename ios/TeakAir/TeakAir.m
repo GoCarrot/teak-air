@@ -83,7 +83,6 @@ void waitOnNotifFuture(void* future, const uint8_t* eventName, FREContext contex
          }
          const uint8_t* notifId = (const uint8_t*)TeakNotificationGetTeakNotifId(future);
          FREDispatchStatusEventAsync(context, eventName, notifId);
-         CFBridgingRelease(future);
       });
    }
 }
@@ -151,7 +150,6 @@ void checkTeakNotifLaunch(FREContext context)
                   {
                      FREDispatchStatusEventAsync(context, eventCode, eventLevelEmpty);
                   }
-                  CFBridgingRelease(reward);
                });
             }
             else
