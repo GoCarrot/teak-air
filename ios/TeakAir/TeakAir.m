@@ -98,7 +98,7 @@ DEFINE_ANE_FUNCTION(scheduleNotification)
       FREGetObjectAsDouble(argv[2], &delay) == FRE_OK)
    {
       void* notif = TeakNotificationSchedule((const char*)creativeId, (const char*)message, (uint64_t)delay);
-      waitOnNotifFuture(notif, (const uint8_t*)"SCHEDULE_NOTIFICATION", context);
+      waitOnNotifFuture(notif, (const uint8_t*)"NOTIFICATION_SCHEDULED", context);
    }
 
    return nil;
@@ -111,7 +111,7 @@ DEFINE_ANE_FUNCTION(cancelNotification)
    if(FREGetObjectAsUTF8(argv[0], &stringLength, &notifId) == FRE_OK)
    {
       void* notif = TeakNotificationCancel((const char*)notifId);
-      waitOnNotifFuture(notif, (const uint8_t*)"CANCEL_NOTIFICATION", context);
+      waitOnNotifFuture(notif, (const uint8_t*)"NOTIFICATION_CANCELED", context);
    }
 
    return nil;
