@@ -1,5 +1,7 @@
 .DS_STORE
 
+air-sdk/*
+!air-sdk/.gitkeep
 bin/
 android/temp/
 android/libs/
