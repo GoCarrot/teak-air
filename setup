@@ -2,26 +2,35 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-err=0
-if [ ! -e ../teak-android ]; then
-  err=1
-fi
+(
+  cd ..
+  if [ ! -e teak-android ]; then
+    git clone git@github.com:GoCarrot/teak-android.git
+  fi
+  (
+    cd teak-android
+    git pull
+    ./setup
+  )
 
-if [ ! -e ../teak-ios ]; then
-  err=1
-fi
-
-if [ $err == 1 ]; then
-  echo "ERROR: You must clone 'teak-air' and 'teak-ios' alongside this repository, and run their respective 'setup' scripts first."
-  exit 1
-fi
+  if [ ! -e teak-ios ]; then
+    git clone git@github.com:GoCarrot/teak-ios.git
+  fi
+  (
+    cd teak-ios
+    git pull
+    ./setup
+  )
+)
 
 echo y | android update sdk --all --no-ui --filter 'extra-android-support'
 
 # TODO: Use Homebrew, once the checksums are updated...
 # brew install homebrew/binary/adobe-air-sdk[-flex]
-curl 'https://airdownload.adobe.com/air/mac/download/latest/AIRSDK_Compiler.tbz2' > air-sdk/AIRSDK_Compiler.tbz2
-(
-  cd air-sdk
-  tar xzf AIRSDK_Compiler.tbz2
-)
+if [ ! -e air-sdk/bin/compc ]; then
+  curl 'https://airdownload.adobe.com/air/mac/download/latest/AIRSDK_Compiler.tbz2' > air-sdk/AIRSDK_Compiler.tbz2
+  (
+    cd air-sdk
+    tar xzf AIRSDK_Compiler.tbz2
+  )
+fi
