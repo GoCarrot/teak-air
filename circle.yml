@@ -12,5 +12,7 @@ dependencies:
   #   without: [production, osx]
   cache_directories:
     - "air-sdk"
+    - "tmp"
     - "../teak-ios"
     - "../teak-android"
+    - "/usr/local/Cellar/android-sdk"
