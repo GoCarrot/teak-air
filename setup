@@ -23,10 +23,7 @@ IFS=$'\n\t'
   )
 )
 
-if [ ! -e 'tmp/.extra-android-support' ]; then
-  echo y | android update sdk --all --no-ui --filter 'extra-android-support'
-  touch tmp/.extra-android-support
-fi
+echo y | android update sdk --all --no-ui --filter 'extra-android-support'
 
 # TODO: Use Homebrew, once the checksums are updated...
 # brew install homebrew/binary/adobe-air-sdk[-flex]

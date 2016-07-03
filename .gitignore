@@ -2,8 +2,6 @@
 
 air-sdk/*
 !air-sdk/.gitkeep
-tmp/*
-!tmp/.gitkeep
 bin/
 android/temp/
 android/libs/
