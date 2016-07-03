@@ -53,7 +53,7 @@
 
     <!-- Android -->
     <target name="android_native" description="Build Teak Android Library">
-        <exec executable="gradle" failonerror="true" dir="../../teak-android/">
+        <exec executable="./gradlew" failonerror="true" dir="../../teak-android/">
             <arg line="assemble"/>
         </exec>
         <copy file="../../teak-android/build/libs/teak.jar" tofile="../android/libs/${name}.jar" overwrite="true"/>
