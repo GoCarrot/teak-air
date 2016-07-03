@@ -1,8 +1,9 @@
 machine:
   xcode:
     version: 7.3
-# test:
-#   override:
+test:
+  override:
+    - ./compile
 dependencies:
   # override:
   # pre:
