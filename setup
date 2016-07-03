@@ -20,8 +20,8 @@ echo y | android update sdk --all --no-ui --filter 'extra-android-support'
 
 # TODO: Use Homebrew, once the checksums are updated...
 # brew install homebrew/binary/adobe-air-sdk[-flex]
-curl 'https://airdownload.adobe.com/air/mac/download/latest/AIRSDK_Compiler.tbz2' > temp/AIRSDK_Compiler.tbz2
+curl 'https://airdownload.adobe.com/air/mac/download/latest/AIRSDK_Compiler.tbz2' > air-sdk/AIRSDK_Compiler.tbz2
 (
   cd air-sdk
-  tar xzf ../temp/AIRSDK_Compiler.tbz2
+  tar xzf AIRSDK_Compiler.tbz2
 )
