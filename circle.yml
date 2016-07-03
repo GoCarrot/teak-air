@@ -3,10 +3,11 @@ machine:
     version: 7.3
 test:
   override:
-    - ./compile
+  - ./compile
 dependencies:
   # override:
-  # pre:
+  pre:
+  - ./setup
   # bundler:
   #   without: [production, osx]
   cache_directories:
