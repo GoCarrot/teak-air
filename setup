@@ -10,7 +10,7 @@ IFS=$'\n\t'
   (
     cd teak-android
     git pull
-    # ./setup
+    ./setup
   )
 
   if [ ! -e teak-ios ]; then
@@ -23,7 +23,7 @@ IFS=$'\n\t'
   )
 )
 
-# echo y | android update sdk --all --no-ui --filter 'extra-android-support'
+echo y | android update sdk --all --no-ui --filter 'extra-android-support'
 
 # TODO: Use Homebrew, once the checksums are updated...
 # brew install homebrew/binary/adobe-air-sdk[-flex]
