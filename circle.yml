@@ -1,0 +1,14 @@
+machine:
+  xcode:
+    version: 7.3
+# test:
+#   override:
+dependencies:
+  # override:
+  # pre:
+  # bundler:
+  #   without: [production, osx]
+  cache_directories:
+    - "air-sdk"
+    - "../teak-ios"
+    - "../teak-android"
