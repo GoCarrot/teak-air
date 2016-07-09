@@ -20,12 +20,14 @@ import com.adobe.fre.FREFunction;
 import com.adobe.fre.FREObject;
 
 public class IdentifyUserFunction implements FREFunction {
+    private static final String LOG_TAG = "Teak:Air:IdentifyUser";
+
     @Override
     public FREObject call(FREContext context, FREObject[] argv) {
         try {
             Teak.identifyUser(argv[0].getAsString());
         } catch(Exception e) {
-            Log.e(Teak.LOG_TAG, Log.getStackTraceString(e));
+            Log.e(LOG_TAG, Log.getStackTraceString(e));
         }
         return null;
     }

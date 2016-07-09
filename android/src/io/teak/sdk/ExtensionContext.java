@@ -31,6 +31,7 @@ import com.adobe.fre.FREContext;
 import com.adobe.fre.FREFunction;
 
 public class ExtensionContext extends FREContext {
+    private static final String LOG_TAG = "Teak:Air:ExtensionContext";
 
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -38,8 +39,9 @@ public class ExtensionContext extends FREContext {
             String action = intent.getAction();
             if (TeakNotification.LAUNCHED_FROM_NOTIFICATION_INTENT.equals(action)) {
                 try {
-                    if(Teak.launchedFromTeakNotifId != null) {
-                        TeakNotification notif = TeakNotification.byTeakNotifId(Teak.launchedFromTeakNotifId);
+                    String teakNotifId = intent.getStringExtra("teakNotifId");
+                    if(teakNotifId != null) {
+                        TeakNotification notif = TeakNotification.byTeakNotifId(teakNotifId);
                         if(notif != null) {
                             // Always call consume() to remove from cache
                             final Future<TeakNotification.Reward> rewardFuture = notif.consumeNotification();
@@ -54,7 +56,7 @@ public class ExtensionContext extends FREContext {
                                                 eventData = reward.reward.toString();
                                             }
                                         } catch(Exception e) {
-                                            Log.e(Teak.LOG_TAG, Log.getStackTraceString(e));
+                                            Log.e(LOG_TAG, Log.getStackTraceString(e));
                                         } finally {
                                             Extension.context.dispatchStatusEventAsync("LAUNCHED_FROM_NOTIFICATION", eventData);
                                         }
@@ -66,7 +68,7 @@ public class ExtensionContext extends FREContext {
                         }
                     }
                 } catch(Exception e) {
-                    Log.e(Teak.LOG_TAG, Log.getStackTraceString(e));
+                    Log.e(LOG_TAG, Log.getStackTraceString(e));
                 }
             }
         }
@@ -75,9 +77,9 @@ public class ExtensionContext extends FREContext {
     public ExtensionContext() {
         IntentFilter filter = new IntentFilter();
         filter.addAction(TeakNotification.LAUNCHED_FROM_NOTIFICATION_INTENT);
-        LocalBroadcastManager.getInstance(Teak.mainActivity).registerReceiver(broadcastReceiver, filter);
+        Teak.localBroadcastManager.registerReceiver(broadcastReceiver, filter);
     }
-    
+
     @Override
     public Map<String, FREFunction> getFunctions() {
         Map<String, FREFunction> functionMap = new HashMap<String, FREFunction>();
