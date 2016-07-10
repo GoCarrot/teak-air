@@ -56,9 +56,9 @@
     <target name="android_native" description="Build Teak Android Library">
         <exec executable="./compile" failonerror="true" dir="../../teak-android/">
         </exec>
-        <copy file="../../teak-android/build/libs/teak.jar" tofile="../android/libs/${name}.jar" overwrite="true"/>
+        <copy file="../../teak-android/build/libs/teak-api_lt_21.jar" tofile="../android/libs/${name}.jar" overwrite="true"/>
         <copy todir="../temp/android/res/">
-            <fileset dir="../../teak-android/src/main/res"/>
+            <fileset dir="../../teak-android/src/api_lt_21/res"/>
         </copy>
     </target>
 
