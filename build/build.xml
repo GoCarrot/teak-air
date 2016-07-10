@@ -67,6 +67,16 @@
         <delete dir="../android/temp"/>
         <mkdir dir="../android/temp/classes"/>
 
+        <copy file="../android/teak_air_version.xml.template"
+              tofile="../temp/android/res/values/teak_air_version.xml" overwrite="true"/>
+        <exec executable="git" failonerror="true" dir="..">
+            <arg line='describe'/>
+            <arg line='--tags'/>
+            <redirector outputproperty="sdk.gitversion"/>
+        </exec>
+        <replace file="../temp/android/res/values/teak_air_version.xml"
+                 token="@@@" value="${sdk.gitversion}"/>
+
         <javac target="1.6" source="1.6" srcdir="../android/src" destdir="../android/temp/classes" includeantruntime="false">
             <classpath>
                 <pathelement location="${env.ANDROID_HOME}/platforms/android-23/android.jar"/>

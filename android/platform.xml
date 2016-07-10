@@ -1,6 +1,6 @@
 <platform xmlns="http://ns.adobe.com/air/extension/18.0">
     <packagedResources>
-      <packagedResource>
+        <packagedResource>
             <packageName>io.teak.sdk</packageName>
             <folderName>res</folderName>
         </packagedResource>

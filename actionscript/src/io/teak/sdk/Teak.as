@@ -35,28 +35,11 @@ package io.teak.sdk
 			if(!_context) throw new Error("ERROR - Extension context is null. Please check if extension.xml is setup correctly.");
 			_context.addEventListener(StatusEvent.STATUS, onStatus);
 			_instance = this;
-
-			// Get version and output it
-			var ext_dir:File = ExtensionContext.getExtensionDirectory(EXTENSION_ID);
-			var ane_dir:File = ext_dir.resolvePath("META-INF/ANE/");
-			var ext_stream:FileStream = new FileStream();
-			ext_stream.open(ane_dir.resolvePath("extension.xml"), FileMode.READ);
-			var ext_xml:XML = XML(ext_stream.readUTFBytes(ext_stream.bytesAvailable));
-			ext_stream.close();
-			var ns:Namespace = ext_xml.namespace();
-			_versionNumber = ext_xml.ns::versionNumber.toString();
-
-			log("AIR SDK Version: " + _versionNumber);
 		}
 
 		public static function get instance():Teak
 		{
 			return _instance ? _instance : new Teak();
-		}
-
-		public function get version():String
-		{
-			return _versionNumber;
 		}
 
 		public function identifyUser(userIdentifier:String):void
