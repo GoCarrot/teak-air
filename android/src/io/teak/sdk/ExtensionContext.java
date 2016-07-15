@@ -39,32 +39,26 @@ public class ExtensionContext extends FREContext {
             String action = intent.getAction();
             if (TeakNotification.LAUNCHED_FROM_NOTIFICATION_INTENT.equals(action)) {
                 try {
-                    String teakNotifId = intent.getStringExtra("teakNotifId");
-                    if(teakNotifId != null) {
-                        TeakNotification notif = TeakNotification.byTeakNotifId(teakNotifId);
-                        if(notif != null) {
-                            // Always call consume() to remove from cache
-                            final Future<TeakNotification.Reward> rewardFuture = notif.consumeNotification();
-                            if(notif.hasReward() && rewardFuture != null) {
-                                new Thread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        String eventData = "";
-                                        try {
-                                            TeakNotification.Reward reward = rewardFuture.get();
-                                            if(reward != null && reward.status == TeakNotification.Reward.GRANT_REWARD && reward.reward != null) {
-                                                eventData = reward.reward.toString();
-                                            }
-                                        } catch(Exception e) {
-                                            Log.e(LOG_TAG, Log.getStackTraceString(e));
-                                        } finally {
-                                            Extension.context.dispatchStatusEventAsync("LAUNCHED_FROM_NOTIFICATION", eventData);
-                                        }
+                    String teakRewardId = intent.getStringExtra("teakRewardId");
+                    if(teakRewardId != null) {
+                        final Future<TeakNotification.Reward> rewardFuture = TeakNotification.Reward.rewardFromRewardId(teakRewardId);
+                        if(rewardFuture != null) {
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    String eventData = "";
+                                    try {
+                                        TeakNotification.Reward reward = rewardFuture.get();
+                                        eventData = reward.originalJson.toString();
+                                    } catch(Exception e) {
+                                        Log.e(LOG_TAG, Log.getStackTraceString(e));
+                                    } finally {
+                                        Extension.context.dispatchStatusEventAsync("LAUNCHED_FROM_NOTIFICATION", eventData);
                                     }
-                                }).start();
-                            } else {
-                                Extension.context.dispatchStatusEventAsync("LAUNCHED_FROM_NOTIFICATION", "");
-                            }
+                                }
+                            }).start();
+                        } else {
+                            Extension.context.dispatchStatusEventAsync("LAUNCHED_FROM_NOTIFICATION", "");
                         }
                     }
                 } catch(Exception e) {

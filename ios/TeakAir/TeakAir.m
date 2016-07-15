@@ -23,12 +23,8 @@ extern void Teak_Plant(Class appDelegateClass, NSString* appId, NSString* appSec
 
 // From TeakCExtern.m
 extern void TeakIdentifyUser(const char* userId);
-extern const char* TeakLaunchedFromTeakNotifId();
-extern void* TeakNotificationFromTeakNotifId(const char* teakNotifId);
-extern BOOL TeakNotificationHasReward(void* notif);
-extern void* TeakNotificationConsume(void* notif);
+extern void* TeakRewardRewardForId(NSString* teakRewardId);
 extern BOOL TeakRewardIsCompleted(void* notif);
-extern int TeakRewardGetStatus(void* reward);
 extern const char* TeakRewardGetJson(void* reward);
 extern void* TeakNotificationSchedule(const char* creativeId, const char* message, uint64_t delay);
 extern void* TeakNotificationCancel(const char* scheduleId);
@@ -117,51 +113,37 @@ DEFINE_ANE_FUNCTION(cancelNotification)
    return nil;
 }
 
-void checkTeakNotifLaunch(FREContext context)
+void checkTeakNotifLaunch(FREContext context, NSDictionary* userInfo)
 {
    const uint8_t* eventCode = (const uint8_t*)"LAUNCHED_FROM_NOTIFICATION";
    const uint8_t* eventLevelEmpty = (const uint8_t*)"";
 
-   const char* teakNotifId = TeakLaunchedFromTeakNotifId();
-   if(teakNotifId != nil)
+   NSString* teakRewardId = [userInfo objectForKey:@"teakRewardId"];
+   if(teakRewardId != nil)
    {
-      void* notif = TeakNotificationFromTeakNotifId(teakNotifId);
-      if(notif != nil)
+      void* reward = TeakRewardRewardForId(teakRewardId);
+      if(reward != nil)
       {
-         if(TeakNotificationHasReward(notif))
-         {
-            void* reward = TeakNotificationConsume(notif);
-            if(reward != nil)
+         __block NSObject* o = (__bridge NSObject*)(reward);
+         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
+            NSLog(@"%@", o);
+            while(!TeakRewardIsCompleted(reward))
             {
-               __block NSObject* o = (__bridge NSObject*)(reward);
-               dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
-                  NSLog(@"%@", o);
-                  while(!TeakRewardIsCompleted(reward))
-                  {
-                     sleep(1);
-                  }
+               sleep(1);
+            }
 
-                  if(TeakRewardGetStatus(reward) == 0)
-                  {
-                     const uint8_t* rewardJson = (const uint8_t*)TeakRewardGetJson(reward);
-                     FREDispatchStatusEventAsync(context, eventCode, rewardJson);
-                  }
-                  else
-                  {
-                     FREDispatchStatusEventAsync(context, eventCode, eventLevelEmpty);
-                  }
-               });
-            }
-            else
-            {
-               FREDispatchStatusEventAsync(context, eventCode, eventLevelEmpty);
-            }
-         }
-         else
-         {
-            FREDispatchStatusEventAsync(context, eventCode, eventLevelEmpty);
-         }
+            const uint8_t* rewardJson = (const uint8_t*)TeakRewardGetJson(reward);
+            FREDispatchStatusEventAsync(context, eventCode, rewardJson);
+         });
       }
+      else
+      {
+         FREDispatchStatusEventAsync(context, eventCode, eventLevelEmpty);
+      }
+   }
+   else
+   {
+      FREDispatchStatusEventAsync(context, eventCode, eventLevelEmpty);
    }
 }
 
@@ -193,7 +175,7 @@ void AirTeakContextInitializer(void* extData, const uint8_t* ctxType, FREContext
                                                      object:nil
                                                       queue:nil
                                                  usingBlock:^(NSNotification* notification) {
-                                                    checkTeakNotifLaunch(ctx);
+                                                    checkTeakNotifLaunch(ctx, notification.userInfo);
                                                  }];
 }
 
