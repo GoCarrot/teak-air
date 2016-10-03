@@ -109,8 +109,15 @@ package io.teak.sdk
 
 		private function useNativeExtension():Boolean
 		{
-			return Capabilities.manufacturer.indexOf("iOS") > -1 ||
-					Capabilities.manufacturer.indexOf("Android") > -1;
+			return _isIOS() || _isAndroid();
+		}
+
+		private static function _isIOS():Boolean {
+			return Capabilities.manufacturer.indexOf("iOS") > -1;
+		}
+
+		private static function _isAndroid():Boolean {
+			return Capabilities.manufacturer.indexOf("Android") > -1;
 		}
 
 		private function log(message:String):void
