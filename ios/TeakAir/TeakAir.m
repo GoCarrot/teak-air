@@ -72,7 +72,6 @@ void waitOnNotifFuture(void* future, const uint8_t* eventName, FREContext contex
    {
       __block NSObject* o = (__bridge NSObject*)(future);
       dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
-         NSLog(@"%@", o);
          while(!TeakNotificationIsCompleted(future))
          {
             sleep(1);
