@@ -38,31 +38,16 @@ public class ExtensionContext extends FREContext {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (TeakNotification.LAUNCHED_FROM_NOTIFICATION_INTENT.equals(action)) {
+                String eventData = "";
                 try {
-                    String teakRewardId = intent.getStringExtra("teakRewardId");
-                    if(teakRewardId != null) {
-                        final Future<TeakNotification.Reward> rewardFuture = TeakNotification.Reward.rewardFromRewardId(teakRewardId);
-                        if(rewardFuture != null) {
-                            new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    String eventData = "";
-                                    try {
-                                        TeakNotification.Reward reward = rewardFuture.get();
-                                        eventData = reward.originalJson.toString();
-                                    } catch(Exception e) {
-                                        Log.e(LOG_TAG, Log.getStackTraceString(e));
-                                    } finally {
-                                        Extension.context.dispatchStatusEventAsync("LAUNCHED_FROM_NOTIFICATION", eventData);
-                                    }
-                                }
-                            }).start();
-                        } else {
-                            Extension.context.dispatchStatusEventAsync("LAUNCHED_FROM_NOTIFICATION", "");
-                        }
+                    String teakRewardJson = intent.getStringExtra("teakRewardJson");
+                    if(teakRewardJson != null) {
+                        eventData = teakRewardJson;
                     }
                 } catch(Exception e) {
                     Log.e(LOG_TAG, Log.getStackTraceString(e));
+                } finally {
+                    Extension.context.dispatchStatusEventAsync("LAUNCHED_FROM_NOTIFICATION", eventData);
                 }
             }
         }

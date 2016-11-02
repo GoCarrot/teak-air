@@ -60,7 +60,7 @@ DEFINE_ANE_FUNCTION(_log)
    const uint8_t* userId;
    if(FREGetObjectAsUTF8(argv[0], &stringLength, &userId) == FRE_OK)
    {
-      NSLog(@"[Teak] %s", (const char*)userId);
+      NSLog(@"[Teak:Air] %s", (const char*)userId);
    }
 
    return nil;
@@ -117,27 +117,20 @@ void checkTeakNotifLaunch(FREContext context, NSDictionary* userInfo)
    const uint8_t* eventCode = (const uint8_t*)"LAUNCHED_FROM_NOTIFICATION";
    const uint8_t* eventLevelEmpty = (const uint8_t*)"";
 
-   NSString* teakRewardId = [userInfo objectForKey:@"teakRewardId"];
-   if(teakRewardId != nil)
+   NSDictionary* teakRewardJson = [userInfo objectForKey:@"teakRewardJson"];
+   if(teakRewardJson != nil)
    {
-      void* reward = TeakRewardRewardForId(teakRewardId);
-      if(reward != nil)
-      {
-         __block NSObject* o = (__bridge NSObject*)(reward);
-         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
-            NSLog(@"%@", o);
-            while(!TeakRewardIsCompleted(reward))
-            {
-               sleep(1);
-            }
+      NSError* error = nil;
+      NSData* jsonData = [NSJSONSerialization dataWithJSONObject:teakRewardJson
+                                                         options:0
+                                                           error:&error];
 
-            const uint8_t* rewardJson = (const uint8_t*)TeakRewardGetJson(reward);
-            FREDispatchStatusEventAsync(context, eventCode, rewardJson);
-         });
-      }
-      else
-      {
+      if (error != nil) {
+         NSLog(@"[Teak:Air] Error converting to JSON: %@", error);
          FREDispatchStatusEventAsync(context, eventCode, eventLevelEmpty);
+      } else {
+         NSString* jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+         FREDispatchStatusEventAsync(context, eventCode, (const uint8_t*)[jsonString UTF8String]);
       }
    }
    else
