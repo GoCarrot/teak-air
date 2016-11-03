@@ -115,27 +115,40 @@ DEFINE_ANE_FUNCTION(cancelNotification)
 void checkTeakNotifLaunch(FREContext context, NSDictionary* userInfo)
 {
    const uint8_t* eventCode = (const uint8_t*)"LAUNCHED_FROM_NOTIFICATION";
-   const uint8_t* eventLevelEmpty = (const uint8_t*)"";
+   const uint8_t* eventLevelEmpty = (const uint8_t*)"{}";
 
-   NSDictionary* teakRewardJson = [userInfo objectForKey:@"teakRewardJson"];
-   if(teakRewardJson != nil)
+   NSMutableDictionary* eventDataDictionary = [NSMutableDictionary dictionary];
+
+   NSDictionary* teakReward = [userInfo objectForKey:@"teakReward"];
+   if(teakReward != nil)
    {
-      NSError* error = nil;
-      NSData* jsonData = [NSJSONSerialization dataWithJSONObject:teakRewardJson
-                                                         options:0
-                                                           error:&error];
-
-      if (error != nil) {
-         NSLog(@"[Teak:Air] Error converting to JSON: %@", error);
-         FREDispatchStatusEventAsync(context, eventCode, eventLevelEmpty);
-      } else {
-         NSString* jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-         FREDispatchStatusEventAsync(context, eventCode, (const uint8_t*)[jsonString UTF8String]);
-      }
+      [eventDataDictionary setObject:teakReward forKey:@"reward"];
    }
-   else
+
+   if([userInfo objectForKey:@"teakDeepLinkPath"] != nil)
    {
+      NSMutableDictionary* deepLinkDictionary = [NSMutableDictionary dictionary];
+      [deepLinkDictionary setObject:[userInfo objectForKey:@"teakDeepLinkPath"] forKey:@"path"];
+
+      if([userInfo objectForKey:@"teakDeepLinkQueryParameters"] != nil)
+      {
+         [deepLinkDictionary setObject:[userInfo objectForKey:@"teakDeepLinkQueryParameters"] forKey:@"queryParameters"];
+      }
+
+      [eventDataDictionary setObject:deepLinkDictionary forKey:@"deepLink"];
+   }
+
+   NSError* error = nil;
+   NSData* jsonData = [NSJSONSerialization dataWithJSONObject:eventDataDictionary
+                                                      options:0
+                                                        error:&error];
+
+   if (error != nil) {
+      NSLog(@"[Teak:Air] Error converting to JSON: %@", error);
       FREDispatchStatusEventAsync(context, eventCode, eventLevelEmpty);
+   } else {
+      NSString* jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+      FREDispatchStatusEventAsync(context, eventCode, (const uint8_t*)[jsonString UTF8String]);
    }
 }
 
