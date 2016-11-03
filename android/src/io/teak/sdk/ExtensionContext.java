@@ -18,12 +18,16 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.concurrent.Future;
 
+import android.os.Bundle;
+
 import android.util.Log;
 
 import android.content.Intent;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.content.BroadcastReceiver;
+
+import org.json.JSONObject;
 
 import android.support.v4.content.LocalBroadcastManager;
 
@@ -39,11 +43,29 @@ public class ExtensionContext extends FREContext {
             String action = intent.getAction();
             if (TeakNotification.LAUNCHED_FROM_NOTIFICATION_INTENT.equals(action)) {
                 String eventData = "";
+                Bundle bundle = intent.getExtras();
                 try {
-                    String teakRewardJson = intent.getStringExtra("teakRewardJson");
-                    if(teakRewardJson != null) {
-                        eventData = teakRewardJson;
+                    HashMap<String, Object> eventDataDict = new HashMap<String, Object>();
+
+                    HashMap<String, Object> teakReward = (HashMap<String, Object>) bundle.getSerializable("teakReward");
+                    if (teakReward != null) {
+                        eventDataDict.put("reward", teakReward);
                     }
+
+                    HashMap<String, Object> teakDeepLink = null;
+                    if (bundle.getString("teakDeepLinkPath") != null) {
+                        teakDeepLink = new HashMap<String, Object>();
+                        teakDeepLink.put("path", bundle.getString("teakDeepLinkPath"));
+                        HashMap<String, Object> teakDeepLinkQueryParameters = (HashMap<String, Object>) bundle.getSerializable("teakDeepLinkQueryParameters");
+                        if (teakDeepLinkQueryParameters != null) {
+                            teakDeepLink.put("queryParameters", teakDeepLinkQueryParameters);
+                        }
+                    }
+
+                    if (teakDeepLink != null) {
+                        eventDataDict.put("deepLink", teakDeepLink);
+                    }
+                    eventData = new JSONObject(eventDataDict).toString();
                 } catch(Exception e) {
                     Log.e(LOG_TAG, Log.getStackTraceString(e));
                 } finally {
