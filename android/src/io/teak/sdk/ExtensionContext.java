@@ -16,7 +16,6 @@ package io.teak.sdk;
 
 import java.util.Map;
 import java.util.HashMap;
-import java.util.concurrent.Future;
 
 import android.os.Bundle;
 
