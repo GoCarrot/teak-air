@@ -51,19 +51,11 @@ public class ExtensionContext extends FREContext {
                         eventDataDict.put("reward", teakReward);
                     }
 
-                    HashMap<String, Object> teakDeepLink = null;
-                    if (bundle.getString("teakDeepLinkPath") != null) {
-                        teakDeepLink = new HashMap<String, Object>();
-                        teakDeepLink.put("path", bundle.getString("teakDeepLinkPath"));
-                        HashMap<String, Object> teakDeepLinkQueryParameters = (HashMap<String, Object>) bundle.getSerializable("teakDeepLinkQueryParameters");
-                        if (teakDeepLinkQueryParameters != null) {
-                            teakDeepLink.put("queryParameters", teakDeepLinkQueryParameters);
-                        }
-                    }
-
+                    String teakDeepLink = bundle.getString("teakDeepLink");
                     if (teakDeepLink != null) {
                         eventDataDict.put("deepLink", teakDeepLink);
                     }
+
                     eventData = new JSONObject(eventDataDict).toString();
                 } catch(Exception e) {
                     Log.e(LOG_TAG, Log.getStackTraceString(e));

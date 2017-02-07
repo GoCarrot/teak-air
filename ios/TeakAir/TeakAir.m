@@ -125,17 +125,10 @@ void checkTeakNotifLaunch(FREContext context, NSDictionary* userInfo)
       [eventDataDictionary setObject:teakReward forKey:@"reward"];
    }
 
-   if([userInfo objectForKey:@"teakDeepLinkPath"] != nil)
+   NSString* teakDeepLink = [userInfo objectForKey:@"teakDeepLink"];
+   if(teakDeepLink != nil)
    {
-      NSMutableDictionary* deepLinkDictionary = [NSMutableDictionary dictionary];
-      [deepLinkDictionary setObject:[userInfo objectForKey:@"teakDeepLinkPath"] forKey:@"path"];
-
-      if([userInfo objectForKey:@"teakDeepLinkQueryParameters"] != nil)
-      {
-         [deepLinkDictionary setObject:[userInfo objectForKey:@"teakDeepLinkQueryParameters"] forKey:@"queryParameters"];
-      }
-
-      [eventDataDictionary setObject:deepLinkDictionary forKey:@"deepLink"];
+      [eventDataDictionary setObject:teakDeepLink forKey:@"deepLink"];
    }
 
    NSError* error = nil;
