@@ -80,7 +80,7 @@
         <javac target="1.6" source="1.6" srcdir="../android/src" destdir="../android/temp/classes" includeantruntime="false">
             <classpath>
                 <pathelement location="${env.ANDROID_HOME}/platforms/android-23/android.jar"/>
-                <pathelement location="${env.ANDROID_HOME}/extras/android/support/v4/android-support-v4.jar"/>
+                <pathelement location="${env.ANDROID_HOME}/extras/android/m2repository/com/android/support/support-v4/18.0.0/support-v4-18.0.0.jar"/>
                 <pathelement location="${flex.sdk}/lib/android/lib/runtimeClasses.jar"/>
                 <pathelement location="${flex.sdk}/lib/android/FlashRuntimeExtensions.jar"/>
                 <pathelement location="../android/libs/Teak.jar"/>
