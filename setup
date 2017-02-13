@@ -23,7 +23,7 @@ IFS=$'\n\t'
   )
 )
 
-echo y | android update sdk --all --no-ui --filter 'extra-android-support'
+echo y | android update sdk --all --no-ui --filter 'extra-android-m2repository'
 
 # TODO: Use Homebrew, once the checksums are updated...
 # brew install homebrew/binary/adobe-air-sdk[-flex]
