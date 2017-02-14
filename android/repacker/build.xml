@@ -5,6 +5,9 @@
     <property name="temp.path" location="./_apktemp"/>
     <property name="temp.apk" location="./_temp.apk"/>
 
+    <property name="signjar.sigalg" value="SHA1withRSA"/>
+    <property name="signjar.digestalg" value="SHA1"/>
+
     <target name="debug" depends="unpack,patch,copy_res,repack,debug_sign,zipalign" description="Prepare APK for debug distribution."/>
 
     <target name="release" depends="unpack,patch,copy_res,repack,release_sign,zipalign" description="Prepare APK for debug distribution."/>
@@ -52,6 +55,8 @@
     <target name="debug_sign" description="Sign APK file with debug credentials.">
         <signjar jar="${temp.apk}"
                  storetype="${debug.storetype}"
+                 sigalg="${signjar.sigalg}"
+                 digestalg="${signjar.digestalg}"
                  keystore="${debug.keystore}"
                  storepass="${debug.keypass}"
                  alias="${debug.alias}"/>
@@ -60,6 +65,8 @@
     <target name="release_sign" description="Sign APK file with release credentials.">
         <signjar jar="${temp.apk}"
                  storetype="${release.storetype}"
+                 sigalg="${signjar.sigalg}"
+                 digestalg="${signjar.digestalg}"
                  keystore="${release.keystore}"
                  storepass="${release.keypass}"
                  alias="${release.alias}"/>
