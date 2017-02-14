@@ -25,6 +25,8 @@ IFS=$'\n\t'
 
 echo y | android update sdk --all --no-ui --filter 'extra-android-m2repository'
 
+if [ "$(which aws)" == "" ]; then brew install awscli; fi
+
 # TODO: Use Homebrew, once the checksums are updated...
 # brew install homebrew/binary/adobe-air-sdk[-flex]
 if [ ! -e air-sdk/bin/compc ]; then
