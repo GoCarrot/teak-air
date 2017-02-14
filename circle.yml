@@ -14,9 +14,6 @@ dependencies:
     - "air-sdk"
     - "../teak-ios"
     - "../teak-android"
-general:
-  artifacts:
-    - "bin"
 deployment:
   prod:
     branch: master
