@@ -14,8 +14,11 @@ dependencies:
     - "air-sdk"
     - "../teak-ios"
     - "../teak-android"
+general:
+  artifacts:
+    - "bin"
 deployment:
   prod:
     branch: master
     commands:
-      - aws s3 sync ./bin/io.teak.sdk.Teak.ane s3://air/io.teak.sdk.Teak.ane --delete
+      - aws s3 sync bin/io.teak.sdk.Teak.ane s3://teak-sdk-artifacts/air/io.teak.sdk.Teak.ane --delete
