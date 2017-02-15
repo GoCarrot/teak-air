@@ -14,10 +14,12 @@ dependencies:
     - "air-sdk"
     - "../teak-ios"
     - "../teak-android"
+checkout:
+  post:
+    - git fetch --tags
 deployment:
   prod:
     branch: master
     commands:
-      - export teak_version=`git describe --tags --always`
-      - aws s3 cp bin/io.teak.sdk.Teak.ane s3://teak-build-artifacts/air/io.teak.sdk.Teak-${teak_version}.ane --acl public-read
+      - aws s3 cp bin/io.teak.sdk.Teak.ane s3://teak-build-artifacts/air/io.teak.sdk.Teak-$(git describe --tags --always).ane --acl public-read
       - aws s3 cp bin/io.teak.sdk.Teak.ane s3://teak-build-artifacts/air/io.teak.sdk.Teak.ane --acl public-read
