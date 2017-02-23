@@ -20,6 +20,8 @@ package io.teak.sdk
 	import flash.filesystem.FileMode;
 	import flash.filesystem.FileStream;
 
+	import flash.utils.Dictionary;
+
 	import flash.events.EventDispatcher;
 	import flash.events.StatusEvent;
 
@@ -34,12 +36,27 @@ package io.teak.sdk
 			_context = ExtensionContext.createExtensionContext(EXTENSION_ID, null);
 			if(!_context) throw new Error("ERROR - Extension context is null. Please check if extension.xml is setup correctly.");
 			_context.addEventListener(StatusEvent.STATUS, onStatus);
+			_deepLinks = new Dictionary();
 			_instance = this;
 		}
 
 		public static function get instance():Teak
 		{
 			return _instance ? _instance : new Teak();
+		}
+
+		public function registerRoute(route:String, name:String, description:String, callback:Function):void
+		{
+			_deepLinks[route] = callback;
+
+			if(useNativeExtension())
+			{
+				_context.call("registerRoute", route, name, description);
+			}
+			else
+			{
+				trace("[Teak] Registering route: " + route);
+			}
 		}
 
 		public function identifyUser(userIdentifier:String):void
@@ -98,6 +115,24 @@ package io.teak.sdk
 				case "NOTIFICATION_CANCELED":
 					e = new TeakEvent(TeakEvent.NOTIFICATION_CANCELED, event.level);
 					break;
+				case "DEEP_LINK":
+					var eventData:Object = JSON.parse(event.level);
+					if(_deepLinks[eventData["route"]] !== undefined)
+					{
+						try
+						{
+							_deepLinks[eventData["route"]](eventData["parameters"]);
+						}
+						catch(error:Error)
+						{
+							log("Error calling function for route " + eventData["route"] + ": " + error);
+						}
+					}
+					else
+					{
+						log("Unable to find function for route: " + eventData["route"]);
+					}
+					break;
 				default:
 					break;
 			}
@@ -137,5 +172,6 @@ package io.teak.sdk
 
 		private var _context:ExtensionContext;
 		private var _versionNumber:String;
+		private var _deepLinks:Dictionary;
 	}
 }
