@@ -31,6 +31,9 @@ extern void* TeakNotificationCancel(const char* scheduleId);
 extern BOOL TeakNotificationIsCompleted(void* notif);
 extern const char* TeakNotificationGetTeakNotifId(void* notif);
 
+typedef void (^TeakLinkBlock)(NSDictionary* _Nonnull parameters);
+extern void TeakRegisterRoute(const char* route, const char* name, const char* description, TeakLinkBlock block);
+
 // From Teak.m
 extern NSString* const TeakNotificationAppLaunch;
 
@@ -112,6 +115,39 @@ DEFINE_ANE_FUNCTION(cancelNotification)
    return nil;
 }
 
+DEFINE_ANE_FUNCTION(registerRoute)
+{
+   const uint8_t* eventCode = (const uint8_t*)"DEEP_LINK";
+
+   uint32_t stringLength;
+   const uint8_t* route;
+   const uint8_t* name;
+   const uint8_t* description;
+   if(FREGetObjectAsUTF8(argv[0], &stringLength, &route) == FRE_OK &&
+      FREGetObjectAsUTF8(argv[1], &stringLength, &name) == FRE_OK &&
+      FREGetObjectAsUTF8(argv[2], &stringLength, &description) == FRE_OK)
+   {
+      NSString* nsRoute = [NSString stringWithUTF8String:(const char*)route];
+
+      TeakRegisterRoute((const char*)route, (const char*)name, (const char*)description, ^(NSDictionary * _Nonnull parameters) {
+         NSError* error = nil;
+         NSData* jsonData = [NSJSONSerialization dataWithJSONObject:@{@"route":nsRoute, @"parameters" : parameters}
+                                                            options:0
+                                                              error:&error];
+
+         if (error != nil) {
+            NSLog(@"[Teak:Air] Error converting to JSON: %@", error);
+         } else {
+            NSString* jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+            FREDispatchStatusEventAsync(context, eventCode, (const uint8_t*)[jsonString UTF8String]);
+         }
+      });
+   }
+
+   return nil;
+}
+
+
 void checkTeakNotifLaunch(FREContext context, NSDictionary* userInfo)
 {
    const uint8_t* eventCode = (const uint8_t*)"LAUNCHED_FROM_NOTIFICATION";
@@ -147,7 +183,7 @@ void checkTeakNotifLaunch(FREContext context, NSDictionary* userInfo)
 
 void AirTeakContextInitializer(void* extData, const uint8_t* ctxType, FREContext ctx, uint32_t* numFunctionsToTest, const FRENamedFunction** functionsToSet)
 {
-   uint32_t numFunctions = 4;
+   uint32_t numFunctions = 5;
    *numFunctionsToTest = numFunctions;
    FRENamedFunction* func = (FRENamedFunction*) malloc(sizeof(FRENamedFunction) * numFunctions);
 
@@ -166,6 +202,10 @@ void AirTeakContextInitializer(void* extData, const uint8_t* ctxType, FREContext
    func[3].name = (const uint8_t*)"cancelNotification";
    func[3].functionData = NULL;
    func[3].function = &cancelNotification;
+
+   func[4].name = (const uint8_t*)"registerRoute";
+   func[4].functionData = NULL;
+   func[4].function = &registerRoute;
 
    *functionsToSet = func;
 
