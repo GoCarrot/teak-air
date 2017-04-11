@@ -8,7 +8,7 @@
     <loadfile property="sdk.version" srcFile="../VERSION"/>
 
     <!-- All -->
-    <target name="all" depends="ios,android_native,android,swc,package" description="Full build of extension"/>
+    <target name="all" depends="ios,android,swc,package" description="Full build of extension"/>
 
     <!-- iOS -->
     <target name="ios" description="Build iOS Library">
@@ -16,18 +16,17 @@
         <delete dir="${ios.temp.path}"/>
         <mkdir dir="${ios.temp.path}"/>
 
-        <exec executable="xcodebuild" failonerror="true" dir="../../teak-ios/">
-            <arg line="-project ${name}.xcodeproj"/>
-            <arg line="-alltargets clean"/>
+        <exec executable="curl" failonerror="true" dir="${ios.temp.path}">
+            <arg line="-o Teak.framework.zip"/>
+            <arg line="https://s3.amazonaws.com/teak-build-artifacts/ios/Teak.framework.zip"/>
         </exec>
 
-        <exec executable="xcodebuild" failonerror="true" dir="../../teak-ios/">
-            <arg line="-project ${name}.xcodeproj"/>
-            <arg line="-sdk ${ios.sdkversion}"/>
-            <arg line="-scheme ${name}"/>
-            <arg line="-configuration Release"/>
-            <arg line="CONFIGURATION_BUILD_DIR=${ios.temp.path}"/>
+        <!-- unzip task does not seem to keep simlinks, do it with exec instead -->
+        <exec executable="unzip" failonerror="true" dir="${ios.temp.path}">
+            <arg line="Teak.framework.zip"/>
         </exec>
+
+        <copy file="${ios.temp.path}/Teak.framework/Teak" tofile="${ios.temp.path}/libTeak.a" overwrite="true"/>
 
         <exec executable="xcodebuild" failonerror="true" dir="../ios/">
             <arg line="-project ${name}Air.xcodeproj"/>
@@ -48,24 +47,19 @@
         </exec>
 
         <copy file="${ios.temp.path}/lib${name}AirMerged.a" todir="../temp/ios" overwrite="true"/>
-
-        <delete dir="${ios.temp.path}"/>
-    </target>
-
-    <!-- Android -->
-    <target name="android_native" description="Build Teak Android Library">
-        <exec executable="./compile" failonerror="true" dir="../../teak-android/">
-        </exec>
-        <copy file="../../teak-android/build/libs/teak-api_gteq_21.jar" tofile="../android/libs/${name}.jar" overwrite="true"/>
-        <copy todir="../temp/android/res/">
-            <fileset dir="../../teak-android/src/api_gteq_21/res"/>
-        </copy>
     </target>
 
     <!-- Android -->
     <target name="android" description="Build Android Library">
         <delete dir="../android/temp"/>
         <mkdir dir="../android/temp/classes"/>
+
+        <exec executable="curl" failonerror="true" dir="../android/temp">
+            <arg line="-o teak-api_gteq_21.zip"/>
+            <arg line="https://s3.amazonaws.com/teak-build-artifacts/android/teak-api_gteq_21.zip"/>
+        </exec>
+
+        <unzip src="../android/temp/teak-api_gteq_21.zip" dest="../android/temp"/>
 
         <copy file="../android/teak_air_version.xml.template"
               tofile="../temp/android/res/values/teak_air_version.xml" overwrite="true"/>
@@ -83,12 +77,12 @@
                 <pathelement location="${env.ANDROID_HOME}/extras/android/m2repository/com/android/support/support-v4/18.0.0/support-v4-18.0.0.jar"/>
                 <pathelement location="${flex.sdk}/lib/android/lib/runtimeClasses.jar"/>
                 <pathelement location="${flex.sdk}/lib/android/FlashRuntimeExtensions.jar"/>
-                <pathelement location="../android/libs/Teak.jar"/>
+                <pathelement location="../android/temp/teak/teak.jar"/>
             </classpath>
         </javac>
 
         <mkdir dir="../android/temp/zip"/>
-        <unzip src="../android/libs/Teak.jar" dest="../android/temp/zip"/>
+        <unzip src="../android/temp/teak/teak.jar" dest="../android/temp/zip"/>
         <copy todir="../android/temp/classes/io">
             <fileset dir="../android/temp/zip/io">
                 <exclude name="**/R.class"/>

@@ -12,8 +12,6 @@ dependencies:
   #   without: [production, osx]
   cache_directories:
     - "air-sdk"
-    - "../teak-ios"
-    - "../teak-android"
 checkout:
   post:
     - git fetch --tags
