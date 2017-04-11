@@ -2,7 +2,7 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-ANDROID_HOME=$(brew --prefix android-sdk)
+ANDROID_HOME=$(brew cask --prefix android-sdk)
 export ANDROID_HOME
 
 (cd build; ant)
