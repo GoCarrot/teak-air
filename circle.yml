@@ -15,8 +15,7 @@ dependencies:
   # bundler:
   #   without: [production, osx]
   cache_directories:
-    - "air-sdk"
-    - ~/Caskroom
+    - ~/Library/Caches/Homebrew/
 checkout:
   post:
     - git fetch --tags
