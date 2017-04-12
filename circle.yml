@@ -2,8 +2,8 @@ machine:
   xcode:
     version: 8.2.1
   environment:
-    HOMEBREW_CASK_OPTS:--caskroom=~/Caskroom
-    ANDROID_HOME:/usr/local/share/android-sdk
+    HOMEBREW_CASK_OPTS: "--caskroom=~/Caskroom"
+    ANDROID_HOME: "/usr/local/share/android-sdk"
 test:
   override:
   - ./compile
