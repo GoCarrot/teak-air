@@ -12,7 +12,7 @@ dependencies:
   #   without: [production, osx]
   cache_directories:
     - "air-sdk"
-    - /usr/local/Caskroom/
+    - /usr/local/Caskroom/android-sdk
 checkout:
   post:
     - git fetch --tags
