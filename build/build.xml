@@ -75,8 +75,8 @@
             <classpath>
                 <pathelement location="${env.ANDROID_HOME}/platforms/android-23/android.jar"/>
                 <pathelement location="${env.ANDROID_HOME}/extras/android/m2repository/com/android/support/support-v4/18.0.0/support-v4-18.0.0.jar"/>
-                <pathelement location="${flex.sdk}/lib/android/lib/runtimeClasses.jar"/>
-                <pathelement location="${flex.sdk}/lib/android/FlashRuntimeExtensions.jar"/>
+                <pathelement location="${env.ADOBE_AIR_HOME}/lib/android/lib/runtimeClasses.jar"/>
+                <pathelement location="${env.ADOBE_AIR_HOME}/lib/android/FlashRuntimeExtensions.jar"/>
                 <pathelement location="../android/temp/teak/teak.jar"/>
             </classpath>
         </javac>
@@ -106,11 +106,11 @@
             <regexpmapper from=".*src.(.*)\.as" to="\1"/>
         </pathconvert>
 
-        <exec executable="${flex.sdk}/bin/compc${bin.ext}" failonerror="true">
+        <exec executable="compc" failonerror="true">
             <arg line='-source-path ../actionscript/src'/>
             <arg line='-output ../temp/swc/${name}.swc'/>
             <arg line='-swf-version=14'/>
-            <arg line='-external-library-path+="${flex.sdk}/frameworks/libs/air/airglobal.swc"'/>
+            <arg line='-external-library-path+="${env.ADOBE_AIR_HOME}/frameworks/libs/air/airglobal.swc"'/>
             <arg line='-include-classes ${classlist}'/>
         </exec>
 
@@ -126,7 +126,7 @@
         <copy file="../build/extension.xml.template" tofile="../build/extension.xml" overwrite="true"/>
         <replace file="../build/extension.xml" token="@@@" value="${sdk.version}"/>
 
-        <exec executable="${flex.sdk}/bin/adt${bin.ext}" failonerror="true" dir="../temp">
+        <exec executable="adt" failonerror="true" dir="../temp">
             <arg value="-package"/>
             <arg value="-target"/>
             <arg value="ane"/>
@@ -144,13 +144,13 @@
 
     <!-- HTML Documentation (must be run manually) -->
     <target name="asdoc" description="generate the asdoc in readable html">
-        <exec executable="${flex.sdk}/bin/asdoc${bin.ext}" failonerror="true">
-            <env key="FLEX_HOME" value="${flex.sdk}"/>
-            <env key="FALCON_HOME" value="${flex.sdk}"/>
+        <exec executable="asdoc" failonerror="true">
+            <env key="FLEX_HOME" value="${env.ADOBE_AIR_HOME}"/>
+            <env key="FALCON_HOME" value="${env.ADOBE_AIR_HOME}"/>
             <arg line='-source-path ../actionscript/src'/>
             <arg line='-doc-sources ../actionscript/src'/>
             <arg line='-output ../docs'/>
-            <arg line='-library-path+="${flex.sdk}/frameworks/libs/air/airglobal.swc"'/>
+            <arg line='-library-path+="${env.ADOBE_AIR_HOME}/frameworks/libs/air/airglobal.swc"'/>
         </exec>
     </target>
 

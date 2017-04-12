@@ -26,12 +26,6 @@ sdkmanager "extras;android;m2repository"
 
 if [ "$(which aws)" == "" ]; then brew install awscli; fi
 
-# TODO: Use Homebrew, once the checksums are updated...
-# brew install homebrew/binary/adobe-air-sdk[-flex]
-if [ ! -e air-sdk/bin/compc ]; then
-  curl 'https://airdownload.adobe.com/air/mac/download/latest/AIRSDK_Compiler.tbz2' > air-sdk/AIRSDK_Compiler.tbz2
-  (
-    cd air-sdk
-    tar xzf AIRSDK_Compiler.tbz2
-  )
+if [ "$(which compc)" == "" ]; then
+  brew cask install adobe-air-sdk
 fi
