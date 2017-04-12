@@ -15,7 +15,7 @@ dependencies:
   #   without: [production, osx]
   cache_directories:
     - "air-sdk"
-    - "Caskroom"
+    - ~/Caskroom
 checkout:
   post:
     - git fetch --tags
