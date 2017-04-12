@@ -11,6 +11,7 @@ test:
 dependencies:
   # override:
   pre:
+  - rm -fr ~/Library/Caches/Homebrew/ # TEMPORARY
   - ./setup
   # bundler:
   #   without: [production, osx]
