@@ -2,7 +2,6 @@ machine:
   xcode:
     version: 8.2.1
   environment:
-    HOMEBREW_CASK_OPTS: "--caskroom=~/Caskroom"
     ANDROID_HOME: /usr/local/share/android-sdk
     ADOBE_AIR_HOME: ~/Caskroom/adobe-air-sdk/22.0
 test:
