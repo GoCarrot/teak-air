@@ -26,7 +26,7 @@ then
     exit 1
 fi
 
-read -r line < "VERSION"
+line=`cat VERSION`
 echo "Creating Git tag: $line"
 git tag -a "$line"
 if ! [ $? -eq 0 ]; then
