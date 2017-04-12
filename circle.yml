@@ -7,12 +7,14 @@ test:
 dependencies:
   # override:
   pre:
+  - brew cask install --caskroom=~/Caskroom android-sdk
+  - export ANDROID_HOME=/usr/local/share/android-sdk
   - ./setup
   # bundler:
   #   without: [production, osx]
   cache_directories:
     - "air-sdk"
-    - /usr/local/Caskroom/android-sdk
+    - "Caskroom"
 checkout:
   post:
     - git fetch --tags
