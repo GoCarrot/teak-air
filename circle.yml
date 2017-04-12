@@ -10,7 +10,6 @@ test:
 dependencies:
   # override:
   pre:
-  - brew cask install android-sdk
   - ./setup
   # bundler:
   #   without: [production, osx]
