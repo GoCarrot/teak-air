@@ -1,14 +1,16 @@
 machine:
   xcode:
     version: 8.2.1
+  environment:
+    HOMEBREW_CASK_OPTS:--caskroom=~/Caskroom
+    ANDROID_HOME:/usr/local/share/android-sdk
 test:
   override:
   - ./compile
 dependencies:
   # override:
   pre:
-  - brew cask install --caskroom=~/Caskroom android-sdk
-  - export ANDROID_HOME=/usr/local/share/android-sdk
+  - brew cask install android-sdk
   - ./setup
   # bundler:
   #   without: [production, osx]
