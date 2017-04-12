@@ -10,6 +10,8 @@ test:
 dependencies:
   # override:
   pre:
+  # Remove 'Warning: File /Users/distiller/.android/repositories.cfg could not be loaded'
+  - echo "count=0" > ~/.android/repositories.cfg
   - ./setup
   # bundler:
   #   without: [production, osx]
