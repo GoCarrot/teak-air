@@ -13,7 +13,7 @@ fi
 
 if [ "$(which ant)" == "" ]; then brew install ant; fi
 if [ "$(which android)" == "" ]; then
-  brew cask reinstall android-sdk
+  brew cask install android-sdk
 fi
 
 ANDROID_HOME=/usr/local/share/android-sdk
