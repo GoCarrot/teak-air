@@ -71,6 +71,10 @@
         <replace file="../temp/android/res/values/teak_air_version.xml"
                  token="@@@" value="${sdk.gitversion}"/>
 
+        <copy todir="../temp/android/res/">
+            <fileset dir="../android/temp/res"/>
+        </copy>
+
         <javac target="1.6" source="1.6" srcdir="../android/src" destdir="../android/temp/classes" includeantruntime="false">
             <classpath>
                 <pathelement location="${env.ANDROID_HOME}/platforms/android-23/android.jar"/>
