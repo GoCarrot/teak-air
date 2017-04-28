@@ -47,6 +47,7 @@
         </exec>
 
         <copy file="${ios.temp.path}/lib${name}AirMerged.a" todir="../temp/ios" overwrite="true"/>
+        <delete dir="${ios.temp.path}"/>
     </target>
 
     <!-- Android -->
