@@ -3,7 +3,7 @@ machine:
     version: 8.2.1
   environment:
     ANDROID_HOME: /usr/local/share/android-sdk
-    ADOBE_AIR_HOME: /usr/local/Caskroom/adobe-air-sdk/22.0
+    ADOBE_AIR_HOME: /usr/local/share/adobe-air-sdk
 test:
   override:
   - ./compile
