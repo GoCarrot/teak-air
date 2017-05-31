@@ -56,11 +56,11 @@
         <mkdir dir="../android/temp/classes"/>
 
         <exec executable="curl" failonerror="true" dir="../android/temp">
-            <arg line="-o teak-api_gteq_21.zip"/>
-            <arg line="https://s3.amazonaws.com/teak-build-artifacts/android/teak-api_gteq_21.zip"/>
+            <arg line="-o teak.zip"/>
+            <arg line="https://s3.amazonaws.com/teak-build-artifacts/android/teak.zip"/>
         </exec>
 
-        <unzip src="../android/temp/teak-api_gteq_21.zip" dest="../android/temp"/>
+        <unzip src="../android/temp/teak.zip" dest="../android/temp"/>
 
         <copy file="../android/teak_air_version.xml.template"
               tofile="../temp/android/res/values/teak_air_version.xml" overwrite="true"/>
