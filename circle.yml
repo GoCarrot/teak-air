@@ -2,7 +2,7 @@ machine:
   xcode:
     version: 8.2.1
   environment:
-    ANDROID_HOME: /usr/local/share/android-sdk
+    ANDROID_SDK_ROOT: /usr/local/share/android-sdk
     ADOBE_AIR_HOME: /usr/local/share/adobe-air-sdk
 test:
   override:
