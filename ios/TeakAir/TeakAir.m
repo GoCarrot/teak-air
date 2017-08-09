@@ -23,13 +23,10 @@ extern void Teak_Plant(Class appDelegateClass, NSString* appId, NSString* appSec
 
 // From TeakCExtern.m
 extern void TeakIdentifyUser(const char* userId);
-extern void* TeakRewardRewardForId(NSString* teakRewardId);
-extern BOOL TeakRewardIsCompleted(void* notif);
-extern const char* TeakRewardGetJson(void* reward);
-extern void* TeakNotificationSchedule(const char* creativeId, const char* message, uint64_t delay);
-extern void* TeakNotificationCancel(const char* scheduleId);
-extern BOOL TeakNotificationIsCompleted(void* notif);
-extern const char* TeakNotificationGetTeakNotifId(void* notif);
+extern NSObject* TeakNotificationSchedule(const char* creativeId, const char* message, uint64_t delay);
+extern NSObject* TeakNotificationCancel(const char* scheduleId);
+extern BOOL TeakNotificationIsCompleted(NSObject* notif);
+extern const char* TeakNotificationGetTeakNotifId(NSObject* notif);
 
 typedef void (^TeakLinkBlock)(NSDictionary* _Nonnull parameters);
 extern void TeakRegisterRoute(const char* route, const char* name, const char* description, TeakLinkBlock block);
@@ -69,11 +66,10 @@ DEFINE_ANE_FUNCTION(_log)
    return nil;
 }
 
-void waitOnNotifFuture(void* future, const uint8_t* eventName, FREContext context)
+void waitOnNotifFuture(NSObject* future, const uint8_t* eventName, FREContext context)
 {
    if(future != nil)
    {
-      __block NSObject* o = (__bridge NSObject*)(future);
       dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
          while(!TeakNotificationIsCompleted(future))
          {
@@ -95,7 +91,7 @@ DEFINE_ANE_FUNCTION(scheduleNotification)
       FREGetObjectAsUTF8(argv[1], &stringLength, &message) == FRE_OK &&
       FREGetObjectAsDouble(argv[2], &delay) == FRE_OK)
    {
-      void* notif = TeakNotificationSchedule((const char*)creativeId, (const char*)message, (uint64_t)delay);
+      NSObject* notif = TeakNotificationSchedule((const char*)creativeId, (const char*)message, (uint64_t)delay);
       waitOnNotifFuture(notif, (const uint8_t*)"NOTIFICATION_SCHEDULED", context);
    }
 
@@ -108,7 +104,7 @@ DEFINE_ANE_FUNCTION(cancelNotification)
    const uint8_t* notifId;
    if(FREGetObjectAsUTF8(argv[0], &stringLength, &notifId) == FRE_OK)
    {
-      void* notif = TeakNotificationCancel((const char*)notifId);
+      NSObject* notif = TeakNotificationCancel((const char*)notifId);
       waitOnNotifFuture(notif, (const uint8_t*)"NOTIFICATION_CANCELED", context);
    }
 

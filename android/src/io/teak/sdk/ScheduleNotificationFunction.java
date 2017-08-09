@@ -23,8 +23,6 @@ import com.adobe.fre.FREObject;
 import java.util.concurrent.Future;
 
 public class ScheduleNotificationFunction implements FREFunction {
-    private static final String LOG_TAG = "Teak:Air:ScheduleNotification";
-
     boolean _isCancel;
 
     public ScheduleNotificationFunction(boolean isCancel) {
@@ -45,13 +43,13 @@ public class ScheduleNotificationFunction implements FREFunction {
                             String teakNotifId = future.get();
                             Extension.context.dispatchStatusEventAsync(_isCancel ? "NOTIFICATION_CANCELED" : "NOTIFICATION_SCHEDULED", teakNotifId);
                         } catch(Exception e) {
-                            Log.e(LOG_TAG, Log.getStackTraceString(e));
+                            Teak.log.exception(e);
                         }
                     }
                 }).start();
             }
         } catch(Exception e) {
-            Log.e(LOG_TAG, Log.getStackTraceString(e));
+            Teak.log.exception(e);
         }
         return null;
     }

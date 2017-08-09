@@ -20,14 +20,12 @@ import com.adobe.fre.FREFunction;
 import com.adobe.fre.FREObject;
 
 public class LogFunction implements FREFunction {
-    private static final String LOG_TAG = "Teak:Air";
-
     @Override
     public FREObject call(FREContext context, FREObject[] argv) {
         try {
-            Log.d(LOG_TAG, argv[0].getAsString());
+            Teak.log.i("teak.air", argv[0].getAsString());
         } catch(Exception e) {
-            Log.e(LOG_TAG, Log.getStackTraceString(e));
+            Teak.log.exception(e);
         }
         return null;
     }

@@ -34,13 +34,11 @@ import com.adobe.fre.FREContext;
 import com.adobe.fre.FREFunction;
 
 public class ExtensionContext extends FREContext {
-    private static final String LOG_TAG = "Teak:Air:ExtensionContext";
-
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if (TeakNotification.LAUNCHED_FROM_NOTIFICATION_INTENT.equals(action)) {
+            if (Teak.LAUNCHED_FROM_NOTIFICATION_INTENT.equals(action)) {
                 String eventData = "";
                 Bundle bundle = intent.getExtras();
                 try {
@@ -58,7 +56,7 @@ public class ExtensionContext extends FREContext {
 
                     eventData = new JSONObject(eventDataDict).toString();
                 } catch(Exception e) {
-                    Log.e(LOG_TAG, Log.getStackTraceString(e));
+                    Teak.log.exception(e);
                 } finally {
                     Extension.context.dispatchStatusEventAsync("LAUNCHED_FROM_NOTIFICATION", eventData);
                 }
@@ -68,7 +66,7 @@ public class ExtensionContext extends FREContext {
 
     public ExtensionContext() {
         IntentFilter filter = new IntentFilter();
-        filter.addAction(TeakNotification.LAUNCHED_FROM_NOTIFICATION_INTENT);
+        filter.addAction(Teak.LAUNCHED_FROM_NOTIFICATION_INTENT);
         Teak.localBroadcastManager.registerReceiver(broadcastReceiver, filter);
     }
 

@@ -26,8 +26,6 @@ import java.util.Map;
 import java.util.HashMap;
 
 public class RegisterRouteFunction implements FREFunction {
-    private static final String LOG_TAG = "Teak:Air:RegisterRoute";
-
     @Override
     public FREObject call(FREContext context, FREObject[] argv) {
         try {
@@ -44,12 +42,12 @@ public class RegisterRouteFunction implements FREFunction {
                     eventData.put("parameters", new JSONObject(parameters));
                     Extension.context.dispatchStatusEventAsync("DEEP_LINK", eventData.toString());
                 } catch (Exception e) {
-                    Log.e(LOG_TAG, Log.getStackTraceString(e));
+                    Teak.log.exception(e);
                 }
             }
         });
         } catch(Exception e) {
-            Log.e(LOG_TAG, Log.getStackTraceString(e));
+            Teak.log.exception(e);
         }
         return null;
     }
