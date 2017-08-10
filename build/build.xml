@@ -33,12 +33,19 @@
             <arg line="-alltargets clean"/>
         </exec>
 
+        <exec executable="git" failonerror="true" dir="..">
+            <arg line='describe'/>
+            <arg line='--tags'/>
+            <redirector outputproperty="sdk.gitversion"/>
+        </exec>
+
         <exec executable="xcodebuild" failonerror="true" dir="../ios/">
             <arg line="-project ${name}Air.xcodeproj"/>
             <arg line="-sdk ${ios.sdkversion}"/>
             <arg line="-scheme ${name}Air"/>
             <arg line="-configuration Release"/>
             <arg line="CONFIGURATION_BUILD_DIR=${ios.temp.path}"/>
+            <arg line="GCC_PREPROCESSOR_DEFINITIONS='$GCC_PREPROCESSOR_DEFINITIONS TEAK_VERSION=@\&quot;${sdk.gitversion}\&quot;'"/>
         </exec>
 
         <exec executable="sh" failonerror="true" dir="../ios/">

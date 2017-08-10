@@ -35,9 +35,13 @@ extern void TeakRegisterRoute(const char* route, const char* name, const char* d
 extern NSString* const TeakNotificationAppLaunch;
 extern NSString* const TeakOnReward;
 
+extern NSDictionary* TeakWrapperSDK;
+
 __attribute__((constructor))
 static void teak_init()
 {
+   TeakWrapperSDK = @{@"adobeAir" : TEAK_VERSION};
+
    NSString* appId = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"TeakAppId"];
    NSString* apiKey = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"TeakApiKey"];
    Teak_Plant(NSClassFromString(@"CTAppController"), appId, apiKey);
