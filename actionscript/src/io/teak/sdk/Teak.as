@@ -133,6 +133,9 @@ package io.teak.sdk
 						log("Unable to find function for route: " + eventData["route"]);
 					}
 					break;
+				case "ON_REWARD":
+					e = new TeakEvent(TeakEvent.ON_REWARD, event.level);
+					break;
 				default:
 					break;
 			}

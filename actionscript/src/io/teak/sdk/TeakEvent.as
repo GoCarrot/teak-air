@@ -21,6 +21,7 @@ package io.teak.sdk
 		public static const LAUNCHED_FROM_NOTIFICATION:String = "launchedFromNotification";
 		public static const NOTIFICATION_SCHEDULED:String = "notificationScheduled";
 		public static const NOTIFICATION_CANCELED:String = "notificationCanceled";
+		public static const ON_REWARD:String = "onReward";
 
 		public var data:String;
 

@@ -43,22 +43,23 @@ public class ExtensionContext extends FREContext {
                 Bundle bundle = intent.getExtras();
                 try {
                     HashMap<String, Object> eventDataDict = new HashMap<String, Object>();
-
-                    HashMap<String, Object> teakReward = (HashMap<String, Object>) bundle.getSerializable("teakReward");
-                    if (teakReward != null) {
-                        eventDataDict.put("reward", teakReward);
-                    }
-
-                    String teakDeepLink = bundle.getString("teakDeepLink");
-                    if (teakDeepLink != null) {
-                        eventDataDict.put("deepLink", teakDeepLink);
-                    }
-
+                    // TODO: In the future this dict may include more things.
                     eventData = new JSONObject(eventDataDict).toString();
                 } catch(Exception e) {
                     Teak.log.exception(e);
                 } finally {
                     Extension.context.dispatchStatusEventAsync("LAUNCHED_FROM_NOTIFICATION", eventData);
+                }
+            }  else if (Teak.REWARD_CLAIM_ATTEMPT.equals(action)) {
+                Bundle bundle = intent.getExtras();
+                try {
+                    HashMap<String, Object> reward = (HashMap<String, Object>) bundle.getSerializable("reward");
+                    if (reward != null) {
+                        String eventData = new JSONObject(reward).toString();
+                        Extension.context.dispatchStatusEventAsync("ON_REWARD", eventData);
+                    }
+                } catch(Exception e) {
+                    Teak.log.exception(e);
                 }
             }
         }
@@ -66,6 +67,7 @@ public class ExtensionContext extends FREContext {
 
     public ExtensionContext() {
         IntentFilter filter = new IntentFilter();
+        filter.addAction(Teak.REWARD_CLAIM_ATTEMPT);
         filter.addAction(Teak.LAUNCHED_FROM_NOTIFICATION_INTENT);
         Teak.localBroadcastManager.registerReceiver(broadcastReceiver, filter);
     }
