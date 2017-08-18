@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Teak APK repacker for Adobe AIR" default="debug">
-    <property file="build.config"/>
-
-    <property name="temp.path" location="./_apktemp"/>
-    <property name="temp.apk" location="./_temp.apk"/>
+<project name="Teak APK repacker for Adobe AIR" default="debug" xmlns:if="ant:if" xmlns:unless="ant:unless">
+    <property file="build.config" unless:set="use-config"/>
+    <property file="${use-config}" if:set="use-config"/>
 
     <property name="signjar.sigalg" value="SHA1withRSA"/>
     <property name="signjar.digestalg" value="SHA1"/>
