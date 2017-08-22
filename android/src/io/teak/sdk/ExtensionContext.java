@@ -19,8 +19,6 @@ import java.util.HashMap;
 
 import android.os.Bundle;
 
-import android.util.Log;
-
 import android.content.Intent;
 import android.content.Context;
 import android.content.IntentFilter;
