@@ -8,11 +8,20 @@
     <loadfile property="sdk.version" srcFile="../VERSION"/>
 
     <!-- All -->
-    <target name="all" depends="ios,android,swc,package" description="Full build of extension"/>
+    <target name="all" depends="ios_download,ios,android,swc,package" description="Full build of extension"/>
+    <target name="local" depends="ios_copy,ios,android,swc,package" description="Full build of extension"/>
 
     <!-- iOS -->
-    <target name="ios" description="Build iOS Library">
-        <property name="ios.temp.path" location="../temp/ios/build/"/>
+    <property name="ios.temp.path" location="../temp/ios/build/"/>
+
+    <target name="ios_copy">
+        <delete dir="${ios.temp.path}"/>
+        <mkdir dir="${ios.temp.path}"/>
+
+        <copy file="../../teak-ios/build/Release-iphoneos/Teak.framework.zip" tofile="${ios.temp.path}/Teak.framework.zip" overwrite="true"/>
+    </target>
+
+    <target name="ios_download">
         <delete dir="${ios.temp.path}"/>
         <mkdir dir="${ios.temp.path}"/>
 
@@ -20,7 +29,9 @@
             <arg line="-o Teak.framework.zip"/>
             <arg line="https://s3.amazonaws.com/teak-build-artifacts/ios/Teak.framework.zip"/>
         </exec>
+    </target>
 
+    <target name="ios" description="Build iOS Library">
         <!-- unzip task does not seem to keep simlinks, do it with exec instead -->
         <exec executable="unzip" failonerror="true" dir="${ios.temp.path}">
             <arg line="Teak.framework.zip"/>
@@ -45,6 +56,7 @@
             <arg line="-scheme ${name}Air"/>
             <arg line="-configuration Release"/>
             <arg line="CONFIGURATION_BUILD_DIR=${ios.temp.path}"/>
+            <!--<arg line="OTHER_CFLAGS=&quot;-fembed-bitcode&quot;"/>-->
             <arg line="GCC_PREPROCESSOR_DEFINITIONS='$GCC_PREPROCESSOR_DEFINITIONS TEAK_VERSION=@\&quot;${sdk.gitversion}\&quot;'"/>
         </exec>
 
