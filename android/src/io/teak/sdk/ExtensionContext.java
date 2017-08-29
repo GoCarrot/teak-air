@@ -78,6 +78,7 @@ public class ExtensionContext extends FREContext {
         functionMap.put("scheduleNotification", new ScheduleNotificationFunction(false));
         functionMap.put("cancelNotification", new ScheduleNotificationFunction(true));
         functionMap.put("registerRoute", new RegisterRouteFunction());
+        functionMap.put("getVersion", new GetVersionFunction());
         return functionMap;
     }
 

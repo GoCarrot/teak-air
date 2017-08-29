@@ -45,6 +45,18 @@ package io.teak.sdk
 			return _instance ? _instance : new Teak();
 		}
 
+		public function get version():Object
+		{
+			if(useNativeExtension())
+			{
+				return JSON.parse(_context.call("getVersion") as String);
+			}
+			else
+			{
+				return { adobeAir: "EDITOR" };
+			}
+		}
+
 		public function registerRoute(route:String, name:String, description:String, callback:Function):void
 		{
 			_deepLinks[route] = callback;
@@ -174,7 +186,6 @@ package io.teak.sdk
 		private static const EXTENSION_ID:String = "io.teak.sdk.Teak";
 
 		private var _context:ExtensionContext;
-		private var _versionNumber:String;
 		private var _deepLinks:Dictionary;
 	}
 }

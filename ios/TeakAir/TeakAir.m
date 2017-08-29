@@ -36,6 +36,7 @@ extern NSString* const TeakNotificationAppLaunch;
 extern NSString* const TeakOnReward;
 
 extern NSDictionary* TeakWrapperSDK;
+extern NSDictionary* TeakVersionDict;
 
 __attribute__((constructor))
 static void teak_init()
@@ -148,6 +149,17 @@ DEFINE_ANE_FUNCTION(registerRoute)
    return nil;
 }
 
+DEFINE_ANE_FUNCTION(getVersion)
+{
+   NSData* jsonData = [NSJSONSerialization dataWithJSONObject:TeakVersionDict
+                                                      options:0
+                                                        error:nil];
+   NSString* jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+   FREObject ret;
+   FRENewObjectFromUTF8((uint32_t)[jsonString length], (const uint8_t*)[jsonString UTF8String], &ret);
+   return ret;
+}
+
 
 void checkTeakNotifLaunch(FREContext context, NSDictionary* userInfo)
 {
@@ -189,7 +201,7 @@ void teakOnReward(FREContext context, NSDictionary* userInfo)
 
 void AirTeakContextInitializer(void* extData, const uint8_t* ctxType, FREContext ctx, uint32_t* numFunctionsToTest, const FRENamedFunction** functionsToSet)
 {
-   uint32_t numFunctions = 5;
+   uint32_t numFunctions = 6;
    *numFunctionsToTest = numFunctions;
    FRENamedFunction* func = (FRENamedFunction*) malloc(sizeof(FRENamedFunction) * numFunctions);
 
@@ -212,6 +224,10 @@ void AirTeakContextInitializer(void* extData, const uint8_t* ctxType, FREContext
    func[4].name = (const uint8_t*)"registerRoute";
    func[4].functionData = NULL;
    func[4].function = &registerRoute;
+
+   func[5].name = (const uint8_t*)"getVersion";
+   func[5].functionData = NULL;
+   func[5].function = &getVersion;
 
    *functionsToSet = func;
 
