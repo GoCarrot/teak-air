@@ -16,10 +16,6 @@ package io.teak.sdk
 {
 	import flash.external.ExtensionContext;
 
-	import flash.filesystem.File;
-	import flash.filesystem.FileMode;
-	import flash.filesystem.FileStream;
-
 	import flash.utils.Dictionary;
 
 	import flash.events.EventDispatcher;
