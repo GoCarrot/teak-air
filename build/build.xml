@@ -7,6 +7,12 @@
 
     <loadfile property="sdk.version" srcFile="../VERSION"/>
 
+    <exec executable="bash">
+        <arg value="-c"/>
+        <arg value="cat ../VERSION | sed 's/\([0-9,\.]*\).*/\1/'"/>
+        <redirector outputproperty="sdk.airversion"/>
+    </exec>
+
     <!-- All -->
     <target name="all" depends="ios_download,ios,android_download,android,swc,package" description="Full build of extension"/>
     <target name="local" depends="ios_copy,ios,android_copy,android,swc,package" description="Full build of extension"/>
@@ -158,7 +164,7 @@
     <!-- Package -->
     <target name="package" description="Create the extension package">
         <copy file="../build/extension.xml.template" tofile="../build/extension.xml" overwrite="true"/>
-        <replace file="../build/extension.xml" token="@@@" value="${sdk.version}"/>
+        <replace file="../build/extension.xml" token="@@@" value="${sdk.airversion}"/>
 
         <exec executable="adt" failonerror="true" dir="../temp">
             <arg value="-package"/>
