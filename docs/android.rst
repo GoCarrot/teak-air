@@ -162,7 +162,7 @@ If your app does not launch, check to make sure your manifest additions are corr
 
 Add the Teak Push Notification Receiver to your AIR XML
 -------------------------------------------------------
-Add the following to the <application> section::
+Add the following to the ``<application>`` section::
 
     <receiver android:name="io.teak.sdk.Teak" android:exported="true"
         android:permission="com.google.android.c2dm.permission.SEND">
