@@ -16,6 +16,8 @@
     <!-- All -->
     <target name="all" depends="ios_download,ios,android_download,android,swc,package" description="Full build of extension"/>
     <target name="local" depends="ios_copy,ios,android_copy,android,swc,package" description="Full build of extension"/>
+    <target name="ios_local" depends="ios_copy,ios,android_download,android,swc,package" description="Full build of extension"/>
+    <target name="android_local" depends="ios_download,ios,android_copy,android,swc,package" description="Full build of extension"/>
 
     <!-- iOS -->
     <property name="ios.temp.path" location="../temp/ios/build/"/>
