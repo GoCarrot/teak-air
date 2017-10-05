@@ -24,6 +24,30 @@ You Should See a Line Containing::
     "event_type":"identify_user" <...>
         "event_data":{"userId":"a unique user identifier"}
 
+Ask for Push Notification Permissions
+-------------------------------------
+Call the ``registerForNotifications`` function on Teak to request push notification permissions on iOS. On Android this will be ignored automatically, there is no need to special case your code.
+
+This should ideally be called after asking the user if they want to be notified when something completes or new information is available.
+
+::
+
+    Teak.instance.registerForNotifications()
+
+What This Does
+^^^^^^^^^^^^^^
+This will pop up the system dialog requesting push notification permissions on iOS.
+
+On Android it will do nothing.
+
+Testing It
+^^^^^^^^^^
+Build your game and launch it on iOS, then check to see if the system dialog is displayed.
+
+.. note:: If permissions have been granted or denied, you need to delete the app from the phone and then re-install it in order for the prompt to be shown again.
+
+.. important:: In non-debug builds, there is a timeout of 1 day for re-requesting push permissions even if the app is deleted. Be aware of this during testing.
+
 Listen for Push Notification Events
 -----------------------------------
 Add an event listener for ``TeakEvent.LAUNCHED_FROM_NOTIFICATION`` in order to detect when your game has been launched by a push notification.

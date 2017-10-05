@@ -23,6 +23,10 @@ package io.teak.sdk
 
 	import flash.system.Capabilities;
 
+	import flash.notifications.NotificationStyle;
+	import flash.notifications.RemoteNotifier;
+	import flash.notifications.RemoteNotifierSubscribeOptions;
+
 	public class Teak extends EventDispatcher
 	{
 		public function Teak()
@@ -51,6 +55,18 @@ package io.teak.sdk
 			{
 				return { adobeAir: "EDITOR" };
 			}
+		}
+
+		public function registerForNotifications():void
+		{
+			var preferredStyles:Vector.<String> = new Vector.<String>();
+			var subscribeOptions:RemoteNotifierSubscribeOptions = new RemoteNotifierSubscribeOptions();
+			var remoteNot:RemoteNotifier = new RemoteNotifier();
+
+			preferredStyles.push(NotificationStyle.ALERT, NotificationStyle.BADGE, NotificationStyle.SOUND);
+			subscribeOptions.notificationStyles = preferredStyles;
+
+			remoteNot.subscribe(subscribeOptions);
 		}
 
 		public function registerRoute(route:String, name:String, description:String, callback:Function):void
