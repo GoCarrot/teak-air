@@ -40,8 +40,7 @@ public class ExtensionContext extends FREContext {
                 String eventData = "";
                 Bundle bundle = intent.getExtras();
                 try {
-                    HashMap<String, Object> eventDataDict = new HashMap<String, Object>();
-                    // TODO: In the future this dict may include more things.
+                    HashMap<String, Object> eventDataDict = (HashMap<String, Object>) bundle.getSerializable("eventData");
                     eventData = new JSONObject(eventDataDict).toString();
                 } catch(Exception e) {
                     Teak.log.exception(e);
