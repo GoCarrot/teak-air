@@ -74,8 +74,9 @@ public class ExtensionContext extends FREContext {
         Map<String, FREFunction> functionMap = new HashMap<String, FREFunction>();
         functionMap.put("identifyUser", new IdentifyUserFunction());
         functionMap.put("_log", new LogFunction());
-        functionMap.put("scheduleNotification", new ScheduleNotificationFunction(false));
-        functionMap.put("cancelNotification", new ScheduleNotificationFunction(true));
+        functionMap.put("scheduleNotification", new TeakNotificationFunction(TeakNotificationFunction.CallType.Schedule));
+        functionMap.put("cancelNotification", new TeakNotificationFunction(TeakNotificationFunction.CallType.Cancel));
+        functionMap.put("cancelAllNotifications", new TeakNotificationFunction(TeakNotificationFunction.CallType.CancelAll));
         functionMap.put("registerRoute", new RegisterRouteFunction());
         functionMap.put("getVersion", new GetVersionFunction());
         return functionMap;

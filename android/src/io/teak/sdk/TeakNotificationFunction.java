@@ -20,26 +20,44 @@ import com.adobe.fre.FREObject;
 
 import java.util.concurrent.Future;
 
-public class ScheduleNotificationFunction implements FREFunction {
-    boolean _isCancel;
+public class TeakNotificationFunction implements FREFunction {
+    public enum CallType {
+        Schedule("NOTIFICATION_SCHEDULED"),
+        Cancel("NOTIFICATION_CANCELED"),
+        CancelAll("NOTIFICATION_CANCEL_ALL");
 
-    public ScheduleNotificationFunction(boolean isCancel) {
-        _isCancel = isCancel;
+        private final String text;
+
+        @Override
+        public String toString() {
+            return text;
+        }
+
+        private CallType(final String text) {
+            this.text = text;
+        }
+    };
+
+    private final CallType callType;
+
+    public TeakNotificationFunction(CallType callType) {
+        this.callType = callType;
     }
 
     @Override
     public FREObject call(FREContext context, FREObject[] argv) {
         try {
-            final Future<String> future = _isCancel ? 
+            final Future<String> future = callType == CallType.Cancel ? 
                 TeakNotification.cancelNotification(argv[0].getAsString()) :
-                TeakNotification.scheduleNotification(argv[0].getAsString(), argv[1].getAsString(), (long)argv[2].getAsDouble());
+                (callType == CallType.CancelAll ? TeakNotification.cancelAll() :
+                TeakNotification.scheduleNotification(argv[0].getAsString(), argv[1].getAsString(), (long)argv[2].getAsDouble()));
             if (future != null) {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            String teakNotifId = future.get();
-                            Extension.context.dispatchStatusEventAsync(_isCancel ? "NOTIFICATION_CANCELED" : "NOTIFICATION_SCHEDULED", teakNotifId);
+                            String json = future.get();
+                            Extension.context.dispatchStatusEventAsync(callType.toString(), json);
                         } catch(Exception e) {
                             Teak.log.exception(e);
                         }

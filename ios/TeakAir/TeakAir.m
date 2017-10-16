@@ -23,10 +23,12 @@ extern void Teak_Plant(Class appDelegateClass, NSString* appId, NSString* appSec
 
 // From TeakCExtern.m
 extern void TeakIdentifyUser(const char* userId);
-extern NSObject* TeakNotificationSchedule(const char* creativeId, const char* message, uint64_t delay);
+extern NSObject* TeakNotificationSchedule(const char* creativeId, const char* message, int64_t delay);
 extern NSObject* TeakNotificationCancel(const char* scheduleId);
+extern NSObject* TeakNotificationCancelAll();
 extern BOOL TeakNotificationIsCompleted(NSObject* notif);
 extern const char* TeakNotificationGetTeakNotifId(NSObject* notif);
+extern const char* TeakNotificationGetStatus(NSObject* notif);
 
 typedef void (^TeakLinkBlock)(NSDictionary* _Nonnull parameters);
 extern void TeakRegisterRoute(const char* route, const char* name, const char* description, TeakLinkBlock block);
@@ -81,8 +83,23 @@ void waitOnNotifFuture(NSObject* future, const uint8_t* eventName, FREContext co
          {
             sleep(1);
          }
-         const uint8_t* notifId = (const uint8_t*)TeakNotificationGetTeakNotifId(future);
-         FREDispatchStatusEventAsync(context, eventName, notifId);
+
+         const char* notifId = TeakNotificationGetTeakNotifId(future);
+         const char* status = TeakNotificationGetStatus(future);
+         NSDictionary* data = @{
+            @"status" : status == nil ? [NSNull null] : [NSString stringWithUTF8String:status],
+            @"data" : notifId == nil ? [NSNull null] : [NSString stringWithUTF8String:notifId]
+         };
+         NSError* error = nil;
+         NSData* jsonData = [NSJSONSerialization dataWithJSONObject:data options:0 error:&error];
+
+         NSString* eventData = @"{\"status\":\"error.internal\"}";
+         if(error == nil)
+         {
+            eventData = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+         }
+
+         FREDispatchStatusEventAsync(context, eventName, (const uint8_t*)[eventData UTF8String]);
       });
    }
 }
@@ -97,7 +114,7 @@ DEFINE_ANE_FUNCTION(scheduleNotification)
       FREGetObjectAsUTF8(argv[1], &stringLength, &message) == FRE_OK &&
       FREGetObjectAsDouble(argv[2], &delay) == FRE_OK)
    {
-      NSObject* notif = TeakNotificationSchedule((const char*)creativeId, (const char*)message, (uint64_t)delay);
+      NSObject* notif = TeakNotificationSchedule((const char*)creativeId, (const char*)message, (int64_t)delay);
       waitOnNotifFuture(notif, (const uint8_t*)"NOTIFICATION_SCHEDULED", context);
    }
 
@@ -113,6 +130,14 @@ DEFINE_ANE_FUNCTION(cancelNotification)
       NSObject* notif = TeakNotificationCancel((const char*)notifId);
       waitOnNotifFuture(notif, (const uint8_t*)"NOTIFICATION_CANCELED", context);
    }
+
+   return nil;
+}
+
+DEFINE_ANE_FUNCTION(cancelAllNotifications)
+{
+   NSObject* notif = TeakNotificationCancelAll();
+   waitOnNotifFuture(notif, (const uint8_t*)"NOTIFICATION_CANCEL_ALL", context);
 
    return nil;
 }
@@ -201,7 +226,7 @@ void teakOnReward(FREContext context, NSDictionary* userInfo)
 
 void AirTeakContextInitializer(void* extData, const uint8_t* ctxType, FREContext ctx, uint32_t* numFunctionsToTest, const FRENamedFunction** functionsToSet)
 {
-   uint32_t numFunctions = 6;
+   uint32_t numFunctions = 7;
    *numFunctionsToTest = numFunctions;
    FRENamedFunction* func = (FRENamedFunction*) malloc(sizeof(FRENamedFunction) * numFunctions);
 
@@ -228,6 +253,10 @@ void AirTeakContextInitializer(void* extData, const uint8_t* ctxType, FREContext
    func[5].name = (const uint8_t*)"getVersion";
    func[5].functionData = NULL;
    func[5].function = &getVersion;
+
+   func[6].name = (const uint8_t*)"cancelAllNotifications";
+   func[6].functionData = NULL;
+   func[6].function = &cancelAllNotifications;
 
    *functionsToSet = func;
 

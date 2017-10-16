@@ -125,40 +125,68 @@ package io.teak.sdk
 			}
 		}
 
+		public function cancelAllNotifications():void
+		{
+			if(useNativeExtension())
+			{
+				_context.call("cancelAllNotifications");
+			}
+			else
+			{
+				trace("[Teak] Canceling all notifications.");
+
+				var e:TeakEvent = new TeakEvent(TeakEvent.NOTIFICATION_CANCEL_ALL);
+				this.dispatchEvent(e);
+			}
+		}
+
 		private function onStatus(event:StatusEvent):void
 		{
 			var e:TeakEvent;
+			var eventData:Object;
 			switch(event.code)
 			{
-				case "LAUNCHED_FROM_NOTIFICATION":
-					e = new TeakEvent(TeakEvent.LAUNCHED_FROM_NOTIFICATION, event.level);
-					break;
-				case "NOTIFICATION_SCHEDULED":
-					e = new TeakEvent(TeakEvent.NOTIFICATION_SCHEDULED, event.level);
-					break;
-				case "NOTIFICATION_CANCELED":
-					e = new TeakEvent(TeakEvent.NOTIFICATION_CANCELED, event.level);
-					break;
-				case "DEEP_LINK":
-					var eventData:Object = JSON.parse(event.level);
-					if(_deepLinks[eventData["route"]] !== undefined)
-					{
-						try
-						{
-							_deepLinks[eventData["route"]](eventData["parameters"]);
-						}
-						catch(error:Error)
-						{
-							log("Error calling function for route " + eventData["route"] + ": " + error);
-						}
-					}
-					else
-					{
-						log("Unable to find function for route: " + eventData["route"]);
+				case "LAUNCHED_FROM_NOTIFICATION": {
+						e = new TeakEvent(TeakEvent.LAUNCHED_FROM_NOTIFICATION, event.level);
 					}
 					break;
-				case "ON_REWARD":
-					e = new TeakEvent(TeakEvent.ON_REWARD, event.level);
+				case "NOTIFICATION_SCHEDULED": {
+						eventData = JSON.parse(event.level);
+						e = new TeakEvent(TeakEvent.NOTIFICATION_SCHEDULED, eventData.data, eventData.status);
+					}
+					break;
+				case "NOTIFICATION_CANCELED": {
+						eventData = JSON.parse(event.level);
+						e = new TeakEvent(TeakEvent.NOTIFICATION_CANCELED, eventData.data, eventData.status);
+					}
+					break;
+				case "NOTIFICATION_CANCEL_ALL": {
+						eventData = JSON.parse(event.level);
+						e = new TeakEvent(TeakEvent.NOTIFICATION_CANCEL_ALL, JSON.stringify(eventData.data), eventData.status);
+					}
+					break;
+				case "DEEP_LINK": {
+						eventData = JSON.parse(event.level);
+						if(_deepLinks[eventData["route"]] !== undefined)
+						{
+							try
+							{
+								_deepLinks[eventData["route"]](eventData["parameters"]);
+							}
+							catch(error:Error)
+							{
+								log("Error calling function for route " + eventData["route"] + ": " + error);
+							}
+						}
+						else
+						{
+							log("Unable to find function for route: " + eventData["route"]);
+						}
+					}
+					break;
+				case "ON_REWARD": {
+						e = new TeakEvent(TeakEvent.ON_REWARD, event.level);
+					}
 					break;
 				default:
 					break;
