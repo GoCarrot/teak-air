@@ -99,8 +99,8 @@ You can use Teak to schedule notifications for the future.
 
 .. note:: You get the full benefit of Teak's analytics, A/B testing, and Content Management System.
 
-Scheduling a Notification from ActionScript
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Scheduling a Local Notification
+^^^^^^^^^^^^^^^^^^^^^^^^^
 To schedule a notification from your game, simply use::
 
     scheduleNotification(creativeId:String, defaultMessage:String, delayInSeconds:Number):void
@@ -128,9 +128,9 @@ And::
 
 The data field of the event will contain the schedule id of the notification, for use with cancelNotification.
 
-Canceling a Notification from ActionScript
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-To cancel a previously scheduled notification, use::
+Canceling a Local Notification
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+To cancel a previously scheduled local notification, use::
 
     cancelNotification(scheduleId:String):void
 
@@ -141,6 +141,28 @@ Event
     Upon successful completion, the ``TeakEvent.NOTIFICATION_CANCELED event`` will be triggered.
 
 The data field of the event will contain the schedule id of the notification that has been canceled.
+
+Canceling all Local Notifications
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+To cancel all previously scheduled local notifications, use::
+
+    cancelAllNotifications():void
+
+Event
+    Upon successful completion, the ``TeakEvent.NOTIFICATION_CANCEL_ALL`` event will be triggered. ``event.status``
+    will be one of the following
+        ``ok`` The request was succesfully processed
+
+        ``invalid_device`` The current device has not been registered with Teak. This is likely caused by ```identifyUser()``` not being called
+
+        ``error.internal`` An unexpected error occurred and the request should be retried
+
+    If status is ``ok`` then event.data will be a JSON encoded array. Each entry in the array will be an
+    Object with ``scheduleId`` and ``creativeId`` entries. ``scheduleId`` is the id originally received from the
+    ``TeakEvent.NOTIFICATION_SCHEDULED`` event. ``creativeId`` is the ``creativeId`` originally passed to
+    ``scheduleNotification(creativeId:String, defaultMessage:String, delayInSeconds:Number):void``
+
+.. note:: This call is processed asynchronously. If you immediately call ``scheduleNotification`` after calling ``cancelAllNotifications`` it is possible for your newly scheduled notification to also be canceled. We recommend waiting until ``TeakEvent.NOTIFICATION_CANCEL_ALL`` has fired before scheduling any new notifications.
 
 Deep Linking
 ------------
