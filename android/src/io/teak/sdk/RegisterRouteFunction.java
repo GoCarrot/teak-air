@@ -31,7 +31,7 @@ public class RegisterRouteFunction implements FREFunction {
             final String name = argv[1].getAsString();
             final String description = argv[2].getAsString();
 
-            DeepLink.registerRoute(route, name, description, new DeepLink.Call() {
+            Teak.registerDeepLink(route, name, description, new Teak.DeepLink() {
             @Override
             public void call(Map<String, Object> parameters) {
                 try {

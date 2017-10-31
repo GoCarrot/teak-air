@@ -23,7 +23,7 @@ import org.json.JSONObject;
 public class GetVersionFunction implements FREFunction {
     @Override
     public FREObject call(FREContext context, FREObject[] argv) {
-        JSONObject obj = new JSONObject(Teak.to_h());
+        JSONObject obj = new JSONObject(Teak.Version);
         try {
             return FREObject.newObject(obj.toString());
         } catch (Exception ignored) {

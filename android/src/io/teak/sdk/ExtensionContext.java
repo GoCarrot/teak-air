@@ -66,7 +66,8 @@ public class ExtensionContext extends FREContext {
         IntentFilter filter = new IntentFilter();
         filter.addAction(Teak.REWARD_CLAIM_ATTEMPT);
         filter.addAction(Teak.LAUNCHED_FROM_NOTIFICATION_INTENT);
-        Teak.localBroadcastManager.registerReceiver(broadcastReceiver, filter);
+
+        Teak.Instance.objectFactory.getTeakCore().registerLocalBroadcastReceiver(broadcastReceiver, filter);
     }
 
     @Override

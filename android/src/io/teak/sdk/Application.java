@@ -33,7 +33,7 @@ public class Application extends android.app.Application {
                 public void onActivityCreated(Activity activity, Bundle bundle) {
                     if (activity.getClass().getCanonicalName().equalsIgnoreCase(appEntryCanonicalName)) {
                         Teak.onCreate(activity);
-                        Teak.lifecycleCallbacks.onActivityCreated(activity, bundle);
+                        Teak.Instance.lifecycleCallbacks.onActivityCreated(activity, bundle);
                     }
                 }
 
