@@ -113,16 +113,6 @@
             <fileset dir="../android/temp/res"/>
         </copy>
 
-        <javac target="1.6" source="1.6" srcdir="../android/src" destdir="../android/temp/classes" includeantruntime="false">
-            <classpath>
-                <pathelement location="${env.ANDROID_SDK_ROOT}/platforms/android-23/android.jar"/>
-                <pathelement location="${env.ANDROID_SDK_ROOT}/extras/android/m2repository/com/android/support/support-v4/18.0.0/support-v4-18.0.0.jar"/>
-                <pathelement location="${env.ADOBE_AIR_HOME}/lib/android/lib/runtimeClasses.jar"/>
-                <pathelement location="${env.ADOBE_AIR_HOME}/lib/android/FlashRuntimeExtensions.jar"/>
-                <pathelement location="../android/temp/teak/teak.jar"/>
-            </classpath>
-        </javac>
-
         <mkdir dir="../android/temp/zip"/>
         <unzip src="../android/temp/teak/teak.jar" dest="../android/temp/zip"/>
         <copy todir="../android/temp/classes/io">

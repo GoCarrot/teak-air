@@ -11,7 +11,7 @@ Add the following lines to your AIR app::
             <![CDATA[
                 <!-- etc -->
 
-                <application android:name="io.teak.sdk.Application">
+                <application android:name="io.teak.sdk.wrapper.Application">
                     <meta-data android:name="io_teak_app_id" android:value="teakYOUR_TEAK_APP_ID" />
                     <meta-data android:name="io_teak_api_key" android:value="teakYOUR_TEAK_API_KEY" />
                     <meta-data android:name="io_teak_gcm_sender_id" android:value="teakYOUR_GCM_SENDER_ID" />
@@ -49,7 +49,7 @@ Add ``android:debuggable="true"`` to your ``<application>`` section::
             <![CDATA[
                 <!-- etc -->
 
-                <application android:name="io.teak.sdk.Application" android:debuggable="true">
+                <application android:name="io.teak.sdk.wraper.Application" android:debuggable="true">
 
                 <!-- etc -->
             ]]>
