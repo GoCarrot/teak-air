@@ -2,7 +2,6 @@ machine:
   xcode:
     version: 8.2.1
   environment:
-    ANDROID_SDK_ROOT: /usr/local/share/android-sdk
     ADOBE_AIR_HOME: /usr/local/share/adobe-air-sdk
 test:
   override:
@@ -11,9 +10,6 @@ dependencies:
   # override:
   pre:
   - brew update # Fixes Homebrew must be run under Ruby 2.3!
-  # Remove 'Warning: File /Users/distiller/.android/repositories.cfg could not be loaded'
-  - mkdir ~/.android/
-  - echo "count=0" > ~/.android/repositories.cfg
   - ./setup
   # bundler:
   #   without: [production, osx]
