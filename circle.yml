@@ -10,7 +10,7 @@ dependencies:
   pre:
   - ./setup
   cache_directories:
-    #- ~/Library/Caches/Homebrew/
+    - ~/Library/Caches/Homebrew/
 checkout:
   post:
     - git fetch --tags
