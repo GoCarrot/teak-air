@@ -35,6 +35,7 @@ package io.teak.sdk
 
 			_context = ExtensionContext.createExtensionContext(EXTENSION_ID, null);
 			if(!_context) throw new Error("ERROR - Extension context is null. Please check if extension.xml is setup correctly.");
+			if(_isAndroid() && _context.call("getInitializationErrors") !== null) throw new Error(_context.call("getInitializationErrors") as String);
 			_context.addEventListener(StatusEvent.STATUS, onStatus);
 			_deepLinks = new Dictionary();
 			_instance = this;
