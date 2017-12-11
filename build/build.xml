@@ -3,35 +3,60 @@
 
     <!-- Config -->
     <property file="build.config"/>
+    <property file="../native.config"/>
     <property environment="env"/>
 
     <loadfile property="sdk.version" srcFile="../VERSION"/>
 
+    <exec executable="bash">
+        <arg value="-c"/>
+        <arg value="cat ../VERSION | sed 's/\([0-9,\.]*\).*/\1/'"/>
+        <redirector outputproperty="sdk.airversion"/>
+    </exec>
+
     <!-- All -->
-    <target name="all" depends="ios,android_native,android,swc,package" description="Full build of extension"/>
+    <target name="all" depends="ios_download,ios,android_download,android,swc,package" description="Full build of extension"/>
+    <target name="local" depends="ios_copy,ios,android_copy,android,swc,package" description="Full build of extension"/>
+    <target name="ios_local" depends="ios_copy,ios,android_download,android,swc,package" description="Full build of extension"/>
+    <target name="android_local" depends="ios_download,ios,android_copy,android,swc,package" description="Full build of extension"/>
 
     <!-- iOS -->
-    <target name="ios" description="Build iOS Library">
-        <property name="ios.temp.path" location="../temp/ios/build/"/>
+    <property name="ios.temp.path" location="../temp/ios/build/"/>
+
+    <target name="ios_copy">
         <delete dir="${ios.temp.path}"/>
         <mkdir dir="${ios.temp.path}"/>
 
-        <exec executable="xcodebuild" failonerror="true" dir="../../teak-ios/">
-            <arg line="-project ${name}.xcodeproj"/>
-            <arg line="-alltargets clean"/>
+        <copy file="../../teak-ios/build/Release-iphoneos/Teak.framework.zip" tofile="${ios.temp.path}/Teak.framework.zip" overwrite="true"/>
+    </target>
+
+    <target name="ios_download">
+        <delete dir="${ios.temp.path}"/>
+        <mkdir dir="${ios.temp.path}"/>
+
+        <exec executable="curl" failonerror="true" dir="${ios.temp.path}">
+            <arg line="-o Teak.framework.zip"/>
+            <arg line="https://s3.amazonaws.com/teak-build-artifacts/ios/Teak-${version.ios}.framework.zip"/>
+        </exec>
+    </target>
+
+    <target name="ios" description="Build iOS Library">
+        <!-- unzip task does not seem to keep simlinks, do it with exec instead -->
+        <exec executable="unzip" failonerror="true" dir="${ios.temp.path}">
+            <arg line="Teak.framework.zip"/>
         </exec>
 
-        <exec executable="xcodebuild" failonerror="true" dir="../../teak-ios/">
-            <arg line="-project ${name}.xcodeproj"/>
-            <arg line="-sdk ${ios.sdkversion}"/>
-            <arg line="-scheme ${name}"/>
-            <arg line="-configuration Release"/>
-            <arg line="CONFIGURATION_BUILD_DIR=${ios.temp.path}"/>
-        </exec>
+        <copy file="${ios.temp.path}/Teak.framework/Teak" tofile="${ios.temp.path}/libTeak.a" overwrite="true"/>
 
         <exec executable="xcodebuild" failonerror="true" dir="../ios/">
             <arg line="-project ${name}Air.xcodeproj"/>
             <arg line="-alltargets clean"/>
+        </exec>
+
+        <exec executable="git" failonerror="true" dir="..">
+            <arg line='describe'/>
+            <arg line='--tags'/>
+            <redirector outputproperty="sdk.gitversion"/>
         </exec>
 
         <exec executable="xcodebuild" failonerror="true" dir="../ios/">
@@ -40,6 +65,8 @@
             <arg line="-scheme ${name}Air"/>
             <arg line="-configuration Release"/>
             <arg line="CONFIGURATION_BUILD_DIR=${ios.temp.path}"/>
+            <arg line="OTHER_CFLAGS=&quot;-fembed-bitcode&quot;"/>
+            <arg line="GCC_PREPROCESSOR_DEFINITIONS='$GCC_PREPROCESSOR_DEFINITIONS TEAK_VERSION=@\&quot;${sdk.gitversion}\&quot;'"/>
         </exec>
 
         <exec executable="sh" failonerror="true" dir="../ios/">
@@ -48,24 +75,30 @@
         </exec>
 
         <copy file="${ios.temp.path}/lib${name}AirMerged.a" todir="../temp/ios" overwrite="true"/>
-
         <delete dir="${ios.temp.path}"/>
     </target>
 
     <!-- Android -->
-    <target name="android_native" description="Build Teak Android Library">
-        <exec executable="./compile" failonerror="true" dir="../../teak-android/">
-        </exec>
-        <copy file="../../teak-android/build/libs/teak-api_gteq_21.jar" tofile="../android/libs/${name}.jar" overwrite="true"/>
-        <copy todir="../temp/android/res/">
-            <fileset dir="../../teak-android/src/api_gteq_21/res"/>
-        </copy>
-    </target>
-
-    <!-- Android -->
-    <target name="android" description="Build Android Library">
+    <target name="android_copy">
         <delete dir="../android/temp"/>
         <mkdir dir="../android/temp/classes"/>
+
+        <copy file="../../teak-android/build/distributions/teak-release.zip"
+              tofile="../android/temp/teak.zip" overwrite="true"/>
+    </target>
+
+    <target name="android_download">
+        <delete dir="../android/temp"/>
+        <mkdir dir="../android/temp/classes"/>
+
+        <exec executable="curl" failonerror="true" dir="../android/temp">
+            <arg line="-o teak.zip"/>
+            <arg line="https://s3.amazonaws.com/teak-build-artifacts/android/teak-${version.android}.zip"/>
+        </exec>
+    </target>
+
+    <target name="android" description="Build Android Library">
+        <unzip src="../android/temp/teak.zip" dest="../android/temp"/>
 
         <copy file="../android/teak_air_version.xml.template"
               tofile="../temp/android/res/values/teak_air_version.xml" overwrite="true"/>
@@ -77,18 +110,12 @@
         <replace file="../temp/android/res/values/teak_air_version.xml"
                  token="@@@" value="${sdk.gitversion}"/>
 
-        <javac target="1.6" source="1.6" srcdir="../android/src" destdir="../android/temp/classes" includeantruntime="false">
-            <classpath>
-                <pathelement location="${env.ANDROID_HOME}/platforms/android-23/android.jar"/>
-                <pathelement location="${env.ANDROID_HOME}/extras/android/m2repository/com/android/support/support-v4/18.0.0/support-v4-18.0.0.jar"/>
-                <pathelement location="${flex.sdk}/lib/android/lib/runtimeClasses.jar"/>
-                <pathelement location="${flex.sdk}/lib/android/FlashRuntimeExtensions.jar"/>
-                <pathelement location="../android/libs/Teak.jar"/>
-            </classpath>
-        </javac>
+        <copy todir="../temp/android/res/">
+            <fileset dir="../android/temp/res"/>
+        </copy>
 
         <mkdir dir="../android/temp/zip"/>
-        <unzip src="../android/libs/Teak.jar" dest="../android/temp/zip"/>
+        <unzip src="../android/temp/teak/teak.jar" dest="../android/temp/zip"/>
         <copy todir="../android/temp/classes/io">
             <fileset dir="../android/temp/zip/io">
                 <exclude name="**/R.class"/>
@@ -112,11 +139,11 @@
             <regexpmapper from=".*src.(.*)\.as" to="\1"/>
         </pathconvert>
 
-        <exec executable="${flex.sdk}/bin/compc${bin.ext}" failonerror="true">
+        <exec executable="compc" failonerror="true">
             <arg line='-source-path ../actionscript/src'/>
             <arg line='-output ../temp/swc/${name}.swc'/>
             <arg line='-swf-version=14'/>
-            <arg line='-external-library-path+="${flex.sdk}/frameworks/libs/air/airglobal.swc"'/>
+            <arg line='-external-library-path+="${env.ADOBE_AIR_HOME}/frameworks/libs/air/airglobal.swc"'/>
             <arg line='-include-classes ${classlist}'/>
         </exec>
 
@@ -130,9 +157,9 @@
     <!-- Package -->
     <target name="package" description="Create the extension package">
         <copy file="../build/extension.xml.template" tofile="../build/extension.xml" overwrite="true"/>
-        <replace file="../build/extension.xml" token="@@@" value="${sdk.version}"/>
+        <replace file="../build/extension.xml" token="@@@" value="${sdk.airversion}"/>
 
-        <exec executable="${flex.sdk}/bin/adt${bin.ext}" failonerror="true" dir="../temp">
+        <exec executable="adt" failonerror="true" dir="../temp">
             <arg value="-package"/>
             <arg value="-target"/>
             <arg value="ane"/>
@@ -150,13 +177,13 @@
 
     <!-- HTML Documentation (must be run manually) -->
     <target name="asdoc" description="generate the asdoc in readable html">
-        <exec executable="${flex.sdk}/bin/asdoc${bin.ext}" failonerror="true">
-            <env key="FLEX_HOME" value="${flex.sdk}"/>
-            <env key="FALCON_HOME" value="${flex.sdk}"/>
+        <exec executable="asdoc" failonerror="true">
+            <env key="FLEX_HOME" value="${env.ADOBE_AIR_HOME}"/>
+            <env key="FALCON_HOME" value="${env.ADOBE_AIR_HOME}"/>
             <arg line='-source-path ../actionscript/src'/>
             <arg line='-doc-sources ../actionscript/src'/>
             <arg line='-output ../docs'/>
-            <arg line='-library-path+="${flex.sdk}/frameworks/libs/air/airglobal.swc"'/>
+            <arg line='-library-path+="${env.ADOBE_AIR_HOME}/frameworks/libs/air/airglobal.swc"'/>
         </exec>
     </target>
 

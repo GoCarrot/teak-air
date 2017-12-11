@@ -6,6 +6,10 @@ android.build-tools =
 # NOTE: This is only used for 'install' task
 android.platform-tools =
 
+# Paths to use temp resources
+temp.path =
+temp.apk =
+
 # Path to the input APK and output APK (this can be the same path)
 input.apk =
 output.apk =

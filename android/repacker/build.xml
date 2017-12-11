@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Teak APK repacker for Adobe AIR" default="debug">
-    <property file="build.config"/>
-
-    <property name="temp.path" location="./_apktemp"/>
-    <property name="temp.apk" location="./_temp.apk"/>
+<project name="Teak APK repacker for Adobe AIR" default="debug" xmlns:if="ant:if" xmlns:unless="ant:unless">
+    <property file="build.config" unless:set="use-config"/>
+    <property file="${use-config}" if:set="use-config"/>
 
     <property name="signjar.sigalg" value="SHA1withRSA"/>
     <property name="signjar.digestalg" value="SHA1"/>
 
-    <target name="debug" depends="unpack,patch,copy_res,repack,debug_sign,zipalign" description="Prepare APK for debug distribution."/>
+    <target name="debug" depends="unpack,check-multi-dex,patch,copy_res,repack,debug_sign,zipalign" description="Prepare APK for debug distribution."/>
 
-    <target name="release" depends="unpack,patch,copy_res,repack,release_sign,zipalign" description="Prepare APK for debug distribution."/>
+    <target name="release" depends="unpack,check-multi-dex,patch,copy_res,repack,release_sign,zipalign" description="Prepare APK for debug distribution."/>
 
     <target name="unpack" description="Unpack APK file.">
         <java jar="apktool_2.1.0.jar" fork="true" failonerror="true">
@@ -20,6 +18,22 @@
             <arg value="${temp.path}"/>
             <arg value="${input.apk}"/>
         </java>
+    </target>
+
+    <target name="check-multi-dex" description="Check the manifest to make sure that">
+        <xmlproperty file="${temp.path}/AndroidManifest.xml" prefix="android" collapseAttributes="true"/>
+        <fail message="Add: android:name=&quot;android.support.multidex.MultiDexApplication&quot; to the &lt;application&gt; element of your Android &lt;manifestAdditions&gt;, or this build will fail on Android &lt; 5 devices.">
+            <condition>
+                <not><or>
+                    <not><available file="${temp.path}/smali_classes2"/></not>
+                    <equals arg1="${android.manifest.application.android:name}" arg2="android.support.multidex.MultiDexApplication"/>
+                </or></not>
+            </condition>
+        </fail>
+    </target>
+
+    <target name="validate-multi-dex-check" if="is.multidex.and.application.is.not.MultiDexApplication">
+        <fail message="android:name="/>
     </target>
 
     <target name="patch" description="Patch the AppEntry.smali file to call Teak.">

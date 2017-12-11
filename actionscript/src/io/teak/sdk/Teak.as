@@ -16,16 +16,16 @@ package io.teak.sdk
 {
 	import flash.external.ExtensionContext;
 
-	import flash.filesystem.File;
-	import flash.filesystem.FileMode;
-	import flash.filesystem.FileStream;
-
 	import flash.utils.Dictionary;
 
 	import flash.events.EventDispatcher;
 	import flash.events.StatusEvent;
 
 	import flash.system.Capabilities;
+
+	import flash.notifications.NotificationStyle;
+	import flash.notifications.RemoteNotifier;
+	import flash.notifications.RemoteNotifierSubscribeOptions;
 
 	public class Teak extends EventDispatcher
 	{
@@ -35,6 +35,7 @@ package io.teak.sdk
 
 			_context = ExtensionContext.createExtensionContext(EXTENSION_ID, null);
 			if(!_context) throw new Error("ERROR - Extension context is null. Please check if extension.xml is setup correctly.");
+			if(_isAndroid() && _context.call("getInitializationErrors") !== null) throw new Error(_context.call("getInitializationErrors") as String);
 			_context.addEventListener(StatusEvent.STATUS, onStatus);
 			_deepLinks = new Dictionary();
 			_instance = this;
@@ -43,6 +44,30 @@ package io.teak.sdk
 		public static function get instance():Teak
 		{
 			return _instance ? _instance : new Teak();
+		}
+
+		public function get version():Object
+		{
+			if(useNativeExtension())
+			{
+				return JSON.parse(_context.call("getVersion") as String);
+			}
+			else
+			{
+				return { adobeAir: "EDITOR" };
+			}
+		}
+
+		public function registerForNotifications():void
+		{
+			var preferredStyles:Vector.<String> = new Vector.<String>();
+			var subscribeOptions:RemoteNotifierSubscribeOptions = new RemoteNotifierSubscribeOptions();
+			var remoteNot:RemoteNotifier = new RemoteNotifier();
+
+			preferredStyles.push(NotificationStyle.ALERT, NotificationStyle.BADGE, NotificationStyle.SOUND);
+			subscribeOptions.notificationStyles = preferredStyles;
+
+			remoteNot.subscribe(subscribeOptions);
 		}
 
 		public function registerRoute(route:String, name:String, description:String, callback:Function):void
@@ -101,36 +126,67 @@ package io.teak.sdk
 			}
 		}
 
+		public function cancelAllNotifications():void
+		{
+			if(useNativeExtension())
+			{
+				_context.call("cancelAllNotifications");
+			}
+			else
+			{
+				trace("[Teak] Canceling all notifications.");
+
+				var e:TeakEvent = new TeakEvent(TeakEvent.NOTIFICATION_CANCEL_ALL);
+				this.dispatchEvent(e);
+			}
+		}
+
 		private function onStatus(event:StatusEvent):void
 		{
 			var e:TeakEvent;
+			var eventData:Object;
 			switch(event.code)
 			{
-				case "LAUNCHED_FROM_NOTIFICATION":
-					e = new TeakEvent(TeakEvent.LAUNCHED_FROM_NOTIFICATION, event.level);
+				case "LAUNCHED_FROM_NOTIFICATION": {
+						e = new TeakEvent(TeakEvent.LAUNCHED_FROM_NOTIFICATION, event.level);
+					}
 					break;
-				case "NOTIFICATION_SCHEDULED":
-					e = new TeakEvent(TeakEvent.NOTIFICATION_SCHEDULED, event.level);
+				case "NOTIFICATION_SCHEDULED": {
+						eventData = JSON.parse(event.level);
+						e = new TeakEvent(TeakEvent.NOTIFICATION_SCHEDULED, eventData.data, eventData.status);
+					}
 					break;
-				case "NOTIFICATION_CANCELED":
-					e = new TeakEvent(TeakEvent.NOTIFICATION_CANCELED, event.level);
+				case "NOTIFICATION_CANCELED": {
+						eventData = JSON.parse(event.level);
+						e = new TeakEvent(TeakEvent.NOTIFICATION_CANCELED, eventData.data, eventData.status);
+					}
 					break;
-				case "DEEP_LINK":
-					var eventData:Object = JSON.parse(event.level);
-					if(_deepLinks[eventData["route"]] !== undefined)
-					{
-						try
+				case "NOTIFICATION_CANCEL_ALL": {
+						eventData = JSON.parse(event.level);
+						e = new TeakEvent(TeakEvent.NOTIFICATION_CANCEL_ALL, JSON.stringify(eventData.data), eventData.status);
+					}
+					break;
+				case "DEEP_LINK": {
+						eventData = JSON.parse(event.level);
+						if(_deepLinks[eventData["route"]] !== undefined)
 						{
-							_deepLinks[eventData["route"]](eventData["parameters"]);
+							try
+							{
+								_deepLinks[eventData["route"]](eventData["parameters"]);
+							}
+							catch(error:Error)
+							{
+								log("Error calling function for route " + eventData["route"] + ": " + error);
+							}
 						}
-						catch(error:Error)
+						else
 						{
-							log("Error calling function for route " + eventData["route"] + ": " + error);
+							log("Unable to find function for route: " + eventData["route"]);
 						}
 					}
-					else
-					{
-						log("Unable to find function for route: " + eventData["route"]);
+					break;
+				case "ON_REWARD": {
+						e = new TeakEvent(TeakEvent.ON_REWARD, event.level);
 					}
 					break;
 				default:
@@ -171,7 +227,6 @@ package io.teak.sdk
 		private static const EXTENSION_ID:String = "io.teak.sdk.Teak";
 
 		private var _context:ExtensionContext;
-		private var _versionNumber:String;
 		private var _deepLinks:Dictionary;
 	}
 }

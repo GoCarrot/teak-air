@@ -2,37 +2,10 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-(
-  cd ..
-  if [ ! -e teak-android ]; then
-    git clone git@github.com:GoCarrot/teak-android.git
-  fi
-  (
-    cd teak-android
-    git pull
-    ./setup
-  )
-
-  if [ ! -e teak-ios ]; then
-    git clone git@github.com:GoCarrot/teak-ios.git
-  fi
-  (
-    cd teak-ios
-    git pull
-    ./setup
-  )
-)
-
-echo y | android update sdk --all --no-ui --filter 'extra-android-m2repository'
-
+if [ "$(which ant)" == "" ]; then brew install ant; fi
 if [ "$(which aws)" == "" ]; then brew install awscli; fi
-
-# TODO: Use Homebrew, once the checksums are updated...
-# brew install homebrew/binary/adobe-air-sdk[-flex]
-if [ ! -e air-sdk/bin/compc ]; then
-  curl 'https://airdownload.adobe.com/air/mac/download/latest/AIRSDK_Compiler.tbz2' > air-sdk/AIRSDK_Compiler.tbz2
-  (
-    cd air-sdk
-    tar xzf AIRSDK_Compiler.tbz2
-  )
+if [ "$(which compc)" == "" ]; then
+  brew tap caskroom/cask
+  brew update
+  brew cask install adobe-air-sdk
 fi

@@ -23,23 +23,28 @@ extern void Teak_Plant(Class appDelegateClass, NSString* appId, NSString* appSec
 
 // From TeakCExtern.m
 extern void TeakIdentifyUser(const char* userId);
-extern void* TeakRewardRewardForId(NSString* teakRewardId);
-extern BOOL TeakRewardIsCompleted(void* notif);
-extern const char* TeakRewardGetJson(void* reward);
-extern void* TeakNotificationSchedule(const char* creativeId, const char* message, uint64_t delay);
-extern void* TeakNotificationCancel(const char* scheduleId);
-extern BOOL TeakNotificationIsCompleted(void* notif);
-extern const char* TeakNotificationGetTeakNotifId(void* notif);
+extern NSObject* TeakNotificationSchedule(const char* creativeId, const char* message, int64_t delay);
+extern NSObject* TeakNotificationCancel(const char* scheduleId);
+extern NSObject* TeakNotificationCancelAll();
+extern BOOL TeakNotificationIsCompleted(NSObject* notif);
+extern const char* TeakNotificationGetTeakNotifId(NSObject* notif);
+extern const char* TeakNotificationGetStatus(NSObject* notif);
 
 typedef void (^TeakLinkBlock)(NSDictionary* _Nonnull parameters);
 extern void TeakRegisterRoute(const char* route, const char* name, const char* description, TeakLinkBlock block);
 
 // From Teak.m
 extern NSString* const TeakNotificationAppLaunch;
+extern NSString* const TeakOnReward;
+
+extern NSDictionary* TeakWrapperSDK;
+extern NSDictionary* TeakVersionDict;
 
 __attribute__((constructor))
 static void teak_init()
 {
+   TeakWrapperSDK = @{@"adobeAir" : TEAK_VERSION};
+
    NSString* appId = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"TeakAppId"];
    NSString* apiKey = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"TeakApiKey"];
    Teak_Plant(NSClassFromString(@"CTAppController"), appId, apiKey);
@@ -69,18 +74,32 @@ DEFINE_ANE_FUNCTION(_log)
    return nil;
 }
 
-void waitOnNotifFuture(void* future, const uint8_t* eventName, FREContext context)
+void waitOnNotifFuture(NSObject* future, const uint8_t* eventName, FREContext context)
 {
    if(future != nil)
    {
-      __block NSObject* o = (__bridge NSObject*)(future);
       dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
          while(!TeakNotificationIsCompleted(future))
          {
             sleep(1);
          }
-         const uint8_t* notifId = (const uint8_t*)TeakNotificationGetTeakNotifId(future);
-         FREDispatchStatusEventAsync(context, eventName, notifId);
+
+         const char* notifId = TeakNotificationGetTeakNotifId(future);
+         const char* status = TeakNotificationGetStatus(future);
+         NSDictionary* data = @{
+            @"status" : status == nil ? [NSNull null] : [NSString stringWithUTF8String:status],
+            @"data" : notifId == nil ? [NSNull null] : [NSString stringWithUTF8String:notifId]
+         };
+         NSError* error = nil;
+         NSData* jsonData = [NSJSONSerialization dataWithJSONObject:data options:0 error:&error];
+
+         NSString* eventData = @"{\"status\":\"error.internal\"}";
+         if(error == nil)
+         {
+            eventData = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+         }
+
+         FREDispatchStatusEventAsync(context, eventName, (const uint8_t*)[eventData UTF8String]);
       });
    }
 }
@@ -95,7 +114,7 @@ DEFINE_ANE_FUNCTION(scheduleNotification)
       FREGetObjectAsUTF8(argv[1], &stringLength, &message) == FRE_OK &&
       FREGetObjectAsDouble(argv[2], &delay) == FRE_OK)
    {
-      void* notif = TeakNotificationSchedule((const char*)creativeId, (const char*)message, (uint64_t)delay);
+      NSObject* notif = TeakNotificationSchedule((const char*)creativeId, (const char*)message, (int64_t)delay);
       waitOnNotifFuture(notif, (const uint8_t*)"NOTIFICATION_SCHEDULED", context);
    }
 
@@ -108,9 +127,17 @@ DEFINE_ANE_FUNCTION(cancelNotification)
    const uint8_t* notifId;
    if(FREGetObjectAsUTF8(argv[0], &stringLength, &notifId) == FRE_OK)
    {
-      void* notif = TeakNotificationCancel((const char*)notifId);
+      NSObject* notif = TeakNotificationCancel((const char*)notifId);
       waitOnNotifFuture(notif, (const uint8_t*)"NOTIFICATION_CANCELED", context);
    }
+
+   return nil;
+}
+
+DEFINE_ANE_FUNCTION(cancelAllNotifications)
+{
+   NSObject* notif = TeakNotificationCancelAll();
+   waitOnNotifFuture(notif, (const uint8_t*)"NOTIFICATION_CANCEL_ALL", context);
 
    return nil;
 }
@@ -147,28 +174,44 @@ DEFINE_ANE_FUNCTION(registerRoute)
    return nil;
 }
 
+DEFINE_ANE_FUNCTION(getVersion)
+{
+   NSData* jsonData = [NSJSONSerialization dataWithJSONObject:TeakVersionDict
+                                                      options:0
+                                                        error:nil];
+   NSString* jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+   FREObject ret;
+   FRENewObjectFromUTF8((uint32_t)[jsonString length], (const uint8_t*)[jsonString UTF8String], &ret);
+   return ret;
+}
+
 
 void checkTeakNotifLaunch(FREContext context, NSDictionary* userInfo)
 {
    const uint8_t* eventCode = (const uint8_t*)"LAUNCHED_FROM_NOTIFICATION";
    const uint8_t* eventLevelEmpty = (const uint8_t*)"{}";
 
-   NSMutableDictionary* eventDataDictionary = [NSMutableDictionary dictionary];
+   NSError* error = nil;
+   NSData* jsonData = [NSJSONSerialization dataWithJSONObject:userInfo
+                                                      options:0
+                                                        error:&error];
 
-   NSDictionary* teakReward = [userInfo objectForKey:@"teakReward"];
-   if(teakReward != nil)
-   {
-      [eventDataDictionary setObject:teakReward forKey:@"reward"];
+   if (error != nil) {
+      NSLog(@"[Teak:Air] Error converting to JSON: %@", error);
+      FREDispatchStatusEventAsync(context, eventCode, eventLevelEmpty);
+   } else {
+      NSString* jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+      FREDispatchStatusEventAsync(context, eventCode, (const uint8_t*)[jsonString UTF8String]);
    }
+}
 
-   NSURL* teakDeepLink = [userInfo objectForKey:@"teakDeepLink"];
-   if(teakDeepLink != nil)
-   {
-      [eventDataDictionary setObject:[teakDeepLink absoluteString] forKey:@"deepLink"];
-   }
+void teakOnReward(FREContext context, NSDictionary* userInfo)
+{
+   const uint8_t* eventCode = (const uint8_t*)"ON_REWARD";
+   const uint8_t* eventLevelEmpty = (const uint8_t*)"{}";
 
    NSError* error = nil;
-   NSData* jsonData = [NSJSONSerialization dataWithJSONObject:eventDataDictionary
+   NSData* jsonData = [NSJSONSerialization dataWithJSONObject:userInfo
                                                       options:0
                                                         error:&error];
 
@@ -183,7 +226,7 @@ void checkTeakNotifLaunch(FREContext context, NSDictionary* userInfo)
 
 void AirTeakContextInitializer(void* extData, const uint8_t* ctxType, FREContext ctx, uint32_t* numFunctionsToTest, const FRENamedFunction** functionsToSet)
 {
-   uint32_t numFunctions = 5;
+   uint32_t numFunctions = 7;
    *numFunctionsToTest = numFunctions;
    FRENamedFunction* func = (FRENamedFunction*) malloc(sizeof(FRENamedFunction) * numFunctions);
 
@@ -207,6 +250,14 @@ void AirTeakContextInitializer(void* extData, const uint8_t* ctxType, FREContext
    func[4].functionData = NULL;
    func[4].function = &registerRoute;
 
+   func[5].name = (const uint8_t*)"getVersion";
+   func[5].functionData = NULL;
+   func[5].function = &getVersion;
+
+   func[6].name = (const uint8_t*)"cancelAllNotifications";
+   func[6].functionData = NULL;
+   func[6].function = &cancelAllNotifications;
+
    *functionsToSet = func;
 
    [[NSNotificationCenter defaultCenter] addObserverForName:TeakNotificationAppLaunch
@@ -214,6 +265,12 @@ void AirTeakContextInitializer(void* extData, const uint8_t* ctxType, FREContext
                                                       queue:nil
                                                  usingBlock:^(NSNotification* notification) {
                                                     checkTeakNotifLaunch(ctx, notification.userInfo);
+                                                 }];
+   [[NSNotificationCenter defaultCenter] addObserverForName:TeakOnReward
+                                                     object:nil
+                                                      queue:nil
+                                                 usingBlock:^(NSNotification* notification) {
+                                                    teakOnReward(ctx, notification.userInfo);
                                                  }];
 }
 
