@@ -83,7 +83,7 @@
         <delete dir="../android/temp"/>
         <mkdir dir="../android/temp/classes"/>
 
-        <copy file="../../teak-android/build/distributions/teak-release.zip"
+        <copy file="../../teak-android/build/distributions/teak-debug.zip"
               tofile="../android/temp/teak.zip" overwrite="true"/>
     </target>
 
