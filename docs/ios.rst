@@ -63,6 +63,8 @@ Add the Teak Universal Link domain to the ``<Entitlements>`` section of your AIR
 
 .. note:: Replace ``YOUR_DOMAIN_PREFIX`` with the domain prefix for your game.
 
+.. note:: Your provisioning profile must include the applinks entitlement. If you are running into issues where you cannot install your iOS app onto a test device, this is likely the issue.
+
 Your Teak domain prefix can be found in the Settings for your app on the Teak dashboard:
 
 .. warning:: TODO: Screenshot

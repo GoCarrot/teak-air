@@ -2,6 +2,16 @@ Android
 =======
 .. highlight:: xml
 
+Android Dependencies
+--------------------
+Teak for Android depends on Google Cloud Messaging (GCM) and Android Support v4. These dependencies are not bundled with the Teak ANE.
+
+If you are not already using an ANE which provides these, we suggest using the following:
+
+- https://github.com/distriqt/ANE-AndroidSupport/blob/master/lib/com.distriqt.androidsupport.V4.ane
+- https://github.com/distriqt/ANE-GooglePlayServices/blob/master/lib/com.distriqt.playservices.Base.ane
+- https://github.com/distriqt/ANE-GooglePlayServices/blob/master/lib/com.distriqt.playservices.GCM.ane
+
 Set up Teak support at the Application level
 --------------------------------------------
 Add the following lines to your AIR app::
