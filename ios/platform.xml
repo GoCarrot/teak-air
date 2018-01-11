@@ -6,7 +6,6 @@
         <option>-framework AVFoundation</option>
         <option>-framework MobileCoreServices</option>
         <option>-framework UserNotifications</option>
-        <option>-framework UserNotificationsUI</option>
         <option>-framework StoreKit</option>
         <option>-framework ImageIO</option>
         <option>-framework CoreGraphics</option>
