@@ -6,7 +6,9 @@
         <option>-framework AVFoundation</option>
         <option>-framework MobileCoreServices</option>
         <option>-framework UserNotifications</option>
+        <option>-framework UserNotificationsUI</option>
         <option>-framework StoreKit</option>
+        <option>-framework CoreGraphics</option>
         <option>-lsqlite3</option>
     </linkerOptions>
 </platform>
