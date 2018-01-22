@@ -82,6 +82,7 @@ And::
         // e.data contains a JSON blob containing reward information
         // eg
         // {
+        //    "teakRewardId":"<reward id as string>",
         //    "status":"grant_reward",
         //    "reward": {
         //       "coins": 1000,
