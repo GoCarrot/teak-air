@@ -101,7 +101,7 @@ You can use Teak to schedule notifications for the future.
 .. note:: You get the full benefit of Teak's analytics, A/B testing, and Content Management System.
 
 Scheduling a Local Notification
-^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 To schedule a notification from your game, simply use::
 
     scheduleNotification(creativeId:String, defaultMessage:String, delayInSeconds:Number):void
