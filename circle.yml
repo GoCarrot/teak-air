@@ -1,6 +1,6 @@
 machine:
   xcode:
-    version: 9.0
+    version: 9.2
   environment:
     ADOBE_AIR_HOME: /usr/local/share/adobe-air-sdk
 test:
