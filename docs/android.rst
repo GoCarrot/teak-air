@@ -118,13 +118,11 @@ Add Teak Deep Link Filters
 --------------------------
 Add the following to the ``<application>`` section of your AIR XML::
 
-    <activity android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|keyboardHidden|fontScale"
-        android:label="@string/app_name"
-        android:launchMode="singleTask"
-        android:name=".AppEntry"
-        android:screenOrientation="user"
-        android:theme="@style/Theme.NoShadow"
-        android:windowSoftInputMode="adjustResize|stateHidden">
+    <activity>
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
 
         <intent-filter android:autoVerify="true" >
             <action android:name="android.intent.action.VIEW" />

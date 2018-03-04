@@ -211,7 +211,7 @@ package io.teak.sdk
 			return Capabilities.manufacturer.indexOf("Android") > -1;
 		}
 
-		private function log(message:String):void
+		public function log(message:String):void
 		{
 			if(useNativeExtension())
 			{
