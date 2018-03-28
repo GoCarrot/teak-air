@@ -29,6 +29,8 @@ extern NSObject* TeakNotificationCancelAll();
 extern BOOL TeakNotificationIsCompleted(NSObject* notif);
 extern const char* TeakNotificationGetTeakNotifId(NSObject* notif);
 extern const char* TeakNotificationGetStatus(NSObject* notif);
+extern void TeakSetNumericAttribute(const char* cstr_key, double value);
+extern void TeakSetStringAttribute(const char* cstr_key, const char* cstr_value);
 
 typedef void (^TeakLinkBlock)(NSDictionary* _Nonnull parameters);
 extern void TeakRegisterRoute(const char* route, const char* name, const char* description, TeakLinkBlock block);
@@ -185,6 +187,33 @@ DEFINE_ANE_FUNCTION(getVersion)
    return ret;
 }
 
+DEFINE_ANE_FUNCTION(setNumericAttribute)
+{
+   uint32_t stringLength;
+   const uint8_t* key;
+   double value;
+   if(FREGetObjectAsUTF8(argv[0], &stringLength, &key) == FRE_OK &&
+      FREGetObjectAsDouble(argv[1], &value) == FRE_OK)
+   {
+      TeakSetNumericAttribute((const char*)key, value);
+   }
+
+   return nil;
+}
+
+DEFINE_ANE_FUNCTION(setStringAttribute)
+{
+   uint32_t stringLength;
+   const uint8_t* key;
+   const uint8_t* value;
+   if(FREGetObjectAsUTF8(argv[0], &stringLength, &key) == FRE_OK &&
+      FREGetObjectAsUTF8(argv[1], &stringLength, &value) == FRE_OK)
+   {
+      TeakSetStringAttribute((const char*)key, (const char*)value);
+   }
+
+   return nil;
+}
 
 void checkTeakNotifLaunch(FREContext context, NSDictionary* userInfo)
 {
@@ -226,7 +255,7 @@ void teakOnReward(FREContext context, NSDictionary* userInfo)
 
 void AirTeakContextInitializer(void* extData, const uint8_t* ctxType, FREContext ctx, uint32_t* numFunctionsToTest, const FRENamedFunction** functionsToSet)
 {
-   uint32_t numFunctions = 7;
+   uint32_t numFunctions = 9;
    *numFunctionsToTest = numFunctions;
    FRENamedFunction* func = (FRENamedFunction*) malloc(sizeof(FRENamedFunction) * numFunctions);
 
@@ -257,6 +286,14 @@ void AirTeakContextInitializer(void* extData, const uint8_t* ctxType, FREContext
    func[6].name = (const uint8_t*)"cancelAllNotifications";
    func[6].functionData = NULL;
    func[6].function = &cancelAllNotifications;
+
+   func[7].name = (const uint8_t*)"setNumericAttribute";
+   func[7].functionData = NULL;
+   func[7].function = &setNumericAttribute;
+
+   func[8].name = (const uint8_t*)"setStringAttribute";
+   func[8].functionData = NULL;
+   func[8].function = &setStringAttribute;
 
    *functionsToSet = func;
 
