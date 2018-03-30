@@ -141,6 +141,30 @@ package io.teak.sdk
 			}
 		}
 
+		public function setNumericAttribute(key:String, value:Number):void
+		{
+			if(useNativeExtension())
+			{
+				_context.call("setNumericAttribute", key, value);
+			}
+			else
+			{
+				trace("[Teak] setNumericAttribute: " + key + ", " + value);
+			}
+		}
+
+		public function setStringAttribute(key:String, value:String):void
+		{
+			if(useNativeExtension())
+			{
+				_context.call("setStringAttribute", key, value);
+			}
+			else
+			{
+				trace("[Teak] setStringAttribute: " + key + ", " + value);
+			}
+		}
+
 		private function onStatus(event:StatusEvent):void
 		{
 			var e:TeakEvent;
