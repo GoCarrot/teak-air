@@ -178,6 +178,19 @@ package io.teak.sdk
 			}
 		}
 
+		public function areNotificationsEnabled():Boolean
+		{
+			if(useNativeExtension())
+			{
+				return _context.call("areNotificationsEnabled");
+			}
+			else
+			{
+				trace("[Teak] areNotificationsEnabled");
+				return false;
+			}
+		}
+
 		private function onStatus(event:StatusEvent):void
 		{
 			var e:TeakEvent;
