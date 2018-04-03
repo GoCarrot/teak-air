@@ -165,6 +165,19 @@ package io.teak.sdk
 			}
 		}
 
+		public function openSettingsAppToThisAppsSettings():Boolean
+		{
+			if(useNativeExtension())
+			{
+				return _context.call("openSettingsAppToThisAppsSettings");
+			}
+			else
+			{
+				trace("[Teak] openSettingsAppToThisAppsSettings");
+				return false;
+			}
+		}
+
 		private function onStatus(event:StatusEvent):void
 		{
 			var e:TeakEvent;

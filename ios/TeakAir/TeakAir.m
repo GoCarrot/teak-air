@@ -31,6 +31,7 @@ extern const char* TeakNotificationGetTeakNotifId(NSObject* notif);
 extern const char* TeakNotificationGetStatus(NSObject* notif);
 extern void TeakSetNumericAttribute(const char* cstr_key, double value);
 extern void TeakSetStringAttribute(const char* cstr_key, const char* cstr_value);
+extern BOOL TeakOpenSettingsAppToThisAppsSettings();
 
 typedef void (^TeakLinkBlock)(NSDictionary* _Nonnull parameters);
 extern void TeakRegisterRoute(const char* route, const char* name, const char* description, TeakLinkBlock block);
@@ -215,6 +216,14 @@ DEFINE_ANE_FUNCTION(setStringAttribute)
    return nil;
 }
 
+DEFINE_ANE_FUNCTION(openSettingsAppToThisAppsSettings)
+{
+   BOOL didOpenSettings = TeakOpenSettingsAppToThisAppsSettings();
+   FREObject ret;
+   FRENewObjectFromBool((uint32_t)didOpenSettings, &ret);
+   return ret;
+}
+
 void checkTeakNotifLaunch(FREContext context, NSDictionary* userInfo)
 {
    const uint8_t* eventCode = (const uint8_t*)"LAUNCHED_FROM_NOTIFICATION";
@@ -255,7 +264,7 @@ void teakOnReward(FREContext context, NSDictionary* userInfo)
 
 void AirTeakContextInitializer(void* extData, const uint8_t* ctxType, FREContext ctx, uint32_t* numFunctionsToTest, const FRENamedFunction** functionsToSet)
 {
-   uint32_t numFunctions = 9;
+   uint32_t numFunctions = 10;
    *numFunctionsToTest = numFunctions;
    FRENamedFunction* func = (FRENamedFunction*) malloc(sizeof(FRENamedFunction) * numFunctions);
 
@@ -294,6 +303,10 @@ void AirTeakContextInitializer(void* extData, const uint8_t* ctxType, FREContext
    func[8].name = (const uint8_t*)"setStringAttribute";
    func[8].functionData = NULL;
    func[8].function = &setStringAttribute;
+
+   func[8].name = (const uint8_t*)"openSettingsAppToThisAppsSettings";
+   func[8].functionData = NULL;
+   func[8].function = &openSettingsAppToThisAppsSettings;
 
    *functionsToSet = func;
 
