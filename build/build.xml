@@ -139,6 +139,16 @@
             <regexpmapper from=".*src.(.*)\.as" to="\1"/>
         </pathconvert>
 
+        <!-- Create symlink so we don't get random failures -->
+        <exec executable="readlink" outputproperty="air.location">
+            <arg line="${env.ADOBE_AIR_HOME}"/>
+        </exec>
+        <basename property="air.version" file="${air.location}"/>
+        <mkdir dir="${env.ADOBE_AIR_HOME}/frameworks/libs/player/11.1/"/>
+        <symlink overwrite="true"
+            link="${env.ADOBE_AIR_HOME}/frameworks/libs/player/11.1/playerglobal.swc"
+            resource="${env.ADOBE_AIR_HOME}/frameworks/libs/player/${air.version}/playerglobal.swc" />
+
         <exec executable="compc" failonerror="true">
             <arg line='-source-path ../actionscript/src'/>
             <arg line='-output ../temp/swc/${name}.swc'/>
@@ -146,6 +156,9 @@
             <arg line='-external-library-path+="${env.ADOBE_AIR_HOME}/frameworks/libs/air/airglobal.swc"'/>
             <arg line='-include-classes ${classlist}'/>
         </exec>
+
+        <!-- Clean up symlink -->
+        <delete dir="${env.ADOBE_AIR_HOME}/frameworks/libs/player/11.1/"/>
 
         <unzip src="../temp/swc/${name}.swc" dest="../temp/swc/content" overwrite="true"/>
         <copy file="../temp/swc/content/library.swf" todir="../temp/ios" overwrite="true"/>
