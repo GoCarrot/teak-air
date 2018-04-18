@@ -191,6 +191,30 @@ package io.teak.sdk
 			}
 		}
 
+		public function getAppConfiguration():Object
+		{
+			if(useNativeExtension())
+			{
+				return JSON.parse(_context.call("getAppConfiguration") as String);
+			}
+			else
+			{
+				return new Object();
+			}
+		}
+
+		public function getDeviceConfiguration():Object
+		{
+			if(useNativeExtension())
+			{
+				return JSON.parse(_context.call("getDeviceConfiguration") as String);
+			}
+			else
+			{
+				return new Object();
+			}
+		}
+
 		private function onStatus(event:StatusEvent):void
 		{
 			var e:TeakEvent;
