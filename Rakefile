@@ -9,7 +9,7 @@ namespace :build do
     HTTParty.post("https://circleci.com/api/v1.1/project/github/GoCarrot/teak-air-cleanroom/tree/master?circle-token=#{CIRCLE_TOKEN}",
                   body: {
                     build_parameters: {
-                      FL_TEAK_SDK_VERSION: `git describe --tags --always`
+                      FL_TEAK_SDK_VERSION: `git describe --tags --always`.strip
                     }
                   }.to_json,
                   headers: {
