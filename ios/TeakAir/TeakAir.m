@@ -31,6 +31,10 @@ extern const char* TeakNotificationGetTeakNotifId(NSObject* notif);
 extern const char* TeakNotificationGetStatus(NSObject* notif);
 extern void TeakSetNumericAttribute(const char* cstr_key, double value);
 extern void TeakSetStringAttribute(const char* cstr_key, const char* cstr_value);
+extern BOOL TeakOpenSettingsAppToThisAppsSettings();
+extern BOOL TeakHasUserDisabledPushNotifications();
+extern const char* TeakGetAppConfiguration();
+extern const char* TeakGetDeviceConfiguration();
 
 typedef void (^TeakLinkBlock)(NSDictionary* _Nonnull parameters);
 extern void TeakRegisterRoute(const char* route, const char* name, const char* description, TeakLinkBlock block);
@@ -215,6 +219,40 @@ DEFINE_ANE_FUNCTION(setStringAttribute)
    return nil;
 }
 
+DEFINE_ANE_FUNCTION(openSettingsAppToThisAppsSettings)
+{
+   BOOL didOpenSettings = TeakOpenSettingsAppToThisAppsSettings();
+   FREObject ret;
+   FRENewObjectFromBool((uint32_t)didOpenSettings, &ret);
+   return ret;
+}
+
+DEFINE_ANE_FUNCTION(areNotificationsEnabled)
+{
+   BOOL notificationsEnabled = !TeakHasUserDisabledPushNotifications();
+   FREObject ret;
+   FRENewObjectFromBool((uint32_t)notificationsEnabled, &ret);
+   return ret;
+}
+
+DEFINE_ANE_FUNCTION(getAppConfiguration)
+{
+   NSData* data = [[NSString stringWithUTF8String:TeakGetAppConfiguration()] dataUsingEncoding:NSUTF8StringEncoding];
+   NSString* jsonString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+   FREObject ret;
+   FRENewObjectFromUTF8((uint32_t)[jsonString length], (const uint8_t*)[jsonString UTF8String], &ret);
+   return ret;
+}
+
+DEFINE_ANE_FUNCTION(getDeviceConfiguration)
+{
+   NSData* data = [[NSString stringWithUTF8String:TeakGetDeviceConfiguration()] dataUsingEncoding:NSUTF8StringEncoding];
+   NSString* jsonString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+   FREObject ret;
+   FRENewObjectFromUTF8((uint32_t)[jsonString length], (const uint8_t*)[jsonString UTF8String], &ret);
+   return ret;
+}
+
 void checkTeakNotifLaunch(FREContext context, NSDictionary* userInfo)
 {
    const uint8_t* eventCode = (const uint8_t*)"LAUNCHED_FROM_NOTIFICATION";
@@ -255,7 +293,7 @@ void teakOnReward(FREContext context, NSDictionary* userInfo)
 
 void AirTeakContextInitializer(void* extData, const uint8_t* ctxType, FREContext ctx, uint32_t* numFunctionsToTest, const FRENamedFunction** functionsToSet)
 {
-   uint32_t numFunctions = 9;
+   uint32_t numFunctions = 13;
    *numFunctionsToTest = numFunctions;
    FRENamedFunction* func = (FRENamedFunction*) malloc(sizeof(FRENamedFunction) * numFunctions);
 
@@ -294,6 +332,22 @@ void AirTeakContextInitializer(void* extData, const uint8_t* ctxType, FREContext
    func[8].name = (const uint8_t*)"setStringAttribute";
    func[8].functionData = NULL;
    func[8].function = &setStringAttribute;
+
+   func[9].name = (const uint8_t*)"openSettingsAppToThisAppsSettings";
+   func[9].functionData = NULL;
+   func[9].function = &openSettingsAppToThisAppsSettings;
+
+   func[10].name = (const uint8_t*)"areNotificationsEnabled";
+   func[10].functionData = NULL;
+   func[10].function = &areNotificationsEnabled;
+
+   func[11].name = (const uint8_t*)"getAppConfiguration";
+   func[11].functionData = NULL;
+   func[11].function = &getAppConfiguration;
+
+   func[12].name = (const uint8_t*)"getDeviceConfiguration";
+   func[12].functionData = NULL;
+   func[12].function = &getDeviceConfiguration;
 
    *functionsToSet = func;
 

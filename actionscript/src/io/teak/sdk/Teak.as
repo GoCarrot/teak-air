@@ -165,6 +165,56 @@ package io.teak.sdk
 			}
 		}
 
+		public function openSettingsAppToThisAppsSettings():Boolean
+		{
+			if(useNativeExtension())
+			{
+				return _context.call("openSettingsAppToThisAppsSettings");
+			}
+			else
+			{
+				trace("[Teak] openSettingsAppToThisAppsSettings");
+				return false;
+			}
+		}
+
+		public function areNotificationsEnabled():Boolean
+		{
+			if(useNativeExtension())
+			{
+				return _context.call("areNotificationsEnabled");
+			}
+			else
+			{
+				trace("[Teak] areNotificationsEnabled");
+				return false;
+			}
+		}
+
+		public function getAppConfiguration():Object
+		{
+			if(useNativeExtension())
+			{
+				return JSON.parse(_context.call("getAppConfiguration") as String);
+			}
+			else
+			{
+				return new Object();
+			}
+		}
+
+		public function getDeviceConfiguration():Object
+		{
+			if(useNativeExtension())
+			{
+				return JSON.parse(_context.call("getDeviceConfiguration") as String);
+			}
+			else
+			{
+				return new Object();
+			}
+		}
+
 		private function onStatus(event:StatusEvent):void
 		{
 			var e:TeakEvent;

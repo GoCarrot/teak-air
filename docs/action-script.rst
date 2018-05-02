@@ -165,6 +165,40 @@ Event
 
 .. note:: This call is processed asynchronously. If you immediately call ``scheduleNotification`` after calling ``cancelAllNotifications`` it is possible for your newly scheduled notification to also be canceled. We recommend waiting until ``TeakEvent.NOTIFICATION_CANCEL_ALL`` has fired before scheduling any new notifications.
 
+Determining if User Has Disabled Push Notifications
+---------------------------------------------------
+You can use Teak to determine if a user has disabled push notifications for your app.
+
+If notifications are disabled, you can prompt them to re-enable them on the settings page for the app, and use Teak to go directly the settings for your app.
+
+Are Notifications Enabled?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+To determine if notifications are enabled, use::
+
+    areNotificationsEnabled():Boolean
+
+This function will return ``false`` if notifications are disabled, or ``true`` if notifications are enabled, or Teak could not determine the status.
+
+Example::
+
+    if (!Teak.instance.areNotificationsEnabled()) {
+        // Show a button that will let users open the settings
+    }
+
+Opening the Settings for Your App
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+If you want to show the settings for your app, use::
+
+    openSettingsAppToThisAppsSettings():Boolean
+
+This function will return ``false`` if Teak was not able to open the settings, ``true`` otherwise.
+
+Example::
+
+    // ...
+    // When a user presses a button indicating they want to change their notification settings
+    Teak.instance.openSettingsAppToThisAppsSettings()
+
 Deep Linking
 ------------
 You can use Teak to register deep links inside of your app for use in push notifications or Teak deep link URLs.
