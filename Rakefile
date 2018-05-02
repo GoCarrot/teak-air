@@ -1,4 +1,5 @@
 require "rake/clean"
+require "httparty"
 CLEAN.include "**/.DS_Store"
 
 CIRCLE_TOKEN = ENV.fetch('CIRCLE_TOKEN') { `aws kms decrypt --ciphertext-blob fileb://kms/encrypted_circle_ci_key.data --output text --query Plaintext | base64 --decode` }

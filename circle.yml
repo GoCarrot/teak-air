@@ -8,7 +8,9 @@ test:
   - ./compile
 dependencies:
   pre:
-  - ./setup
+    - ./setup
+    - gem install bundler
+    - bundle install
   cache_directories:
     - ~/Library/Caches/Homebrew/
 checkout:
