@@ -8,7 +8,9 @@ test:
   - ./compile
 dependencies:
   pre:
-  - ./setup
+    - ./setup
+    - gem install bundler
+    - bundle install
   cache_directories:
     - ~/Library/Caches/Homebrew/
 checkout:
@@ -20,3 +22,4 @@ deployment:
     commands:
       - aws s3 cp bin/io.teak.sdk.Teak.ane s3://teak-build-artifacts/air/io.teak.sdk.Teak-$(git describe --tags --always).ane --acl public-read
       - aws s3 cp bin/io.teak.sdk.Teak.ane s3://teak-build-artifacts/air/io.teak.sdk.Teak.ane --acl public-read
+      - rake build:cleanroom
