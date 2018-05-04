@@ -55,5 +55,7 @@ workflows:
           requires:
             - build
           filters:
+            tags:
+              only: /.*/
             branches:
-              only: [master, /hotfix.*/]
+              ignore: /.*/
