@@ -54,8 +54,8 @@ jobs:
       - run:
           name: Upload SDK to S3
           command: |
-            aws s3 cp bin/io.teak.sdk.Teak.ane s3://teak-build-artifacts/air/io.teak.sdk.Teak-$(git describe --tags --always).ane --acl public-read --dryrun
-            aws s3 cp bin/io.teak.sdk.Teak.ane s3://teak-build-artifacts/air/io.teak.sdk.Teak.ane --acl public-read --dryrun
+            aws s3 cp bin/io.teak.sdk.Teak.ane s3://teak-build-artifacts/air/io.teak.sdk.Teak-$(git describe --tags --always).ane --acl public-read
+            aws s3 cp bin/io.teak.sdk.Teak.ane s3://teak-build-artifacts/air/io.teak.sdk.Teak.ane --acl public-read
       - run:
           name: Trigger Cleanroom Build
           command: bundle exec rake build:cleanroom
@@ -67,8 +67,8 @@ workflows:
       - deploy:
           requires:
             - build
-          # filters:
-          #   tags:
-          #     only: /.*/
-          #   branches:
-          #     ignore: /.*/
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              ignore: /.*/
