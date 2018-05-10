@@ -58,7 +58,7 @@ jobs:
             aws s3 cp bin/io.teak.sdk.Teak.ane s3://teak-build-artifacts/air/io.teak.sdk.Teak.ane --acl public-read --dryrun
       - run:
           name: Trigger Cleanroom Build
-          command: rake build:cleanroom
+          command: bundle exec rake build:cleanroom
 workflows:
   version: 2
   build_and_deploy:
