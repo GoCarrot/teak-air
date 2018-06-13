@@ -66,6 +66,21 @@
         </java>
     </target>
 
+    <target name="xmlns_amazon" description="Add xmlns:amazon to the manifest">
+        <replace file="${temp.path}/AndroidManifest.xml" token="manifest xmlns:android">
+            <replacevalue>manifest xmlns:amazon="http://schemas.amazon.com/apk/res/android" xmlns:android</replacevalue>
+        </replace>
+    </target>
+
+    <target name="enable_adm" description="&lt;amazon:enable-feature&gt; for ADM">
+        <replace file="${temp.path}/AndroidManifest.xml"
+            token="service android:name=&quot;placeholder.enable.adm&quot;">
+            <replacevalue><![CDATA[amazon:enable-feature
+                android:name="com.amazon.device.messaging"
+                android:required="false"]]></replacevalue>
+        </replace>
+    </target>
+
     <target name="debug_sign" description="Sign APK file with debug credentials.">
         <signjar jar="${temp.apk}"
                  storetype="${debug.storetype}"
