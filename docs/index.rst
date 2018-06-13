@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 Getting started with Teak in Adobe AIR
-==============================================
+======================================
 
 .. toctree::
     :maxdepth: 2
@@ -14,6 +14,7 @@ Getting started with Teak in Adobe AIR
     ios
     android
     action-script
+    adm
 
 Hey there!
 
@@ -45,3 +46,9 @@ ActionScript
 * Listen for push notifications
 * Listen for deep links
 * 🎉 Pat yourself on the back, because you did it 🎉
+
+Amazon Device Support
+---------------------
+* Add ADM manifest modifications to your ``app.xml``
+* Add ``api_key.txt`` to your assets
+* Set up your un-pack/re-pack build steps
