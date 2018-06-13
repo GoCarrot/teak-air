@@ -85,6 +85,7 @@ Add the ``xmlns:amazon`` property::
 Add amazon:enable-feature Tag
 -----------------------------
 Enable ADM by adding this tag::
+
     <amazon:enable-feature android:name="com.amazon.device.messaging" android:required="false"/>
 
 It should be located right above this::
@@ -99,6 +100,7 @@ Copy your ``api_key.txt`` to ``<temp_path>/assets/api_key.txt``
 
 Re-pack your APK
 ----------------
+Re-pack your apk using ``apktool``::
 
     java -jar apktool_2.1.0.jar b --output output.apk <temp_path>
 
