@@ -44,6 +44,16 @@ ADM requires that you have an ``api_key.txt`` in the assets folder of your Andro
 
 In order to get your ``api_key.txt`` follow the instructions located here: https://developer.amazon.com/docs/adm/obtain-credentials.html
 
+Once you have completed these steps, go to your apps on the Amazon Developer site, and look at the Security Profiles https://developer.amazon.com/iba-sp/overview.html
+
+Click on the security profile for your app.
+
+Copy the value in the Amazon security profile for **Client ID** into the Teak Mobile Settings for your app for **ADM Client ID**.
+
+Copy the value in the Amazon security profile for **Client Secret** into the Teak Mobile Settings for your app for **ADM Client Secret**.
+
+This gives Teak the information it needs to send ADM messages to your app.
+
 Add api_key.txt to your Assets
 ------------------------------
 You can add ``api_key.txt`` to your APK in one of two ways:
@@ -107,3 +117,44 @@ Re-pack your apk using ``apktool``::
 Sign and zipalign Your New APK
 ------------------------------
 Follow these instructions to sign and ``zipalign`` the resulting APK: https://developer.android.com/studio/publish/app-signing#sign-manually
+
+Give it a Try
+-------------
+You should now have what you need to test ADM support.
+
+Keep an eye on the debug console, if you see::
+
+    Add this to your <application> in AndroidManifest.xml in order to use ADM: <amazon:enable-feature android:name="com.amazon.device.messaging" android:required="false" />
+
+Revisit step 3 in https://developer.amazon.com/docs/adm/integrate-your-app.html#update-your-app-manifest
+
+If you see log output with ``event_type`` of ``amazon.adm.registration_error`` Teak is trying to determine why ADM registration has failed. If you see::
+
+    Unable to find 'api_key.txt' in assets [...]
+
+``api_key.txt`` is not in the Android assets. Revisit https://developer.amazon.com/docs/adm/integrate-your-app.html#store-your-api-key-as-an-asset
+
+If you see::
+
+    Whitespace found in 'api_key.txt'
+
+There is whitespace somewhere in the contents of ``api_key.txt``, this will prevent Amazon's SDK from reading the key. Remove the whitespace, it is usually a trailing newline.
+
+If you see::
+
+    Potentially malformed contents of 'api_key.txt', does not contain three sections delimited by '.'
+
+The contents of ``api_key.txt`` are incorrect. Revisit https://developer.amazon.com/docs/adm/integrate-your-app.html#store-your-api-key-as-an-asset
+
+If you see::
+
+    Package name mismatch in 'api_key.txt'
+
+The package name of your app does not match the package name inside ``api_key.txt``. The ``api_key.txt`` must be generated for the package name of your app.
+
+If you see::
+
+    App signature SHA-256 does not match api_key.txt
+    App signature MD5 does not match api_key.txt
+
+The signature your app was signed with does not match any of the signatures in ``api_key.txt``. Revisit step 8 in https://developer.amazon.com/docs/adm/obtain-credentials.html
