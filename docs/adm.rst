@@ -84,13 +84,11 @@ Add xmlns:amazon Property
 -------------------------
 At the top of your ``<temp_path>/AndroidManifest.xml`` you will see::
 
-    <manifest xmlns:android="http://schemas.android.com/apk/res/android" [...] >
+    <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
 Add the ``xmlns:amazon`` property:: 
 
-    <manifest xmlns:amazon="http://schemas.amazon.com/apk/res/android" xmlns:android="http://schemas.android.com/apk/res/android" [...] >
-
-    <manifest xmlns:android="http://schemas.android.com/apk/res/android" [...] >
+    <manifest xmlns:amazon="http://schemas.amazon.com/apk/res/android" xmlns:android="http://schemas.android.com/apk/res/android">
 
 Add amazon:enable-feature Tag
 -----------------------------
