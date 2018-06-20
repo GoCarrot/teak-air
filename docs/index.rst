@@ -15,6 +15,7 @@ Getting started with Teak in Adobe AIR
     android
     action-script
     adm
+    limiting-data-collection
 
 Hey there!
 
