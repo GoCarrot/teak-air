@@ -1,3 +1,5 @@
+.. include:: global.rst
+
 Amazon Device Messaging
 =======================
 .. highlight:: xml

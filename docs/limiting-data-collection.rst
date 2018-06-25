@@ -1,3 +1,5 @@
+.. include:: global.rst
+
 Limiting Data Collection
 ========================
 .. highlight:: xml
