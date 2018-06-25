@@ -55,6 +55,9 @@ Add the Teak Universal Link domain to the ``<Entitlements>`` section of your AIR
         <!-- Other iPhone Configuration -->
         <Entitlements>
             <![CDATA[
+                <key>aps-environment</key>
+                <string>YOUR_PUSH_ENVIRONMENT</string>
+
                 <key>com.apple.developer.associated-domains</key>
                 <array>
                     <string>applinks:YOUR_DOMAIN_PREFIX.jckpt.me</string>
@@ -62,6 +65,8 @@ Add the Teak Universal Link domain to the ``<Entitlements>`` section of your AIR
             ]]>
        </Entitlements>
     </iPhone>
+
+.. note:: Replace ``YOUR_PUSH_ENVIRONMENT`` with ``development`` for debug builds, or ``production`` for release builds.
 
 .. note:: Replace ``YOUR_DOMAIN_PREFIX`` with the domain prefix for your game.
 
