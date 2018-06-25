@@ -151,12 +151,13 @@ To cancel all previously scheduled local notifications, use::
 
 Event
     Upon successful completion, the ``TeakEvent.NOTIFICATION_CANCEL_ALL`` event will be triggered. ``event.status``
-    will be one of the following
-        ``ok`` The request was succesfully processed
+    will be one of the following:
 
-        ``invalid_device`` The current device has not been registered with Teak. This is likely caused by ```identifyUser()``` not being called
+        * ``ok`` The request was succesfully processed
 
-        ``error.internal`` An unexpected error occurred and the request should be retried
+        * ``invalid_device`` The current device has not been registered with Teak. This is likely caused by ```identifyUser()``` not being called
+
+        * ``error.internal`` An unexpected error occurred and the request should be retried
 
     If status is ``ok`` then event.data will be a JSON encoded array. Each entry in the array will be an
     Object with ``scheduleId`` and ``creativeId`` entries. ``scheduleId`` is the id originally received from the
