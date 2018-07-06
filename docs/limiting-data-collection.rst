@@ -25,7 +25,7 @@ Add the following to your ``Info.plist``::
 
 Facebook Access Token
 ---------------------
-.. warning:: If you prevent Teak from collecting the Facebook Access Token, Teak will no longer be able to corrilate users across multiple devices.
+.. warning:: If you prevent Teak from collecting the Facebook Access Token, Teak will no longer be able to correlate users across multiple devices.
 
 Android
 ^^^^^^^
