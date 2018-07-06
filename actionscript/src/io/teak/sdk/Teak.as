@@ -84,11 +84,17 @@ package io.teak.sdk
 			}
 		}
 
-		public function identifyUser(userIdentifier:String):void
+		public static const OPT_OUT_IDFA:String = "opt_out_idfa";
+		public static const OPT_OUT_FACEBOOK:String = "opt_out_facebook";
+		public static const OPT_OUT_PUSH_KEY:String = "opt_out_push_key";
+
+		public function identifyUser(userIdentifier:String, optOut:Array = null):void
 		{
+			if(optOut === null) optOut = new Array();
+
 			if(useNativeExtension())
 			{
-				_context.call("identifyUser", userIdentifier);
+				_context.call("identifyUser", userIdentifier, JSON.stringify(optOut));
 			}
 			else
 			{
