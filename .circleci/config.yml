@@ -31,6 +31,9 @@ jobs:
           root: bin/
           paths:
             - io.teak.sdk.Teak.ane
+      - run:
+          name: ReadTheDocs.org Unified Docs
+          command: curl -X POST -d "branches=master" -d "token=$RTD_TOKEN" https://readthedocs.org/api/v2/webhook/teak/41148/
   deploy_versioned:
     docker:
       - image: circleci/ruby:latest

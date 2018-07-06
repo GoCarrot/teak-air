@@ -3,10 +3,21 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+.. include:: global.rst
+
 Getting started with Teak in Adobe AIR
-==============================================
+======================================
 
 .. toctree::
+    :caption: Teak Documentation
+    :maxdepth: 2
+    :hidden:
+
+    Home <https://teak.readthedocs.io/en/latest/>
+    Unity <https://teak.readthedocs.io/projects/unity/en/latest/index.html>
+
+.. toctree::
+    :caption: Adobe AIR
     :maxdepth: 2
     :hidden:
 
@@ -14,6 +25,8 @@ Getting started with Teak in Adobe AIR
     ios
     android
     action-script
+    adm
+    limiting-data-collection
 
 Hey there!
 
@@ -45,3 +58,9 @@ ActionScript
 * Listen for push notifications
 * Listen for deep links
 * 🎉 Pat yourself on the back, because you did it 🎉
+
+Amazon Device Support
+---------------------
+* Add ADM manifest modifications to your ``app.xml``
+* Add ``api_key.txt`` to your assets
+* Set up your un-pack/re-pack build steps

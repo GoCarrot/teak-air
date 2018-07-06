@@ -22,7 +22,7 @@
 extern void Teak_Plant(Class appDelegateClass, NSString* appId, NSString* appSecret);
 
 // From TeakCExtern.m
-extern void TeakIdentifyUser(const char* userId);
+extern void TeakIdentifyUser(const char* userId, const char* optOutJsonArray);
 extern NSObject* TeakNotificationSchedule(const char* creativeId, const char* message, int64_t delay);
 extern NSObject* TeakNotificationCancel(const char* scheduleId);
 extern NSObject* TeakNotificationCancelAll();
@@ -60,9 +60,11 @@ DEFINE_ANE_FUNCTION(identifyUser)
 {
    uint32_t stringLength;
    const uint8_t* userId;
-   if(FREGetObjectAsUTF8(argv[0], &stringLength, &userId) == FRE_OK)
+   const uint8_t* optOutJson;
+   if(FREGetObjectAsUTF8(argv[0], &stringLength, &userId) == FRE_OK &&
+      FREGetObjectAsUTF8(argv[1], &stringLength, &optOutJson) == FRE_OK)
    {
-      TeakIdentifyUser((const char*)userId);
+      TeakIdentifyUser((const char*)userId, (const char*)optOutJson);
    }
 
    return nil;
