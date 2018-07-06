@@ -59,6 +59,8 @@
             <redirector outputproperty="sdk.gitversion"/>
         </exec>
 
+        <delete dir="../ios/build"/>
+
         <exec executable="xcodebuild" failonerror="true" dir="../ios/">
             <arg line="-project ${name}Air.xcodeproj"/>
             <arg line="-sdk ${ios.sdkversion}"/>
