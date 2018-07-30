@@ -70,6 +70,15 @@ package io.teak.sdk
 			remoteNot.subscribe(subscribeOptions);
 		}
 
+		public function registerForProvisionalNotifications():Boolean
+		{
+			if(_isIOS())
+			{
+				return _context.call("requestProvisionalPushAuthorization");
+			}
+			return false;
+		}
+
 		public function registerRoute(route:String, name:String, description:String, callback:Function):void
 		{
 			_deepLinks[route] = callback;
