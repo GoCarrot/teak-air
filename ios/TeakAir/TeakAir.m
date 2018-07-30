@@ -35,6 +35,7 @@ extern BOOL TeakOpenSettingsAppToThisAppsSettings();
 extern BOOL TeakHasUserDisabledPushNotifications();
 extern const char* TeakGetAppConfiguration();
 extern const char* TeakGetDeviceConfiguration();
+extern void TeakReportTestException();
 
 typedef void (^TeakLinkBlock)(NSDictionary* _Nonnull parameters);
 extern void TeakRegisterRoute(const char* route, const char* name, const char* description, TeakLinkBlock block);
@@ -255,6 +256,12 @@ DEFINE_ANE_FUNCTION(getDeviceConfiguration)
    return ret;
 }
 
+DEFINE_ANE_FUNCTION(reportTestException)
+{
+   TeakReportTestException();
+   return nil;
+}
+
 void checkTeakNotifLaunch(FREContext context, NSDictionary* userInfo)
 {
    const uint8_t* eventCode = (const uint8_t*)"LAUNCHED_FROM_NOTIFICATION";
@@ -295,7 +302,7 @@ void teakOnReward(FREContext context, NSDictionary* userInfo)
 
 void AirTeakContextInitializer(void* extData, const uint8_t* ctxType, FREContext ctx, uint32_t* numFunctionsToTest, const FRENamedFunction** functionsToSet)
 {
-   uint32_t numFunctions = 13;
+   uint32_t numFunctions = 14;
    *numFunctionsToTest = numFunctions;
    FRENamedFunction* func = (FRENamedFunction*) malloc(sizeof(FRENamedFunction) * numFunctions);
 
@@ -350,6 +357,10 @@ void AirTeakContextInitializer(void* extData, const uint8_t* ctxType, FREContext
    func[12].name = (const uint8_t*)"getDeviceConfiguration";
    func[12].functionData = NULL;
    func[12].function = &getDeviceConfiguration;
+
+   func[13].name = (const uint8_t*)"reportTestException";
+   func[13].functionData = NULL;
+   func[13].function = &reportTestException;
 
    *functionsToSet = func;
 

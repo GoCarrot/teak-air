@@ -303,6 +303,14 @@ package io.teak.sdk
 			}
 		}
 
+		public function testExceptionReporting():void
+		{
+			if(useNativeExtension())
+			{
+				_context.call("_testExceptionReporting");
+			}
+		}
+
 		private static var _instance:Teak;
 		private static const EXTENSION_ID:String = "io.teak.sdk.Teak";
 
