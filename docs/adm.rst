@@ -12,7 +12,7 @@ Amazon devices do not support GCM/FCM and instead use Amazon's push notification
 
 Add Permissions and Teak Components to your AIR XML
 ---------------------------------------------------
-Add the following to the ``<application>`` section::
+Add the following to the ``<manifest>`` section, above the opening ``<application>`` tag::
 
     <permission
         android:name="YOUR_PACKAGE_NAME.permission.RECEIVE_ADM_MESSAGE"
@@ -20,6 +20,8 @@ Add the following to the ``<application>`` section::
     <uses-permission android:name="YOUR_PACKAGE_NAME.permission.RECEIVE_ADM_MESSAGE" />
     <uses-permission android:name="com.amazon.device.messaging.permission.RECEIVE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+Add the following to the ``<application>`` section::
 
     <!-- If you are using the Teak build scripts, uncomment the next line -->
     <!-- <service android:name="placeholder.enable.adm" /> -->
