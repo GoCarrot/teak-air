@@ -20,6 +20,7 @@ package io.teak.sdk
 	{
 		public static const LAUNCHED_FROM_NOTIFICATION:String = "launchedFromNotification";
 		public static const NOTIFICATION_SCHEDULED:String = "notificationScheduled";
+		public static const LONG_DISTANCE_NOTIFICATION_SCHEDULED:String = "longDistanceNotificationScheduled";
 		public static const NOTIFICATION_CANCELED:String = "notificationCanceled";
 		public static const NOTIFICATION_CANCEL_ALL:String = "notificationCancelAll";
 		public static const ON_REWARD:String = "onReward";
