@@ -212,7 +212,7 @@ Are Notifications Enabled?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 To determine if notifications are enabled, use::
 
-    areNotificationsEnabled():Boolean
+    Teak.instance.areNotificationsEnabled():Boolean
 
 This function will return ``false`` if notifications are disabled, or ``true`` if notifications are enabled, or Teak could not determine the status.
 
@@ -226,7 +226,7 @@ Opening the Settings for Your App
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 If you want to show the settings for your app, use::
 
-    openSettingsAppToThisAppsSettings():Boolean
+    Teak.instance.openSettingsAppToThisAppsSettings():Boolean
 
 This function will return ``false`` if Teak was not able to open the settings, ``true`` otherwise.
 
@@ -244,7 +244,7 @@ Registering a Deep Link from ActionScript
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 To schedule a notification from your game, simply use::
 
-   registerRoute(route:String, name:String, description:String, callback:Function):void
+   Teak.instance.registerRoute(route:String, name:String, description:String, callback:Function):void
 
 Parameters
     :route: The URL pattern, including variables, that routes incoming deep links to the specified code.
