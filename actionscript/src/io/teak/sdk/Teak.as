@@ -136,7 +136,7 @@ package io.teak.sdk
 			{
 				trace("[Teak] Scheduling long distance notification (" + creativeId + ") for " + delayInSeconds + " from now to users: " + userIds);
 
-				var e:TeakEvent = new TeakEvent(TeakEvent.NOTIFICATION_SCHEDULED, "DEBUG-SCHEDULE-ID");
+				var e:TeakEvent = new TeakEvent(TeakEvent.LONG_DISTANCE_NOTIFICATION_SCHEDULED, "[\"DEBUG-SCHEDULE-ID\"]");
 				this.dispatchEvent(e);
 			}
 		}
