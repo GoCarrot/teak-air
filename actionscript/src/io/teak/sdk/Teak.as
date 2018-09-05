@@ -126,6 +126,21 @@ package io.teak.sdk
 			}
 		}
 
+		public function scheduleLongDistanceNotification(creativeId:String, delayInSeconds:Number, userIds:Array):void
+		{
+			if(useNativeExtension())
+			{
+				_context.call("scheduleLongDistanceNotification", creativeId, delayInSeconds, userIds);
+			}
+			else
+			{
+				trace("[Teak] Scheduling long distance notification (" + creativeId + ") for " + delayInSeconds + " from now to users: " + userIds);
+
+				var e:TeakEvent = new TeakEvent(TeakEvent.LONG_DISTANCE_NOTIFICATION_SCHEDULED, "[\"DEBUG-SCHEDULE-ID\"]");
+				this.dispatchEvent(e);
+			}
+		}
+
 		public function cancelNotification(scheduleId:String):void
 		{
 			if(useNativeExtension())
@@ -243,6 +258,11 @@ package io.teak.sdk
 				case "NOTIFICATION_SCHEDULED": {
 						eventData = JSON.parse(event.level);
 						e = new TeakEvent(TeakEvent.NOTIFICATION_SCHEDULED, eventData.data, eventData.status);
+					}
+					break;
+				case "LONG_DISTANCE_NOTIFICATION_SCHEDULED": {
+						eventData = JSON.parse(event.level);
+						e = new TeakEvent(TeakEvent.LONG_DISTANCE_NOTIFICATION_SCHEDULED, eventData.data, eventData.status);
 					}
 					break;
 				case "NOTIFICATION_CANCELED": {

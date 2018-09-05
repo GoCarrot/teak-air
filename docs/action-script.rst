@@ -2,6 +2,7 @@
 
 ActionScript
 ============
+.. highlight:: as3
 
 Tell Teak how to Identify The Current User
 ------------------------------------------
@@ -104,16 +105,17 @@ You can use Teak to schedule notifications for the future.
 
 Scheduling a Local Notification
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-To schedule a notification from your game, simply use::
+To schedule a notification from your game, use::
 
-    scheduleNotification(creativeId:String, defaultMessage:String, delayInSeconds:Number):void
+    Teak.instance.scheduleNotification(creativeId:String, defaultMessage:String,
+        delayInSeconds:Number):void
 
 Parameters
-    ``creativeId`` - A value used to identify the message creative in the Teak CMS e.g. "daily_bonus"
+    :creativeId: A value used to identify the message creative in the Teak CMS e.g. "daily_bonus"
 
-    ``defaultMessage`` - The text to use in the notification if there are no modifications in the Teak CMS.
+    :defaultMessage: The text to use in the notification if there are no modifications in the Teak CMS.
 
-    ``delayInSeconds`` - The number of seconds from the current time before the notification should be sent.
+    :delayInSeconds: The number of seconds from the current time before the notification should be sent.
 
 Event
     Upon successful completion, the ``TeakEvent.NOTIFICATION_SCHEDULED`` event will be triggered.
@@ -129,16 +131,47 @@ And::
         trace("Scheduled id " + e.data);
     }
 
-The data field of the event will contain the schedule id of the notification, for use with cancelNotification.
+The data field of the event will contain the schedule id of the notification, for use with ``cancelNotification()``.
+
+Scheduling a Long-Distance Notification
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+To schedule a notification from your game that will be delivered to another user, use::
+
+    Teak.instance.scheduleLongDistanceNotification(creativeId:String, delayInSeconds:Number,
+        userIds:Array):void
+
+Parameters
+    :creativeId: A value used to identify the message creative in the Teak CMS e.g. "daily_bonus"
+
+    :delayInSeconds: The number of seconds from the current time before the notification should be sent.
+
+    :userIds: An array of user ids to which the notification should be delivered
+
+Event
+    Upon successful completion, the ``TeakEvent.LONG_DISTANCE_NOTIFICATION_SCHEDULED`` event will be triggered.
+
+Listen for this event by adding an event listener::
+
+    Teak.instance.addEventListener(TeakEvent.LONG_DISTANCE_NOTIFICATION_SCHEDULED,
+        scheduledLongDistanceNotification);
+
+And::
+
+    private function scheduledLongDistanceNotification(e:TeakEvent):void
+    {
+        trace("Scheduled ids " + e.data);
+    }
+
+The data field of the event will contain a JSON encoded array of scheduled ids, for use with ``cancelNotification()``.
 
 Canceling a Local Notification
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 To cancel a previously scheduled local notification, use::
 
-    cancelNotification(scheduleId:String):void
+    Teak.instance.cancelNotification(scheduleId:String):void
 
 Parameters
-    ``scheduleId`` - The id received from the ``TeakEvent.NOTIFICATION_SCHEDULED`` event.
+    :scheduleId: The id received from the ``TeakEvent.NOTIFICATION_SCHEDULED`` event.
 
 Event
     Upon successful completion, the ``TeakEvent.NOTIFICATION_CANCELED event`` will be triggered.
@@ -149,22 +182,23 @@ Canceling all Local Notifications
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 To cancel all previously scheduled local notifications, use::
 
-    cancelAllNotifications():void
+    Teak.instance.cancelAllNotifications():void
 
 Event
     Upon successful completion, the ``TeakEvent.NOTIFICATION_CANCEL_ALL`` event will be triggered. ``event.status``
     will be one of the following:
 
-        * ``ok`` The request was succesfully processed
+        :ok: The request was succesfully processed
 
-        * ``invalid_device`` The current device has not been registered with Teak. This is likely caused by ```identifyUser()``` not being called
+        :invalid_device: The current device has not been registered with Teak. This is likely caused by ```identifyUser()``` not being called
 
-        * ``error.internal`` An unexpected error occurred and the request should be retried
+        :error.internal: An unexpected error occurred and the request should be retried
 
-    If status is ``ok`` then event.data will be a JSON encoded array. Each entry in the array will be an
-    Object with ``scheduleId`` and ``creativeId`` entries. ``scheduleId`` is the id originally received from the
-    ``TeakEvent.NOTIFICATION_SCHEDULED`` event. ``creativeId`` is the ``creativeId`` originally passed to
-    ``scheduleNotification(creativeId:String, defaultMessage:String, delayInSeconds:Number):void``
+    If status is ``ok`` then event.data will be a JSON encoded array. Each entry in the array will be an Object containing:
+
+        :scheduleId: The id originally received from the ``TeakEvent.NOTIFICATION_SCHEDULED`` event.
+
+        :creativeId: The the ``creativeId`` originally passed to ``scheduleNotification()`` or ``scheduleLongDistanceNotification()``
 
 .. note:: This call is processed asynchronously. If you immediately call ``scheduleNotification`` after calling ``cancelAllNotifications`` it is possible for your newly scheduled notification to also be canceled. We recommend waiting until ``TeakEvent.NOTIFICATION_CANCEL_ALL`` has fired before scheduling any new notifications.
 
@@ -178,7 +212,7 @@ Are Notifications Enabled?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 To determine if notifications are enabled, use::
 
-    areNotificationsEnabled():Boolean
+    Teak.instance.areNotificationsEnabled():Boolean
 
 This function will return ``false`` if notifications are disabled, or ``true`` if notifications are enabled, or Teak could not determine the status.
 
@@ -192,7 +226,7 @@ Opening the Settings for Your App
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 If you want to show the settings for your app, use::
 
-    openSettingsAppToThisAppsSettings():Boolean
+    Teak.instance.openSettingsAppToThisAppsSettings():Boolean
 
 This function will return ``false`` if Teak was not able to open the settings, ``true`` otherwise.
 
@@ -210,16 +244,16 @@ Registering a Deep Link from ActionScript
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 To schedule a notification from your game, simply use::
 
-   registerRoute(route:String, name:String, description:String, callback:Function):void
+   Teak.instance.registerRoute(route:String, name:String, description:String, callback:Function):void
 
 Parameters
-    ``route`` - The URL pattern, including variables, that routes incoming deep links to the specified code.
+    :route: The URL pattern, including variables, that routes incoming deep links to the specified code.
 
-    ``name`` - The name used to identify the deep link route, used in the Teak dashboard.
+    :name: The name used to identify the deep link route, used in the Teak dashboard.
 
-    ``description`` - The description of the deep link route, used in the Teak dashboard.
+    :description: The description of the deep link route, used in the Teak dashboard.
 
-    ``callback`` - The function to execute when the deep link route is called. The parameters of the function are passed as an object map.
+    :callback: The function to execute when the deep link route is called. The parameters of the function are passed as an object map.
 
 Example::
 

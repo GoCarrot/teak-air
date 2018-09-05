@@ -24,6 +24,7 @@ extern void Teak_Plant(Class appDelegateClass, NSString* appId, NSString* appSec
 // From TeakCExtern.m
 extern void TeakIdentifyUser(const char* userId, const char* optOutJsonArray);
 extern NSObject* TeakNotificationSchedule(const char* creativeId, const char* message, int64_t delay);
+extern NSObject* TeakNotificationScheduleLongDistanceWithNSArray(const char* creativeId, int64_t delay, NSArray* userIds);
 extern NSObject* TeakNotificationCancel(const char* scheduleId);
 extern NSObject* TeakNotificationCancelAll();
 extern BOOL TeakNotificationIsCompleted(NSObject* notif);
@@ -126,6 +127,33 @@ DEFINE_ANE_FUNCTION(scheduleNotification)
    {
       NSObject* notif = TeakNotificationSchedule((const char*)creativeId, (const char*)message, (int64_t)delay);
       waitOnNotifFuture(notif, (const uint8_t*)"NOTIFICATION_SCHEDULED", context);
+   }
+
+   return nil;
+}
+
+DEFINE_ANE_FUNCTION(scheduleLongDistanceNotification)
+{
+   uint32_t stringLength, arrayLength;
+   const uint8_t* creativeId;
+   double delay;
+   if(FREGetObjectAsUTF8(argv[0], &stringLength, &creativeId) == FRE_OK &&
+      FREGetObjectAsDouble(argv[1], &delay) == FRE_OK &&
+      FREGetArrayLength(argv[2], &arrayLength) == FRE_OK)
+   {
+      NSMutableArray* userIds = [[NSMutableArray alloc] init];
+      for (uint32_t i = 0; i < arrayLength; i++)
+      {
+         FREObject elem;
+         const uint8_t* elemAsStr;
+         if (FREGetArrayElementAt(argv[2], i, &elem) == FRE_OK &&
+             FREGetObjectAsUTF8(elem, &stringLength, &elemAsStr) == FRE_OK)
+         {
+            [userIds addObject:[NSString stringWithUTF8String:(const char*)elemAsStr]];
+         }
+      }
+      NSObject* notif = TeakNotificationScheduleLongDistanceWithNSArray((const char*)creativeId, (int64_t)delay, userIds);
+      waitOnNotifFuture(notif, (const uint8_t*)"LONG_DISTANCE_NOTIFICATION_SCHEDULED", context);
    }
 
    return nil;
@@ -311,7 +339,7 @@ void teakOnReward(FREContext context, NSDictionary* userInfo)
 
 void AirTeakContextInitializer(void* extData, const uint8_t* ctxType, FREContext ctx, uint32_t* numFunctionsToTest, const FRENamedFunction** functionsToSet)
 {
-   uint32_t numFunctions = 15;
+   uint32_t numFunctions = 16;
    *numFunctionsToTest = numFunctions;
    FRENamedFunction* func = (FRENamedFunction*) malloc(sizeof(FRENamedFunction) * numFunctions);
 
@@ -374,6 +402,10 @@ void AirTeakContextInitializer(void* extData, const uint8_t* ctxType, FREContext
    func[14].name = (const uint8_t*)"requestProvisionalPushAuthorization";
    func[14].functionData = NULL;
    func[14].function = &requestProvisionalPushAuthorization;
+
+   func[15].name = (const uint8_t*)"scheduleLongDistanceNotification";
+   func[15].functionData = NULL;
+   func[15].function = &scheduleLongDistanceNotification;
 
    *functionsToSet = func;
 
