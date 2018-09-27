@@ -11,7 +11,7 @@
     <target name="release" depends="unpack,check-multi-dex,patch,copy_res,repack,release_sign,zipalign" description="Prepare APK for debug distribution."/>
 
     <target name="unpack" description="Unpack APK file.">
-        <java jar="apktool_2.1.0.jar" fork="true" failonerror="true">
+        <java jar="apktool_2.3.4.jar" fork="true" failonerror="true">
             <arg value="d"/>
             <arg value="--force"/>
             <arg value="--output"/>
