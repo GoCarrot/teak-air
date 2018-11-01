@@ -8,13 +8,7 @@
 Getting started with Teak in Adobe AIR
 ======================================
 
-.. toctree::
-    :caption: Teak Documentation
-    :maxdepth: 2
-    :hidden:
-
-    Home <https://teak.readthedocs.io/en/latest/>
-    Unity <https://teak.readthedocs.io/projects/unity/en/latest/index.html>
+.. include:: teak-docs-common/sidebar-top.rst
 
 .. toctree::
     :caption: Adobe AIR
@@ -27,6 +21,9 @@ Getting started with Teak in Adobe AIR
     action-script
     adm
     limiting-data-collection
+
+.. include:: teak-docs-common/sidebar.rst
+
 
 Hey there!
 
