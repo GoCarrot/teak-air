@@ -13,3 +13,7 @@ ios/TeakAir.xcodeproj/xcuserdata
 ios/build
 ios/Teak.framework*
 build/extension.xml
+_build
+_static
+_templates
+_doxygen
