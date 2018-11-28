@@ -58,7 +58,7 @@
     </target>
 
     <target name="repack" description="Repack APK file.">
-        <java jar="apktool_2.1.0.jar" fork="true" failonerror="true">
+        <java jar="apktool_2.3.4.jar" fork="true" failonerror="true">
             <arg value="b"/>
             <arg value="--output"/>
             <arg value="${temp.apk}"/>
