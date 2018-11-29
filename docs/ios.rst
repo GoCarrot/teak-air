@@ -7,7 +7,10 @@ iOS
 Add Teak settings to Info.plist
 -------------------------------
 
-Add the *TeakAppId* and *TeakApiKey* key-value pairs, and the Teak URL Scheme to the ``<InfoAdditions>`` section of your AIR XML::
+Add the *TeakAppId* and *TeakApiKey* key-value pairs, and the Teak URL Scheme to the ``<InfoAdditions>`` section of your AIR XML:
+
+.. code-block:: xml
+   :emphasize-lines: 8-28
 
     <iPhone>
         <!-- Other iPhone Configuration -->
@@ -43,13 +46,14 @@ Add the *TeakAppId* and *TeakApiKey* key-value pairs, and the Teak URL Scheme to
 
 .. note:: Replace ``YOUR_TEAK_APP_ID``, and ``YOUR_TEAK_API_KEY`` with your game's values.
 
-Your Teak App Id and API Key can be found in the Settings for your app on the Teak dashboard:
-
-.. warning:: TODO: Screenshot
+Your Teak App Id and API Key can be found in the Settings for your app on the Teak dashboard.
 
 Add Teak settings to Entitlements
 ---------------------------------
-Add the Teak Universal Link domain to the ``<Entitlements>`` section of your AIR XML::
+Add the Teak Universal Link domain to the ``<Entitlements>`` section of your AIR XML:
+
+.. code-block:: xml
+   :emphasize-lines: 5-11
 
     <iPhone>
         <!-- Other iPhone Configuration -->
@@ -72,9 +76,7 @@ Add the Teak Universal Link domain to the ``<Entitlements>`` section of your AIR
 
 .. note:: Your provisioning profile must include the applinks entitlement. If you are running into issues where you cannot install your iOS app onto a test device, this is likely the issue.
 
-Your Teak domain prefix can be found in the Settings for your app on the Teak dashboard:
-
-.. warning:: TODO: Screenshot
+Your Teak domain prefix can be found in the Settings for your app on the Teak dashboard.
 
 What This Does
 --------------
@@ -87,8 +89,6 @@ Build your AIR game for iOS, and install it on your device.
 In Xcode, go to **Window > Devices** and select the connected iOS device. Then run the installed Adobe AIR application.
 
 You will be able to see debug log output in the window by clicking on the arrow in a box along the bottom bar.
-
-.. warning:: TODO: Screenshot
 
 You Should See
 ^^^^^^^^^^^^^^

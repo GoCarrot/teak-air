@@ -38,6 +38,8 @@ We're going to give you step-by-step instructions for integrating Teak with Adob
 
 Here is an overview of what we'll be doing.
 
+.. important:: The minimum version of Adobe AIR supported by Teak is 30.0.
+
 Setup
 -----
 * Add the Teak ANE
