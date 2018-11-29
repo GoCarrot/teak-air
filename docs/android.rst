@@ -4,6 +4,8 @@ Android
 =======
 .. highlight:: xml
 
+.. _android-dependencies:
+
 Android Dependencies
 --------------------
 Teak for Android depends on Firebase Messaging (FCM) and Android Support v4. These dependencies are not bundled with the Teak ANE.
