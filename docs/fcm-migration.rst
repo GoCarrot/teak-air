@@ -4,15 +4,15 @@
 
 Migrating to FCM and Teak 2.0
 =============================
-GCM was deprecated April 10, 2018, and will be removed "as soon as April 11, 2019" according to Google (https://developers.google.com/cloud-messaging/faq).
+GCM was deprecated April 10, 2018, and will be removed "as soon as April 11, 2019" `according to Google <https://developers.google.com/cloud-messaging/faq>`_.
 
 :Since: 2.0.0
 
 The Teak SDK no longer supports GCM, but we're going to make your migration to FCM as painless as possible.
 
-Update to at least Air 29
+Update to at least AIR 29
 -------------------------
-if you are using a lower version of Air, you'll need to update to Air 29. There should be no changes required for this besides the update.
+If you are using a lower version of AIR, you'll need to update to AIR 29.
 
 Permissions
 -----------
