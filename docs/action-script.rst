@@ -202,21 +202,30 @@ Event
 
 Determining if User Has Disabled Push Notifications
 ---------------------------------------------------
-You can use Teak to determine if a user has disabled push notifications for your app.
+You can use Teak to get the state of push notifications for your app.
 
 If notifications are disabled, you can prompt them to re-enable them on the settings page for the app, and use Teak to go directly the settings for your app.
 
-Are Notifications Enabled?
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
-To determine if notifications are enabled, use::
+Get Notification State
+^^^^^^^^^^^^^^^^^^^^^^
+To determine the state of push notifications, use::
 
-    Teak.instance.areNotificationsEnabled():Boolean
+    Teak.instance.getNotificationState():TeakNotificationState
 
-This function will return ``false`` if notifications are disabled, or ``true`` if notifications are enabled, or Teak could not determine the status.
+Return
+    :UnableToDetermine: Unable to determine the notification state.
+
+    :Enabled: Notifications are enabled, your app can send push notifications.
+
+    :Disabled: Notifications are disabled, your app cannot send push notifications.
+
+    :Provisional: Provisional notifications are enabled, your app can send notifications but they will only display in the Notification Center (iOS 12+ only).
+
+    :NotRequested: The user has not been asked to authorize push notifications (iOS only).
 
 Example::
 
-    if (!Teak.instance.areNotificationsEnabled()) {
+    if (Teak.instance.getNotificationState() === TeakNotificationState.Disabled) {
         // Show a button that will let users open the settings
     }
 
