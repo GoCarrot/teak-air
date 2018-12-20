@@ -1,0 +1,8 @@
+0.12.7
+------
+:Breaking Changes:
+    * None
+:New Features:
+    * Added ``registerForNotifications``
+:Bug Fixes:
+    * None

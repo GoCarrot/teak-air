@@ -1,0 +1,8 @@
+0.14.0
+------
+:Breaking Changes:
+    * ``UserNotifcations.framework`` now required
+:New Features:
+    * None
+:Bug Fixes:
+    * None

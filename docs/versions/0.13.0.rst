@@ -1,0 +1,8 @@
+0.13.0
+------
+:Breaking Changes:
+    * ``io.teak.sdk.Application`` renamed to ``io.teak.sdk.wrapper.Application``
+:New Features:
+    * None
+:Bug Fixes:
+    * None

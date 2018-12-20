@@ -1,0 +1,13 @@
+{% extends "!layout.html" %}
+
+{%- block extrahead %}
+{{ super() }}
+<script type="text/javascript">
+  var url = new URL(window.location);
+  if (url.hostname.startsWith('teak-unity')) {
+    url.hostname = url.hostname.replace('teak-unity', 'teak');
+    url.pathname = '/projects/unity' + url.pathname;
+    window.location.replace(url.href);
+  }
+</script>
+{% endblock %}

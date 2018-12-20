@@ -1,5 +1,3 @@
-.. include:: global.rst
-
 ActionScript
 ============
 .. highlight:: as3

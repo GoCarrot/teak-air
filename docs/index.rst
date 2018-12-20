@@ -3,8 +3,6 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-.. include:: global.rst
-
 Getting started with Teak in Adobe AIR
 ======================================
 
@@ -21,6 +19,7 @@ Getting started with Teak in Adobe AIR
     :maxdepth: 2
     :hidden:
 
+    before-you-start
     setup
     ios
     android
@@ -28,6 +27,7 @@ Getting started with Teak in Adobe AIR
     adm
     limiting-data-collection
     fcm-migration
+    changelog
 
 Hey there!
 
@@ -40,6 +40,10 @@ We're going to give you step-by-step instructions for integrating Teak with Adob
 Here is an overview of what we'll be doing.
 
 .. important:: The minimum version of Adobe AIR supported by Teak is 29.0.
+
+Getting Ready
+-------------
+* :ref:`Before You Start` make sure Teak has all of the credentials needed to send push notifications
 
 Setup
 -----

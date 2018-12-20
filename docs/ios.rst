@@ -1,5 +1,3 @@
-.. include:: global.rst
-
 iOS
 ===
 .. highlight:: xml

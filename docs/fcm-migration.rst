@@ -1,5 +1,3 @@
-.. include:: global.rst
-
 .. highlight:: xml
 
 Migrating to FCM and Teak 2.0
