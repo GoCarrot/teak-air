@@ -37,9 +37,9 @@ We're going to give you step-by-step instructions for integrating Teak with Adob
 
 .. tip:: You can always ask us for help, don't be shy.
 
-Here is an overview of what we'll be doing.
+.. warning:: The minimum version of Adobe AIR supported by Teak is 29.0.
 
-.. important:: The minimum version of Adobe AIR supported by Teak is 29.0.
+Here is an overview of what we'll be doing.
 
 Getting Ready
 -------------
