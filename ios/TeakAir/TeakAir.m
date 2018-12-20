@@ -33,7 +33,7 @@ extern const char* TeakNotificationGetStatus(NSObject* notif);
 extern void TeakSetNumericAttribute(const char* cstr_key, double value);
 extern void TeakSetStringAttribute(const char* cstr_key, const char* cstr_value);
 extern BOOL TeakOpenSettingsAppToThisAppsSettings();
-extern BOOL TeakHasUserDisabledPushNotifications();
+extern int TeakGetNotificationState();
 extern const char* TeakGetAppConfiguration();
 extern const char* TeakGetDeviceConfiguration();
 extern void TeakReportTestException();
@@ -259,11 +259,10 @@ DEFINE_ANE_FUNCTION(openSettingsAppToThisAppsSettings)
    return ret;
 }
 
-DEFINE_ANE_FUNCTION(areNotificationsEnabled)
+DEFINE_ANE_FUNCTION(getNotificationState)
 {
-   BOOL notificationsEnabled = !TeakHasUserDisabledPushNotifications();
    FREObject ret;
-   FRENewObjectFromBool((uint32_t)notificationsEnabled, &ret);
+   FRENewObjectFromInt32((int32_t) TeakGetNotificationState(), &ret);
    return ret;
 }
 
@@ -383,9 +382,9 @@ void AirTeakContextInitializer(void* extData, const uint8_t* ctxType, FREContext
    func[9].functionData = NULL;
    func[9].function = &openSettingsAppToThisAppsSettings;
 
-   func[10].name = (const uint8_t*)"areNotificationsEnabled";
+   func[10].name = (const uint8_t*)"getNotificationState";
    func[10].functionData = NULL;
-   func[10].function = &areNotificationsEnabled;
+   func[10].function = &getNotificationState;
 
    func[11].name = (const uint8_t*)"getAppConfiguration";
    func[11].functionData = NULL;
