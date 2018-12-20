@@ -72,6 +72,17 @@ You will also need to manually add the following to your AIR app:
                     </service>
                     <!-- End Firebase -->
 
+                    <!-- This would have been added by the Firebase JobDispatcher manifest merge -->
+                    <service
+                        android:name="com.firebase.jobdispatcher.GooglePlayReceiver"
+                        android:exported="true"
+                        android:permission="com.google.android.gms.permission.BIND_NETWORK_TASK_SERVICE" >
+                        <intent-filter>
+                            <action android:name="com.google.android.gms.gcm.ACTION_TASK_READY" />
+                        </intent-filter>
+                    </service>
+                    <!-- End Firebase JobDispatcher -->
+
                     <!-- etc -->
                 </application>
 
