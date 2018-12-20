@@ -15,6 +15,16 @@ Don't Panic
 * You don't have to let Google collect analytics
 * You can always ask us for help
 
+Import your GCM project as a Firebase project
+---------------------------------------------
+Follow `Google's instructions to import your project to Firebase <https://developers.google.com/cloud-messaging/android/android-migrate-fcm#import-your-gcm-project-as-a-firebase-project>`_.
+
+.. important:: You only need to perform the **Import your GCM project as a Firebase project** step of those instructions.
+
+    This doc describes everything else you need to do.
+
+Your live game will continue to work after this step, this step just adds Firebase, so there will not be a disruption in service.
+
 Update to at least AIR 29
 -------------------------
 If you are using a lower version of AIR, you'll need to update to AIR 29.
@@ -101,8 +111,10 @@ Optionally Disable Google's Automatic Analytics Collection
 ----------------------------------------------------------
 .. highlight:: xml
 
-Don't want to send your purchase and session data to Google? You don't have to! (`Source <https://firebase.google.com/support/guides/disable-analytics#permanently_deactivate_collection>`_)
+Don't want to send your purchase and session data to Google? You don't have to!
 
 Add this line to your Android XML::
 
     <meta-data android:name="firebase_analytics_collection_deactivated" android:value="true" />
+
+(`Source <https://firebase.google.com/support/guides/disable-analytics#permanently_deactivate_collection>`_)
