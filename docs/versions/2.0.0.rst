@@ -1,0 +1,11 @@
+2.0.0
+-----
+:Breaking Changes:
+    * Air 29 or greater is now required
+    * New Android dependencies (:ref:`android-dependencies`)
+    * Firebase now required (:ref:`fcm-migration`)
+    * ``areNotificationsEnabled`` -> ``getNotificationState`` (:ref:`get-notification-state`)
+:New Features:
+    * None
+:Bug Fixes:
+    * None

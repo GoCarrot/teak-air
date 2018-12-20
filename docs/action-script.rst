@@ -206,6 +206,8 @@ You can use Teak to get the state of push notifications for your app.
 
 If notifications are disabled, you can prompt them to re-enable them on the settings page for the app, and use Teak to go directly the settings for your app.
 
+.. _get-notification-state:
+
 Get Notification State
 ^^^^^^^^^^^^^^^^^^^^^^
 To determine the state of push notifications, use::

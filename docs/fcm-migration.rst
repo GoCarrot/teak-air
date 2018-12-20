@@ -1,5 +1,7 @@
 .. highlight:: xml
 
+.. _fcm-migration:
+
 Migrating to FCM and Teak 2.0
 =============================
 GCM was deprecated April 10, 2018, and will be removed "as soon as April 11, 2019" `according to Google <https://developers.google.com/cloud-messaging/faq>`_.
@@ -96,6 +98,19 @@ Add the following service::
         <intent-filter>
             <action android:name="com.google.firebase.MESSAGING_EVENT" />
             <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+        </intent-filter>
+    </service>
+
+Add the Firebase Job Dispatcher Service
+---------------------------------------
+Add the following service::
+
+    <service
+        android:name="com.firebase.jobdispatcher.GooglePlayReceiver"
+        android:exported="true"
+        android:permission="com.google.android.gms.permission.BIND_NETWORK_TASK_SERVICE" >
+        <intent-filter>
+            <action android:name="com.google.android.gms.gcm.ACTION_TASK_READY" />
         </intent-filter>
     </service>
 
