@@ -1,0 +1,9 @@
+0.12.8
+------
+:Breaking Changes:
+    * None
+:New Features:
+    * Added ``cancelAllNotifications``
+    * Added ``status`` on ``TeakEvent``
+:Bug Fixes:
+    * None

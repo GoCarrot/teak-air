@@ -1,0 +1,8 @@
+0.16.0
+------
+:Breaking Changes:
+    * None
+:New Features:
+    * None
+:Bug Fixes:
+    * None

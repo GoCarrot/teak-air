@@ -15,10 +15,10 @@
     </exec>
 
     <!-- All -->
-    <target name="all" depends="ios_download,ios,android_download,android,swc,package" description="Full build of extension"/>
-    <target name="local" depends="ios_copy,ios,android_copy,android,swc,package" description="Full build of extension"/>
-    <target name="ios_local" depends="ios_copy,ios,android_download,android,swc,package" description="Full build of extension"/>
-    <target name="android_local" depends="ios_download,ios,android_copy,android,swc,package" description="Full build of extension"/>
+    <target name="all" depends="ios_download,ios,android_download,android_firebase,android,swc,package" description="Full build of extension"/>
+    <target name="local" depends="ios_copy,ios,android_copy,android_firebase,android,swc,package" description="Full build of extension"/>
+    <target name="ios_local" depends="ios_copy,ios,android_download,android_firebase,android,swc,package" description="Full build of extension"/>
+    <target name="android_local" depends="ios_download,ios,android_copy,android_firebase,android,swc,package" description="Full build of extension"/>
 
     <!-- iOS -->
     <property name="ios.temp.path" location="../temp/ios/build/"/>
@@ -99,6 +99,19 @@
         </exec>
     </target>
 
+    <target name="android_firebase">
+        <delete dir="../android/firebase"/>
+        <mkdir dir="../android/firebase/zip"/>
+
+        <exec executable="curl" failonerror="true" dir="../android/firebase">
+            <arg line="-o firebase-jobdispatcher-with-gcm-dep-${version.firebase.jobdispatcher}.aar"/>
+            <arg line="https://dl.bintray.com/firebase/firebase-jobdispatcher/com/firebase/firebase-jobdispatcher-with-gcm-dep/${version.firebase.jobdispatcher}/firebase-jobdispatcher-with-gcm-dep-${version.firebase.jobdispatcher}.aar"/>
+        </exec>
+
+        <unzip src="../android/firebase/firebase-jobdispatcher-with-gcm-dep-${version.firebase.jobdispatcher}.aar" dest="../android/firebase"/>
+        <unzip src="../android/firebase/classes.jar" dest="../android/firebase/zip"/>
+    </target>
+
     <target name="android" description="Build Android Library">
         <unzip src="../android/temp/teak.zip" dest="../android/temp"/>
 
@@ -122,6 +135,12 @@
             <fileset dir="../android/temp/zip/io">
                 <exclude name="**/R.class"/>
                 <exclude name="**/R$*.class"/>
+            </fileset>
+        </copy>
+
+        <copy todir="../android/temp/classes/com">
+            <fileset dir="../android/firebase/zip/com">
+                <include name="**/*.class"/>
             </fileset>
         </copy>
 

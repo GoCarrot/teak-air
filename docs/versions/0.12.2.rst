@@ -1,0 +1,8 @@
+0.12.2
+------
+:Breaking Changes:
+    * None
+:New Features:
+    * More flexibility with repacker
+:Bug Fixes:
+    * None

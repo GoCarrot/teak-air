@@ -1,22 +1,102 @@
-.. include:: global.rst
-
 Android
 =======
 .. highlight:: xml
 
+.. _android-dependencies:
+
 Android Dependencies
 --------------------
-Teak for Android depends on Google Cloud Messaging (GCM) and Android Support v4. These dependencies are not bundled with the Teak ANE.
+Teak for Android depends on Firebase Messaging (FCM) and Android Support v4. These dependencies are not bundled with the Teak ANE.
 
-If you are not already using an ANE which provides these, we suggest using the following:
+If you are not already using an ANE which provides these, we suggest using the ANE dependencies from MyFlashLabs, located at: https://github.com/myflashlab/common-dependencies-ANE
 
-- https://github.com/distriqt/ANE-AndroidSupport/blob/master/lib/com.distriqt.androidsupport.V4.ane
-- https://github.com/distriqt/ANE-GooglePlayServices/blob/master/lib/com.distriqt.playservices.Base.ane
-- https://github.com/distriqt/ANE-GooglePlayServices/blob/master/lib/com.distriqt.playservices.GCM.ane
+The dependencies in your App XML should look like this::
+
+    <extensionID>com.myflashlab.air.extensions.dependency.androidSupport.arch</extensionID>
+    <extensionID>com.myflashlab.air.extensions.dependency.androidSupport.core</extensionID>
+    <extensionID>com.myflashlab.air.extensions.dependency.androidSupport.v4</extensionID>
+
+    <extensionID>com.myflashlab.air.extensions.dependency.firebase.common</extensionID>
+    <extensionID>com.myflashlab.air.extensions.dependency.firebase.iid</extensionID>
+    <extensionID>com.myflashlab.air.extensions.dependency.firebase.messaging</extensionID>
+
+    <extensionID>com.myflashlab.air.extensions.dependency.googlePlayServices.ads</extensionID>
+    <extensionID>com.myflashlab.air.extensions.dependency.googlePlayServices.base</extensionID>
+    <extensionID>com.myflashlab.air.extensions.dependency.googlePlayServices.basement</extensionID>
+    <extensionID>com.myflashlab.air.extensions.dependency.googlePlayServices.tasks</extensionID>
+
+You will also need to manually add the following to your AIR app:
+
+.. code-block:: xml
+   :emphasize-lines: 6, 7, 12-41
+
+    <android>
+        <manifestAdditions>
+            <![CDATA[
+                <!-- etc -->
+
+                <!-- Required by older versions of Google Play services to create IID tokens -->
+                <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+
+                <application android:name="io.teak.sdk.wrapper.Application">
+                    <!-- etc -->
+
+                    <!-- These would have been added by Firebase manifest merger -->
+                    <service android:name="com.google.firebase.components.ComponentDiscoveryService"
+                             android:exported="false">
+                        <meta-data
+                            android:name="com.google.firebase.components:com.google.firebase.iid.Registrar"
+                            android:value="com.google.firebase.components.ComponentRegistrar" />
+                    </service>
+
+                    <receiver android:name="com.google.firebase.iid.FirebaseInstanceIdReceiver"
+                              android:exported="true"
+                              android:permission="com.google.android.c2dm.permission.SEND">
+                        <intent-filter>
+                            <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                        </intent-filter>
+                    </receiver>
+
+                    <service android:name="com.google.firebase.iid.FirebaseInstanceIdService"
+                             android:exported="true">
+                        <intent-filter android:priority="-500">
+                            <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+                        </intent-filter>
+                    </service>
+
+                    <service android:name="com.google.firebase.messaging.FirebaseMessagingService"
+                             android:exported="true">
+                        <intent-filter android:priority="-500">
+                            <action android:name="com.google.firebase.MESSAGING_EVENT" />
+                        </intent-filter>
+                    </service>
+                    <!-- End Firebase -->
+
+                    <!-- This would have been added by the Firebase JobDispatcher manifest merge -->
+                    <service
+                        android:name="com.firebase.jobdispatcher.GooglePlayReceiver"
+                        android:exported="true"
+                        android:permission="com.google.android.gms.permission.BIND_NETWORK_TASK_SERVICE" >
+                        <intent-filter>
+                            <action android:name="com.google.android.gms.gcm.ACTION_TASK_READY" />
+                        </intent-filter>
+                    </service>
+                    <!-- End Firebase JobDispatcher -->
+
+                    <!-- etc -->
+                </application>
+
+                <!-- etc -->
+            ]]>
+        </manifestAdditions>
+    </android>
 
 Set up Teak support at the Application level
 --------------------------------------------
-Add the following lines to your AIR app::
+Add the following lines to your AIR app:
+
+.. code-block:: xml
+   :emphasize-lines: 6-11
 
     <android>
         <manifestAdditions>
@@ -27,6 +107,7 @@ Add the following lines to your AIR app::
                     <meta-data android:name="io_teak_app_id" android:value="teakYOUR_TEAK_APP_ID" />
                     <meta-data android:name="io_teak_api_key" android:value="teakYOUR_TEAK_API_KEY" />
                     <meta-data android:name="io_teak_gcm_sender_id" android:value="teakYOUR_GCM_SENDER_ID" />
+                    <meta-data android:name="io_teak_firebase_app_id" android:value="teakYOUR_FIREBASE_APP_ID" />
                 </application>
 
                 <!-- etc -->
@@ -34,7 +115,7 @@ Add the following lines to your AIR app::
         </manifestAdditions>
     </android>
 
-.. note:: Replace ``YOUR_TEAK_APP_ID`` with your Teak App Id, ``YOUR_TEAK_API_KEY`` with your Teak API Key, and ``YOUR_GCM_SENDER_ID`` with your GCM Sender Id.
+.. note:: Replace ``YOUR_TEAK_APP_ID`` with your Teak App Id, ``YOUR_TEAK_API_KEY`` with your Teak API Key, ``YOUR_GCM_SENDER_ID`` with your GCM Sender Id, and ``YOUR_FIREBASE_APP_ID`` with your Firebase App Id.
 
 .. warning:: Make sure to keep the 'teak' prefix on each value, I.E. ``teak12345``.
 
@@ -54,7 +135,10 @@ This gives Teak all of the information it needs to run, and lets Teak auto-load 
 
 Enable Debugging (for testing)
 ------------------------------
-Add ``android:debuggable="true"`` to your ``<application>`` section::
+Add ``android:debuggable="true"`` to your ``<application>`` section:
+
+.. code-block:: xml
+   :emphasize-lines: 6
 
     <android>
         <manifestAdditions>
@@ -174,21 +258,39 @@ Add the Teak Push Notification Receiver to your AIR XML
 -------------------------------------------------------
 Add the following to the ``<application>`` section::
 
-    <receiver android:name="io.teak.sdk.Teak" android:exported="true"
-        android:permission="com.google.android.c2dm.permission.SEND">
+    <!-- Teak Broadcast Receiver -->
+    <receiver android:name="io.teak.sdk.Teak" android:exported="false">
         <intent-filter>
             <action android:name="YOUR_PACKAGE_NAME.intent.TEAK_NOTIFICATION_OPENED" />
             <action android:name="YOUR_PACKAGE_NAME.intent.TEAK_NOTIFICATION_CLEARED" />
-            <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             <category android:name="YOUR_PACKAGE_NAME" />
         </intent-filter>
     </receiver>
 
-    <service android:name="io.teak.sdk.InstanceIDListenerService" android:exported="false" >
+    <!-- Teak error reporter -->
+    <service android:name="io.teak.sdk.service.RavenService"
+             android:process=":teak.raven"
+             android:exported="false"/>
+
+    <!-- Device state background service for minimizing power consumption -->
+    <service android:name="io.teak.sdk.service.DeviceStateService"
+             android:process=":teak.device_state"
+             android:exported="false"/>
+
+    <!-- Job service, Android O and higher -->
+    <service android:name="io.teak.sdk.service.JobService"
+             android:permission="android.permission.BIND_JOB_SERVICE"
+             android:exported="true"/>
+
+    <!-- FCM ID Listener Service -->
+    <service android:name="io.teak.sdk.push.FCMPushProvider"
+             android:stopWithTask="false">
         <intent-filter>
-            <action android:name="com.google.android.gms.iid.InstanceID" />
+            <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
         </intent-filter>
     </service>
+
 
 .. note:: Replace ``YOUR_PACKAGE_NAME`` with the package name of your Android game. Make sure that for air games, you prefix the package name with "air" (if applicable to your game).
 

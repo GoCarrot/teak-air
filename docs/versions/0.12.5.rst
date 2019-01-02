@@ -1,0 +1,8 @@
+0.12.5
+------
+:Breaking Changes:
+    * None
+:New Features:
+    * ``Teak.instance.version`` gets an object with the native SDK and Air SDK versions
+:Bug Fixes:
+    * Unused imports caused Android 7 + AIR 21 NDK issues (somehow)

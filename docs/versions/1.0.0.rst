@@ -1,0 +1,9 @@
+1.0.0
+-----
+:Breaking Changes:
+    * None
+:New Features:
+    * iOS Notification Extensions now work via repack script
+    * Long distance notifications
+:Bug Fixes:
+    * None

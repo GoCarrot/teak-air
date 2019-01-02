@@ -1,15 +1,16 @@
-.. include:: global.rst
-
 Setup
 =====
 .. highlight:: xml
 
 Download the ANE and Add to <extensions>
 ----------------------------------------
-Get the Teak latest ANE from https://s3.amazonaws.com/teak-build-artifacts/air/io.teak.sdk.Teak.ane and add it to your Adobe AIR XML build file in the ``<extensions>`` area::
+Get the Teak latest ANE from https://s3.amazonaws.com/teak-build-artifacts/air/io.teak.sdk.Teak.ane and add it to your Adobe AIR XML build file in the ``<extensions>`` area:
+
+.. code-block:: xml
+   :emphasize-lines: 7
 
     <?xml version="1.0" encoding="utf-8" standalone="no"?>
-    <application xmlns="http://ns.adobe.com/air/application/4.0">
+    <application xmlns="http://ns.adobe.com/air/application/25.0">
 
         <!-- Rest of the application config -->
 

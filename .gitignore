@@ -3,6 +3,7 @@
 air-sdk/*
 !air-sdk/.gitkeep
 bin/
+android/firebase
 android/temp/
 android/repacker/build.config
 android/repacker/_temp.apk
