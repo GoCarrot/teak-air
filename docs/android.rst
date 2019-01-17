@@ -119,13 +119,6 @@ Add the following lines to your AIR app:
 
 .. warning:: Make sure to keep the 'teak' prefix on each value, I.E. ``teak12345``.
 
-To customize the accent-color and/or icons for your notifications, use the following::
-
-    <integer name="io_teak_notification_accent_color">0xfff15a29</integer> <!-- Color : 0xAARRGGBB -->
-    <drawable name="io_teak_small_notification_icon">@drawable/icon</drawable>
-
-.. note:: An additional value for ``io_teak_small_notification_icon`` should be placed in ``values-v21`` with a white and transparent icon for Lollipop.
-
 
 What This Does
 ^^^^^^^^^^^^^^
@@ -297,3 +290,22 @@ Add the following to the ``<application>`` section::
 What This Does
 ^^^^^^^^^^^^^^
 This allows Teak to receive events related to push notifications.
+
+Set Notification Icons for your Game
+------------------------------------
+To specify the icon displayed in the system tray, and at the top of the notification, specify these resources.
+
+You will need two versions of this file. One located in ``values`` and the other located in ``values-v21``::
+
+    <?xml version="1.0" encoding="utf-8"?>
+    <resources>
+        <!-- The tint-color for your silouette icon, format is: 0xAARRGGBB -->
+        <integer name="io_teak_notification_accent_color">0xfff15a29</integer>
+
+        <!-- Icons should be white and transparent, and processed with Android Asset Studio -->
+        <drawable name="io_teak_small_notification_icon">@drawable/YOUR_ICON_FILE_NAME</drawable>
+    </resources>
+
+The file in ``values`` should point to a full-color icon, for devices running less than Android 5, and the file in ``values-v21`` should point to a white and transparent PNG for Android 5 and above.
+
+.. important:: To make sure that your white and transparent PNG shows up properly, use :doc:`Android Asset Studio's Notification icon generator <android/notification-icon>`.
