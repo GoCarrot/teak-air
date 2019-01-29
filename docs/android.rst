@@ -117,6 +117,10 @@ Add the following lines to your AIR app:
 
 .. note:: Replace ``YOUR_TEAK_APP_ID`` with your Teak App Id, ``YOUR_TEAK_API_KEY`` with your Teak API Key, ``YOUR_GCM_SENDER_ID`` with your GCM Sender Id, and ``YOUR_FIREBASE_APP_ID`` with your Firebase App Id.
 
+        (`How to find your GCM Sender Id <https://teak.readthedocs.io/en/latest/firebase-gcm.html>`_)
+
+        (`How to find your Firebase App Id <https://teak.readthedocs.io/en/latest/firebase-app-id.html>`_)
+
 .. warning:: Make sure to keep the 'teak' prefix on each value, I.E. ``teak12345``.
 
 
