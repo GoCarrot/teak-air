@@ -157,6 +157,30 @@ package io.teak.sdk
 			}
 		}
 
+		public function trackEvent(actionId:String, objectTypeId:String, objectInstanceId:String)
+		{
+			if(useNativeExtension())
+			{
+				_context.call("trackEvent", actionId, objectTypeId, objectInstanceId);
+			}
+			else
+			{
+				trace("[Teak] trackEvent: " + actionId + ", " + objectTypeId + ", " + objectInstanceId);
+			}
+		}
+
+		public function incrementEvent(actionId:String, objectTypeId:String, objectInstanceId:String, count:uint)
+		{
+			if(useNativeExtension())
+			{
+				_context.call("incrementEvent", actionId, objectTypeId, objectInstanceId, count);
+			}
+			else
+			{
+				trace("[Teak] incrementEvent: " + actionId + ", " + objectTypeId + ", " + objectInstanceId, ", " + count);
+			}
+		}
+
 		public function setNumericAttribute(key:String, value:Number):void
 		{
 			if(useNativeExtension())
