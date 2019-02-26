@@ -255,6 +255,18 @@ package io.teak.sdk
 			}
 		}
 
+		public function processDeepLinks():Object
+		{
+			if(useNativeExtension())
+			{
+				_context.call("processDeepLinks");
+			}
+			else
+			{
+				trace("[Teak] processDeepLinks");
+			}
+		}
+
 		private function onStatus(event:StatusEvent):void
 		{
 			var e:TeakEvent;

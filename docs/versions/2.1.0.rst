@@ -4,5 +4,6 @@
     * None
 :New Features:
     * ``trackEvent`` and ``incrementEvent``
+    * ``processDeepLinks``
 :Bug Fixes:
     * None

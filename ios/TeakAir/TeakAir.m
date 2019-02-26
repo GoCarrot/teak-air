@@ -25,6 +25,7 @@ extern const char* TeakGetAppConfiguration();
 extern const char* TeakGetDeviceConfiguration();
 extern void TeakReportTestException();
 extern BOOL TeakRequestProvisionalPushAuthorization();
+extern void TeakProcessDeepLinks();
 
 typedef void (^TeakLinkBlock)(NSDictionary* _Nonnull parameters);
 extern void TeakRegisterRoute(const char* route, const char* name, const char* description, TeakLinkBlock block);
@@ -318,6 +319,12 @@ DEFINE_ANE_FUNCTION(requestProvisionalPushAuthorization)
    return nil;
 }
 
+DEFINE_ANE_FUNCTION(processDeepLinks)
+{
+   TeakProcessDeepLinks();
+   return nil;
+}
+
 void checkTeakNotifLaunch(FREContext context, NSDictionary* userInfo)
 {
    const uint8_t* eventCode = (const uint8_t*)"LAUNCHED_FROM_NOTIFICATION";
@@ -358,7 +365,7 @@ void teakOnReward(FREContext context, NSDictionary* userInfo)
 
 void AirTeakContextInitializer(void* extData, const uint8_t* ctxType, FREContext ctx, uint32_t* numFunctionsToTest, const FRENamedFunction** functionsToSet)
 {
-   uint32_t numFunctions = 18;
+   uint32_t numFunctions = 19;
    *numFunctionsToTest = numFunctions;
    FRENamedFunction* func = (FRENamedFunction*) malloc(sizeof(FRENamedFunction) * numFunctions);
 
@@ -433,6 +440,10 @@ void AirTeakContextInitializer(void* extData, const uint8_t* ctxType, FREContext
    func[17].name = (const uint8_t*)"incrementEvent";
    func[17].functionData = NULL;
    func[17].function = &incrementEvent;
+
+   func[18].name = (const uint8_t*)"processDeepLinks";
+   func[18].functionData = NULL;
+   func[18].function = &processDeepLinks;
 
    *functionsToSet = func;
 
