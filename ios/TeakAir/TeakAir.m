@@ -17,12 +17,15 @@ extern const char* TeakNotificationGetTeakNotifId(NSObject* notif);
 extern const char* TeakNotificationGetStatus(NSObject* notif);
 extern void TeakSetNumericAttribute(const char* cstr_key, double value);
 extern void TeakSetStringAttribute(const char* cstr_key, const char* cstr_value);
+extern void TeakTrackEvent(const char* cstr_actionId, const char* cstr_objectTypeId, const char* cstr_objectInstanceId);
+extern void TeakIncrementEvent(const char* cstr_actionId, const char* cstr_objectTypeId, const char* cstr_objectInstanceId, uint32_t count);
 extern BOOL TeakOpenSettingsAppToThisAppsSettings();
 extern int TeakGetNotificationState();
 extern const char* TeakGetAppConfiguration();
 extern const char* TeakGetDeviceConfiguration();
 extern void TeakReportTestException();
 extern BOOL TeakRequestProvisionalPushAuthorization();
+extern void TeakProcessDeepLinks();
 
 typedef void (^TeakLinkBlock)(NSDictionary* _Nonnull parameters);
 extern void TeakRegisterRoute(const char* route, const char* name, const char* description, TeakLinkBlock block);
@@ -236,6 +239,39 @@ DEFINE_ANE_FUNCTION(setStringAttribute)
    return nil;
 }
 
+DEFINE_ANE_FUNCTION(trackEvent)
+{
+   uint32_t stringLength;
+   const uint8_t* actionId;
+   const uint8_t* objectTypeId;
+   const uint8_t* objectInstanceId;
+   if(FREGetObjectAsUTF8(argv[0], &stringLength, &actionId) == FRE_OK &&
+      FREGetObjectAsUTF8(argv[1], &stringLength, &objectTypeId) == FRE_OK &&
+      FREGetObjectAsUTF8(argv[2], &stringLength, &objectInstanceId) == FRE_OK)
+   {
+      TeakTrackEvent((const char*)actionId, (const char*)objectTypeId, (const char*)objectInstanceId);
+   }
+
+   return nil;
+}
+
+DEFINE_ANE_FUNCTION(incrementEvent)
+{
+   uint32_t stringLength, count;
+   const uint8_t* actionId;
+   const uint8_t* objectTypeId;
+   const uint8_t* objectInstanceId;
+   if(FREGetObjectAsUTF8(argv[0], &stringLength, &actionId) == FRE_OK &&
+      FREGetObjectAsUTF8(argv[1], &stringLength, &objectTypeId) == FRE_OK &&
+      FREGetObjectAsUTF8(argv[2], &stringLength, &objectInstanceId) == FRE_OK &&
+      FREGetObjectAsUint32(argv[3], &count) == FRE_OK)
+   {
+      TeakIncrementEvent((const char*)actionId, (const char*)objectTypeId, (const char*)objectInstanceId, count);
+   }
+
+   return nil;
+}
+
 DEFINE_ANE_FUNCTION(openSettingsAppToThisAppsSettings)
 {
    BOOL didOpenSettings = TeakOpenSettingsAppToThisAppsSettings();
@@ -283,6 +319,12 @@ DEFINE_ANE_FUNCTION(requestProvisionalPushAuthorization)
    return nil;
 }
 
+DEFINE_ANE_FUNCTION(processDeepLinks)
+{
+   TeakProcessDeepLinks();
+   return nil;
+}
+
 void checkTeakNotifLaunch(FREContext context, NSDictionary* userInfo)
 {
    const uint8_t* eventCode = (const uint8_t*)"LAUNCHED_FROM_NOTIFICATION";
@@ -323,7 +365,7 @@ void teakOnReward(FREContext context, NSDictionary* userInfo)
 
 void AirTeakContextInitializer(void* extData, const uint8_t* ctxType, FREContext ctx, uint32_t* numFunctionsToTest, const FRENamedFunction** functionsToSet)
 {
-   uint32_t numFunctions = 16;
+   uint32_t numFunctions = 19;
    *numFunctionsToTest = numFunctions;
    FRENamedFunction* func = (FRENamedFunction*) malloc(sizeof(FRENamedFunction) * numFunctions);
 
@@ -390,6 +432,18 @@ void AirTeakContextInitializer(void* extData, const uint8_t* ctxType, FREContext
    func[15].name = (const uint8_t*)"scheduleLongDistanceNotification";
    func[15].functionData = NULL;
    func[15].function = &scheduleLongDistanceNotification;
+
+   func[16].name = (const uint8_t*)"trackEvent";
+   func[16].functionData = NULL;
+   func[16].function = &trackEvent;
+
+   func[17].name = (const uint8_t*)"incrementEvent";
+   func[17].functionData = NULL;
+   func[17].function = &incrementEvent;
+
+   func[18].name = (const uint8_t*)"processDeepLinks";
+   func[18].functionData = NULL;
+   func[18].function = &processDeepLinks;
 
    *functionsToSet = func;
 

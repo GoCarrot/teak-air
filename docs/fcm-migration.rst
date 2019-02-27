@@ -58,6 +58,8 @@ Add your Firebase App Id to the section where you configure your Teak values, it
 
 .. note:: Replace ``YOUR_FIREBASE_APP_ID`` with your Firebase App Id.
 
+        (`How to find this value <https://teak.readthedocs.io/en/latest/firebase-app-id.html>`_)
+
 .. warning:: Make sure to keep the 'teak' prefix on each value, I.E. ``teak12345``.
 
 Change the Teak Receiver

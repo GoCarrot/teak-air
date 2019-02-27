@@ -71,7 +71,8 @@ language = None
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This patterns also effect to html_static_path and html_extra_path
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', 'versions', 'ios', 'android']
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', 'versions',
+    'ios/index.rst', 'ios/versions', 'android/index.rst', 'android/versions']
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'

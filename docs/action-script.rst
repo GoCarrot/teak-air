@@ -245,6 +245,34 @@ Example::
     // When a user presses a button indicating they want to change their notification settings
     Teak.instance.openSettingsAppToThisAppsSettings()
 
+.. user-attributes:
+
+User Attributes
+---------------
+Teak can store up to 16 numeric, and 16 string attributes per user. These attributes can then be used for targeting.
+
+You do not need to register the attribute in the Teak Dashboard prior to sending them from your game, however you will need to enable them in the Teak Dashboard before using them in targeting.
+
+Numeric Attributes
+^^^^^^^^^^^^^^^^^^
+To set a numeric attribute, use::
+
+    Teak.instance.setNumericAttribute(key:String, value:Number):void
+
+Example::
+
+    Teak.instance.setNumericAttribute("coins", new_coin_balance);
+
+String Attributes
+^^^^^^^^^^^^^^^^^
+To set a string attribute, use::
+
+    Teak.instance.setStringAttribute(key:String, value:String):void
+
+Example::
+
+    Teak.instance.setStringAttribute("last_slot", "amazing_slot_name");
+
 Deep Linking
 ------------
 You can use Teak to register deep links inside of your app for use in push notifications or Teak deep link URLs.
