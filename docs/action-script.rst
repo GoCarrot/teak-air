@@ -299,3 +299,14 @@ Example::
     });
 
 The ``parameters`` argument contains the URL query parameters and any variables built into the deep link route.
+
+When Are Deep Links Executed
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Deep links are passed to an application as part of the launch. The Teak SDK holds onto the deep link information and waits until your app has finished launching, and initializing.
+
+Deep links will get processed the sooner of:
+
+* Your app calls ``identifyUser``
+* Your app calls ``processDeepLinks``
+
+``processDeepLinks`` is provided so that you can signify that deep links should be processed earlier than your call to ``identifyUser`` or so that you can still process deep links in the case of a user opting out of tracking.
