@@ -173,7 +173,7 @@ To cancel a previously scheduled local notification, use::
     Teak.instance.cancelNotification(scheduleId:String):void
 
 Parameters
-    :scheduleId: The id received from the ``TeakEvent.NOTIFICATION_SCHEDULED`` event.
+    :scheduleId: Passing the id received from the ``TeakEvent.NOTIFICATION_SCHEDULED`` event will cancel that specific notification; passing the ``creativeId`` used to schedule the notification will cancel **all** scheduled notifications with that creative id for the user
 
 Event
     Upon successful completion, the ``TeakEvent.NOTIFICATION_CANCELED event`` will be triggered.
