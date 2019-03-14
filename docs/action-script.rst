@@ -131,6 +131,8 @@ And::
 
 The data field of the event will contain the schedule id of the notification, for use with ``cancelNotification()``.
 
+.. important:: The maximum delay for a Local Notification is 30 days.
+
 Scheduling a Long-Distance Notification
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 To schedule a notification from your game that will be delivered to another user, use::
@@ -161,6 +163,8 @@ And::
     }
 
 The data field of the event will contain a JSON encoded array of scheduled ids, for use with ``cancelNotification()``.
+
+.. important:: The maximum delay for a Long-Distance Notification is 30 days.
 
 Canceling a Local Notification
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
