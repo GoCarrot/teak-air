@@ -157,7 +157,7 @@ package io.teak.sdk
 			}
 		}
 
-		public function trackEvent(actionId:String, objectTypeId:String, objectInstanceId:String)
+		public function trackEvent(actionId:String, objectTypeId:String, objectInstanceId:String):void
 		{
 			if(useNativeExtension())
 			{
@@ -169,7 +169,7 @@ package io.teak.sdk
 			}
 		}
 
-		public function incrementEvent(actionId:String, objectTypeId:String, objectInstanceId:String, count:uint)
+		public function incrementEvent(actionId:String, objectTypeId:String, objectInstanceId:String, count:uint):void
 		{
 			if(useNativeExtension())
 			{
@@ -255,7 +255,7 @@ package io.teak.sdk
 			}
 		}
 
-		public function processDeepLinks():Object
+		public function processDeepLinks():void
 		{
 			if(useNativeExtension())
 			{

@@ -18,7 +18,7 @@ extern const char* TeakNotificationGetStatus(NSObject* notif);
 extern void TeakSetNumericAttribute(const char* cstr_key, double value);
 extern void TeakSetStringAttribute(const char* cstr_key, const char* cstr_value);
 extern void TeakTrackEvent(const char* cstr_actionId, const char* cstr_objectTypeId, const char* cstr_objectInstanceId);
-extern void TeakIncrementEvent(const char* cstr_actionId, const char* cstr_objectTypeId, const char* cstr_objectInstanceId, uint32_t count);
+extern void TeakIncrementEvent(const char* cstr_actionId, const char* cstr_objectTypeId, const char* cstr_objectInstanceId, uint64_t count);
 extern BOOL TeakOpenSettingsAppToThisAppsSettings();
 extern int TeakGetNotificationState();
 extern const char* TeakGetAppConfiguration();
@@ -257,16 +257,17 @@ DEFINE_ANE_FUNCTION(trackEvent)
 
 DEFINE_ANE_FUNCTION(incrementEvent)
 {
-   uint32_t stringLength, count;
+   uint32_t stringLength;
+   double count;
    const uint8_t* actionId;
    const uint8_t* objectTypeId;
    const uint8_t* objectInstanceId;
    if(FREGetObjectAsUTF8(argv[0], &stringLength, &actionId) == FRE_OK &&
       FREGetObjectAsUTF8(argv[1], &stringLength, &objectTypeId) == FRE_OK &&
       FREGetObjectAsUTF8(argv[2], &stringLength, &objectInstanceId) == FRE_OK &&
-      FREGetObjectAsUint32(argv[3], &count) == FRE_OK)
+      FREGetObjectAsDouble(argv[3], &count) == FRE_OK)
    {
-      TeakIncrementEvent((const char*)actionId, (const char*)objectTypeId, (const char*)objectInstanceId, count);
+      TeakIncrementEvent((const char*)actionId, (const char*)objectTypeId, (const char*)objectInstanceId, (uint64_t)count);
    }
 
    return nil;

@@ -131,6 +131,8 @@ And::
 
 The data field of the event will contain the schedule id of the notification, for use with ``cancelNotification()``.
 
+.. important:: The maximum delay for a Local Notification is 30 days.
+
 Scheduling a Long-Distance Notification
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 To schedule a notification from your game that will be delivered to another user, use::
@@ -162,6 +164,8 @@ And::
 
 The data field of the event will contain a JSON encoded array of scheduled ids, for use with ``cancelNotification()``.
 
+.. important:: The maximum delay for a Long-Distance Notification is 30 days.
+
 Canceling a Local Notification
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 To cancel a previously scheduled local notification, use::
@@ -169,7 +173,7 @@ To cancel a previously scheduled local notification, use::
     Teak.instance.cancelNotification(scheduleId:String):void
 
 Parameters
-    :scheduleId: The id received from the ``TeakEvent.NOTIFICATION_SCHEDULED`` event.
+    :scheduleId: Passing the id received from the ``TeakEvent.NOTIFICATION_SCHEDULED`` event will cancel that specific notification; passing the ``creativeId`` used to schedule the notification will cancel **all** scheduled notifications with that creative id for the user
 
 Event
     Upon successful completion, the ``TeakEvent.NOTIFICATION_CANCELED event`` will be triggered.
@@ -299,3 +303,14 @@ Example::
     });
 
 The ``parameters`` argument contains the URL query parameters and any variables built into the deep link route.
+
+When Are Deep Links Executed
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Deep links are passed to an application as part of the launch. The Teak SDK holds onto the deep link information and waits until your app has finished launching, and initializing.
+
+Deep links will get processed the sooner of:
+
+* Your app calls ``identifyUser``
+* Your app calls ``processDeepLinks``
+
+``processDeepLinks`` is provided so that you can signify that deep links should be processed earlier than your call to ``identifyUser`` or so that you can still process deep links in the case of a user opting out of tracking.
