@@ -18,7 +18,7 @@ extern const char* TeakNotificationGetStatus(NSObject* notif);
 extern void TeakSetNumericAttribute(const char* cstr_key, double value);
 extern void TeakSetStringAttribute(const char* cstr_key, const char* cstr_value);
 extern void TeakTrackEvent(const char* cstr_actionId, const char* cstr_objectTypeId, const char* cstr_objectInstanceId);
-extern void TeakIncrementEvent(const char* cstr_actionId, const char* cstr_objectTypeId, const char* cstr_objectInstanceId, uint64_t count);
+extern void TeakIncrementEvent(const char* cstr_actionId, const char* cstr_objectTypeId, const char* cstr_objectInstanceId, int64_t count);
 extern BOOL TeakOpenSettingsAppToThisAppsSettings();
 extern int TeakGetNotificationState();
 extern const char* TeakGetAppConfiguration();
