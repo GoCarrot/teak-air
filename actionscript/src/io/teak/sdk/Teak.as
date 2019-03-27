@@ -169,7 +169,7 @@ package io.teak.sdk
 			}
 		}
 
-		public function incrementEvent(actionId:String, objectTypeId:String, objectInstanceId:String, count:uint):void
+		public function incrementEvent(actionId:String, objectTypeId:String, objectInstanceId:String, count:Number):void
 		{
 			if(useNativeExtension())
 			{
