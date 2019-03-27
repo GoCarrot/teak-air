@@ -267,7 +267,7 @@ DEFINE_ANE_FUNCTION(incrementEvent)
       FREGetObjectAsUTF8(argv[2], &stringLength, &objectInstanceId) == FRE_OK &&
       FREGetObjectAsDouble(argv[3], &count) == FRE_OK)
    {
-      TeakIncrementEvent((const char*)actionId, (const char*)objectTypeId, (const char*)objectInstanceId, (uint64_t)count);
+      TeakIncrementEvent((const char*)actionId, (const char*)objectTypeId, (const char*)objectInstanceId, (int64_t)count);
    }
 
    return nil;
