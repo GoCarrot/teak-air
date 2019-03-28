@@ -249,7 +249,6 @@ DEFINE_ANE_FUNCTION(trackEvent)
       (argv[1] == NULL || FREGetObjectAsUTF8(argv[1], &stringLength, &objectTypeId) == FRE_OK) &&
       (argv[2] == NULL || FREGetObjectAsUTF8(argv[2], &stringLength, &objectInstanceId) == FRE_OK))
    {
-      NSLog(@"Teak GOT PARAMETERS: %s %s %s", actionId, objectTypeId, objectInstanceId);
       TeakTrackEvent((const char*)actionId, (const char*)objectTypeId, (const char*)objectInstanceId);
    }
 
