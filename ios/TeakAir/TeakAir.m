@@ -18,7 +18,7 @@ extern const char* TeakNotificationGetStatus(NSObject* notif);
 extern void TeakSetNumericAttribute(const char* cstr_key, double value);
 extern void TeakSetStringAttribute(const char* cstr_key, const char* cstr_value);
 extern void TeakTrackEvent(const char* cstr_actionId, const char* cstr_objectTypeId, const char* cstr_objectInstanceId);
-extern void TeakIncrementEvent(const char* cstr_actionId, const char* cstr_objectTypeId, const char* cstr_objectInstanceId, uint64_t count);
+extern void TeakIncrementEvent(const char* cstr_actionId, const char* cstr_objectTypeId, const char* cstr_objectInstanceId, int64_t count);
 extern BOOL TeakOpenSettingsAppToThisAppsSettings();
 extern int TeakGetNotificationState();
 extern const char* TeakGetAppConfiguration();
@@ -50,10 +50,10 @@ static void teak_init()
 DEFINE_ANE_FUNCTION(identifyUser)
 {
    uint32_t stringLength;
-   const uint8_t* userId;
-   const uint8_t* optOutJson;
-   if(FREGetObjectAsUTF8(argv[0], &stringLength, &userId) == FRE_OK &&
-      FREGetObjectAsUTF8(argv[1], &stringLength, &optOutJson) == FRE_OK)
+   const uint8_t* userId = NULL;
+   const uint8_t* optOutJson = NULL;
+   if((argv[0] == NULL || FREGetObjectAsUTF8(argv[0], &stringLength, &userId) == FRE_OK) &&
+      (argv[1] == NULL || FREGetObjectAsUTF8(argv[1], &stringLength, &optOutJson) == FRE_OK))
    {
       TeakIdentifyUser((const char*)userId, (const char*)optOutJson);
    }
@@ -64,7 +64,7 @@ DEFINE_ANE_FUNCTION(identifyUser)
 DEFINE_ANE_FUNCTION(_log)
 {
    uint32_t stringLength;
-   const uint8_t* userId;
+   const uint8_t* userId = NULL;
    if(FREGetObjectAsUTF8(argv[0], &stringLength, &userId) == FRE_OK)
    {
       NSLog(@"[Teak:Air] %s", (const char*)userId);
@@ -106,11 +106,11 @@ void waitOnNotifFuture(NSObject* future, const uint8_t* eventName, FREContext co
 DEFINE_ANE_FUNCTION(scheduleNotification)
 {
    uint32_t stringLength;
-   const uint8_t* creativeId;
-   const uint8_t* message;
+   const uint8_t* creativeId = NULL;
+   const uint8_t* message = NULL;
    double delay;
-   if(FREGetObjectAsUTF8(argv[0], &stringLength, &creativeId) == FRE_OK &&
-      FREGetObjectAsUTF8(argv[1], &stringLength, &message) == FRE_OK &&
+   if((argv[0] == NULL || FREGetObjectAsUTF8(argv[0], &stringLength, &creativeId) == FRE_OK) &&
+      (argv[1] == NULL || FREGetObjectAsUTF8(argv[1], &stringLength, &message) == FRE_OK) &&
       FREGetObjectAsDouble(argv[2], &delay) == FRE_OK)
    {
       NSObject* notif = TeakNotificationSchedule((const char*)creativeId, (const char*)message, (int64_t)delay);
@@ -123,9 +123,9 @@ DEFINE_ANE_FUNCTION(scheduleNotification)
 DEFINE_ANE_FUNCTION(scheduleLongDistanceNotification)
 {
    uint32_t stringLength, arrayLength;
-   const uint8_t* creativeId;
+   const uint8_t* creativeId = NULL;
    double delay;
-   if(FREGetObjectAsUTF8(argv[0], &stringLength, &creativeId) == FRE_OK &&
+   if((argv[0] == NULL || FREGetObjectAsUTF8(argv[0], &stringLength, &creativeId) == FRE_OK) &&
       FREGetObjectAsDouble(argv[1], &delay) == FRE_OK &&
       FREGetArrayLength(argv[2], &arrayLength) == FRE_OK)
    {
@@ -150,8 +150,8 @@ DEFINE_ANE_FUNCTION(scheduleLongDistanceNotification)
 DEFINE_ANE_FUNCTION(cancelNotification)
 {
    uint32_t stringLength;
-   const uint8_t* notifId;
-   if(FREGetObjectAsUTF8(argv[0], &stringLength, &notifId) == FRE_OK)
+   const uint8_t* notifId = NULL;
+   if((argv[0] == NULL || FREGetObjectAsUTF8(argv[0], &stringLength, &notifId) == FRE_OK))
    {
       NSObject* notif = TeakNotificationCancel((const char*)notifId);
       waitOnNotifFuture(notif, (const uint8_t*)"NOTIFICATION_CANCELED", context);
@@ -173,12 +173,12 @@ DEFINE_ANE_FUNCTION(registerRoute)
    const uint8_t* eventCode = (const uint8_t*)"DEEP_LINK";
 
    uint32_t stringLength;
-   const uint8_t* route;
-   const uint8_t* name;
-   const uint8_t* description;
-   if(FREGetObjectAsUTF8(argv[0], &stringLength, &route) == FRE_OK &&
-      FREGetObjectAsUTF8(argv[1], &stringLength, &name) == FRE_OK &&
-      FREGetObjectAsUTF8(argv[2], &stringLength, &description) == FRE_OK)
+   const uint8_t* route = NULL;
+   const uint8_t* name = NULL;
+   const uint8_t* description = NULL;
+   if((argv[0] == NULL || FREGetObjectAsUTF8(argv[0], &stringLength, &route) == FRE_OK) &&
+      (argv[1] == NULL || FREGetObjectAsUTF8(argv[1], &stringLength, &name) == FRE_OK) &&
+      (argv[2] == NULL || FREGetObjectAsUTF8(argv[2], &stringLength, &description) == FRE_OK))
    {
       NSString* nsRoute = [NSString stringWithUTF8String:(const char*)route];
 
@@ -214,9 +214,9 @@ DEFINE_ANE_FUNCTION(getVersion)
 DEFINE_ANE_FUNCTION(setNumericAttribute)
 {
    uint32_t stringLength;
-   const uint8_t* key;
+   const uint8_t* key = NULL;
    double value;
-   if(FREGetObjectAsUTF8(argv[0], &stringLength, &key) == FRE_OK &&
+   if((argv[0] == NULL || FREGetObjectAsUTF8(argv[0], &stringLength, &key) == FRE_OK) &&
       FREGetObjectAsDouble(argv[1], &value) == FRE_OK)
    {
       TeakSetNumericAttribute((const char*)key, value);
@@ -228,10 +228,10 @@ DEFINE_ANE_FUNCTION(setNumericAttribute)
 DEFINE_ANE_FUNCTION(setStringAttribute)
 {
    uint32_t stringLength;
-   const uint8_t* key;
-   const uint8_t* value;
-   if(FREGetObjectAsUTF8(argv[0], &stringLength, &key) == FRE_OK &&
-      FREGetObjectAsUTF8(argv[1], &stringLength, &value) == FRE_OK)
+   const uint8_t* key = NULL;
+   const uint8_t* value = NULL;
+   if((argv[0] == NULL || FREGetObjectAsUTF8(argv[0], &stringLength, &key) == FRE_OK) &&
+      (argv[1] == NULL || FREGetObjectAsUTF8(argv[1], &stringLength, &value) == FRE_OK))
    {
       TeakSetStringAttribute((const char*)key, (const char*)value);
    }
@@ -242,12 +242,12 @@ DEFINE_ANE_FUNCTION(setStringAttribute)
 DEFINE_ANE_FUNCTION(trackEvent)
 {
    uint32_t stringLength;
-   const uint8_t* actionId;
-   const uint8_t* objectTypeId;
-   const uint8_t* objectInstanceId;
-   if(FREGetObjectAsUTF8(argv[0], &stringLength, &actionId) == FRE_OK &&
-      FREGetObjectAsUTF8(argv[1], &stringLength, &objectTypeId) == FRE_OK &&
-      FREGetObjectAsUTF8(argv[2], &stringLength, &objectInstanceId) == FRE_OK)
+   const uint8_t* actionId = NULL;
+   const uint8_t* objectTypeId = NULL;
+   const uint8_t* objectInstanceId = NULL;
+   if((argv[0] == NULL || FREGetObjectAsUTF8(argv[0], &stringLength, &actionId) == FRE_OK) &&
+      (argv[1] == NULL || FREGetObjectAsUTF8(argv[1], &stringLength, &objectTypeId) == FRE_OK) &&
+      (argv[2] == NULL || FREGetObjectAsUTF8(argv[2], &stringLength, &objectInstanceId) == FRE_OK))
    {
       TeakTrackEvent((const char*)actionId, (const char*)objectTypeId, (const char*)objectInstanceId);
    }
@@ -259,15 +259,15 @@ DEFINE_ANE_FUNCTION(incrementEvent)
 {
    uint32_t stringLength;
    double count;
-   const uint8_t* actionId;
-   const uint8_t* objectTypeId;
-   const uint8_t* objectInstanceId;
-   if(FREGetObjectAsUTF8(argv[0], &stringLength, &actionId) == FRE_OK &&
-      FREGetObjectAsUTF8(argv[1], &stringLength, &objectTypeId) == FRE_OK &&
-      FREGetObjectAsUTF8(argv[2], &stringLength, &objectInstanceId) == FRE_OK &&
+   const uint8_t* actionId = NULL;
+   const uint8_t* objectTypeId = NULL;
+   const uint8_t* objectInstanceId = NULL;
+   if((argv[0] == NULL || FREGetObjectAsUTF8(argv[0], &stringLength, &actionId) == FRE_OK) &&
+      (argv[1] == NULL || FREGetObjectAsUTF8(argv[1], &stringLength, &objectTypeId) == FRE_OK) &&
+      (argv[2] == NULL || FREGetObjectAsUTF8(argv[2], &stringLength, &objectInstanceId) == FRE_OK) &&
       FREGetObjectAsDouble(argv[3], &count) == FRE_OK)
    {
-      TeakIncrementEvent((const char*)actionId, (const char*)objectTypeId, (const char*)objectInstanceId, (uint64_t)count);
+      TeakIncrementEvent((const char*)actionId, (const char*)objectTypeId, (const char*)objectInstanceId, (int64_t)count);
    }
 
    return nil;
