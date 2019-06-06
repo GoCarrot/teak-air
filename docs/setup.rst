@@ -4,7 +4,7 @@ Setup
 
 Download the ANE and Add to <extensions>
 ----------------------------------------
-Get the Teak latest ANE from https://s3.amazonaws.com/teak-build-artifacts/air/io.teak.sdk.Teak.ane and add it to your Adobe AIR XML build file in the ``<extensions>`` area:
+Get the Teak latest ANE from https://sdks.teakcdn.com/air/io.teak.sdk.Teak.ane and add it to your Adobe AIR XML build file in the ``<extensions>`` area:
 
 .. code-block:: xml
    :emphasize-lines: 7

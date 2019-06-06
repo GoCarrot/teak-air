@@ -36,7 +36,7 @@
 
         <exec executable="curl" failonerror="true" dir="${ios.temp.path}">
             <arg line="-o Teak.framework.zip"/>
-            <arg line="https://s3.amazonaws.com/teak-build-artifacts/ios/Teak-${version.ios}.framework.zip"/>
+            <arg line="https://sdks.teakcdn.com/ios/Teak-${version.ios}.framework.zip"/>
         </exec>
     </target>
 
@@ -95,7 +95,7 @@
 
         <exec executable="curl" failonerror="true" dir="../android/temp">
             <arg line="-o teak.zip"/>
-            <arg line="https://s3.amazonaws.com/teak-build-artifacts/android/teak-${version.android}.zip"/>
+            <arg line="https://sdks.teakcdn.com/android/teak-${version.android}.zip"/>
         </exec>
     </target>
 
