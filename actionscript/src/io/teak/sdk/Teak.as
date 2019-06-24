@@ -277,6 +277,14 @@ package io.teak.sdk
 						e = new TeakEvent(TeakEvent.LAUNCHED_FROM_NOTIFICATION, event.level);
 					}
 					break;
+				case "ON_FOREGROUND_NOTIFICATION": {
+						e = new TeakEvent(TeakEvent.ON_FOREGROUND_NOTIFICATION, event.level);
+					}
+					break;
+				case "ON_LOG_EVENT": {
+						e = new TeakEvent(TeakEvent.ON_LOG_EVENT, event.level);
+					}
+					break;
 				case "NOTIFICATION_SCHEDULED": {
 						eventData = JSON.parse(event.level);
 						e = new TeakEvent(TeakEvent.NOTIFICATION_SCHEDULED, eventData.data, eventData.status);

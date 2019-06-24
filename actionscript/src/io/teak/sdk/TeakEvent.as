@@ -5,6 +5,8 @@ package io.teak.sdk
 	public class TeakEvent extends Event
 	{
 		public static const LAUNCHED_FROM_NOTIFICATION:String = "launchedFromNotification";
+		public static const ON_FOREGROUND_NOTIFICATION:String = "onForegroundNotification";
+		public static const ON_LOG_EVENT:String = "onLogEvent";
 		public static const NOTIFICATION_SCHEDULED:String = "notificationScheduled";
 		public static const LONG_DISTANCE_NOTIFICATION_SCHEDULED:String = "longDistanceNotificationScheduled";
 		public static const NOTIFICATION_CANCELED:String = "notificationCanceled";
