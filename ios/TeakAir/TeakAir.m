@@ -7,7 +7,7 @@
 extern void Teak_Plant(Class appDelegateClass, NSString* appId, NSString* appSecret);
 
 // From TeakCExtern.m
-extern void TeakIdentifyUser(const char* userId, const char* optOutJsonArray);
+extern void TeakIdentifyUser(const char* userId, const char* optOutJsonArray, const char* email);
 extern NSObject* TeakNotificationSchedule(const char* creativeId, const char* message, int64_t delay);
 extern NSObject* TeakNotificationScheduleLongDistanceWithNSArray(const char* creativeId, int64_t delay, NSArray* userIds);
 extern NSObject* TeakNotificationCancel(const char* scheduleId);
@@ -59,10 +59,12 @@ DEFINE_ANE_FUNCTION(identifyUser)
    uint32_t stringLength;
    const uint8_t* userId = NULL;
    const uint8_t* optOutJson = NULL;
+   const uint8_t* email = NULL;
    if((argv[0] == NULL || FREGetObjectAsUTF8(argv[0], &stringLength, &userId) == FRE_OK) &&
-      (argv[1] == NULL || FREGetObjectAsUTF8(argv[1], &stringLength, &optOutJson) == FRE_OK))
+      (argv[1] == NULL || FREGetObjectAsUTF8(argv[1], &stringLength, &optOutJson) == FRE_OK) &&
+      (argv[2] == NULL || FREGetObjectAsUTF8(argv[2], &stringLength, &email) == FRE_OK))
    {
-      TeakIdentifyUser((const char*)userId, (const char*)optOutJson);
+      TeakIdentifyUser((const char*)userId, (const char*)optOutJson, (const char*)email);
    }
 
    return nil;

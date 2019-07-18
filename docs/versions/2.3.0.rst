@@ -1,0 +1,8 @@
+2.3.0
+-----
+:Breaking Changes:
+    * None
+:New Features:
+    * ``identifyUser`` can now take an email address.
+:Bug Fixes:
+    * None
