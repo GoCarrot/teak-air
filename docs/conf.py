@@ -22,6 +22,14 @@
 
 import os, re, subprocess, errno
 from functools import cmp_to_key
+read_the_docs_build = os.environ.get('READTHEDOCS', None) == 'True'
+
+import importlib
+import sys
+
+sys.path.append('.')
+
+docs_common = importlib.import_module('teak-docs-common')
 
 # -- General configuration ------------------------------------------------
 
@@ -170,6 +178,10 @@ texinfo_documents = [
      author, 'TeakforAdobeAIR', 'One line description of project.',
      'Miscellaneous'),
 ]
+
+# -- Sidebar --------------------------------------------------------------
+
+docs_common.generate_sidebar(globals(), 'air', './_sidebar.rst.inc')
 
 ####
 # Global include

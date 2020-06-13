@@ -1,12 +1,21 @@
-.. Teak for Adobe AIR documentation master file, created by
-   sphinx-quickstart on Thu Aug 31 12:44:59 2017.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
 Getting started with Teak in Adobe AIR
 ======================================
 
-.. include:: _sidebar.rst.inc
+.. toctree::
+    :caption: Adobe AIR
+    :maxdepth: 2
+    :hidden:
+
+    overview
+    before-you-start
+    setup
+    ios
+    android
+    action-script
+    adm
+    limiting-data-collection
+    fcm-migration
+    changelog
 
 Hey there!
 
