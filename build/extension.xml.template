@@ -18,6 +18,14 @@
             </applicationDeployment>
         </platform>
 
+        <platform name="Android-ARM64">
+             <applicationDeployment>
+                <nativeLibrary>libTeakAir.jar</nativeLibrary>
+                <initializer>io.teak.sdk.wrapper.air.Extension</initializer>
+                <finalizer>io.teak.sdk.wrapper.air.Extension</finalizer>
+             </applicationDeployment>
+         </platform>
+
         <platform name="default">
             <applicationDeployment/>
         </platform>
