@@ -34,6 +34,7 @@ extern void TeakRegisterRoute(const char* route, const char* name, const char* d
 extern NSString* const TeakNotificationAppLaunch;
 extern NSString* const TeakOnReward;
 extern NSString* const TeakForegroundNotification;
+extern NSString* const TeakAdditionalData;
 
 extern NSDictionary* TeakWrapperSDK;
 extern NSDictionary* TeakVersionDict;
@@ -454,6 +455,12 @@ void AirTeakContextInitializer(void* extData, const uint8_t* ctxType, FREContext
                                                       queue:nil
                                                  usingBlock:^(NSNotification* notification) {
                                                     dispatchEvent((const uint8_t*)"ON_FOREGROUND_NOTIFICATION", ctx, notification.userInfo);
+                                                 }];
+   [[NSNotificationCenter defaultCenter] addObserverForName:TeakAdditionalData
+                                                     object:nil
+                                                      queue:nil
+                                                 usingBlock:^(NSNotification* notification) {
+                                                    dispatchEvent((const uint8_t*)"ON_ADDITIONAL_DATA", ctx, notification.userInfo);
                                                  }];
 
    TeakSetLogListener(^(NSString* _Nonnull event,

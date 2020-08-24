@@ -12,6 +12,7 @@ package io.teak.sdk
 		public static const NOTIFICATION_CANCELED:String = "notificationCanceled";
 		public static const NOTIFICATION_CANCEL_ALL:String = "notificationCancelAll";
 		public static const ON_REWARD:String = "onReward";
+		public static const ON_ADDITIONAL_DATA:String = "onAdditionalData";
 
 		public var data:String;
 		public var status:String;

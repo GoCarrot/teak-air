@@ -328,6 +328,10 @@ package io.teak.sdk
 						e = new TeakEvent(TeakEvent.ON_REWARD, event.level);
 					}
 					break;
+				case "ON_ADDITIONAL_DATA": {
+						e = new TeakEvent(TeakEvent.ON_ADDITIONAL_DATA, event.level);
+					}
+					break;
 				default:
 					break;
 			}
