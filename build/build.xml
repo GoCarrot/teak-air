@@ -170,7 +170,7 @@
             link="${env.ADOBE_AIR_HOME}/frameworks/libs/player/11.1/playerglobal.swc"
             resource="${env.ADOBE_AIR_HOME}/frameworks/libs/player/${air.version}/playerglobal.swc" />
 
-        <exec executable="compc" failonerror="true">
+        <exec executable="${env.ADOBE_AIR_HOME}/bin/compc" failonerror="true">
             <arg line='-source-path ../actionscript/src'/>
             <arg line='-output ../temp/swc/${name}.swc'/>
             <arg line='-swf-version=14'/>
@@ -193,7 +193,7 @@
         <copy file="../build/extension.xml.template" tofile="../build/extension.xml" overwrite="true"/>
         <replace file="../build/extension.xml" token="@@@" value="${sdk.airversion}"/>
 
-        <exec executable="adt" failonerror="true" dir="../temp">
+        <exec executable="${env.ADOBE_AIR_HOME}/bin/adt" failonerror="true" dir="../temp">
             <arg value="-package"/>
             <arg value="-target"/>
             <arg value="ane"/>
@@ -211,7 +211,7 @@
 
     <!-- HTML Documentation (must be run manually) -->
     <target name="asdoc" description="generate the asdoc in readable html">
-        <exec executable="asdoc" failonerror="true">
+        <exec executable="${env.ADOBE_AIR_HOME}/bin/asdoc" failonerror="true">
             <env key="FLEX_HOME" value="${env.ADOBE_AIR_HOME}"/>
             <env key="FALCON_HOME" value="${env.ADOBE_AIR_HOME}"/>
             <arg line='-source-path ../actionscript/src'/>
