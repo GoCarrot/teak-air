@@ -6,17 +6,19 @@ Android
 
 Android Dependencies
 --------------------
-Teak for Android depends on Firebase Messaging (FCM) and Android Support v4. These dependencies are not bundled with the Teak ANE.
+Teak for Android depends on Firebase Messaging (FCM) and AndroidX. These dependencies are not bundled with the Teak ANE.
 
 If you are not already using an ANE which provides these, we suggest using the ANE dependencies from MyFlashLabs, located at: https://github.com/myflashlab/common-dependencies-ANE
 
 The dependencies in your App XML should look like this::
 
-    <extensionID>com.myflashlab.air.extensions.dependency.androidSupport.arch</extensionID>
-    <extensionID>com.myflashlab.air.extensions.dependency.androidSupport.core</extensionID>
-    <extensionID>com.myflashlab.air.extensions.dependency.androidSupport.v4</extensionID>
+    <extensionID>com.myflashlab.air.extensions.dependency.androidx.arch</extensionID>
+    <extensionID>com.myflashlab.air.extensions.dependency.androidx.core</extensionID>
+    <extensionID>com.myflashlab.air.extensions.dependency.androidx.lifecycle</extensionID>
+    <extensionID>com.myflashlab.air.extensions.dependency.androidx.utils</extensionID>
 
     <extensionID>com.myflashlab.air.extensions.dependency.firebase.common</extensionID>
+    <extensionID>com.myflashlab.air.extensions.dependency.firebase.encoders.json</extensionID>
     <extensionID>com.myflashlab.air.extensions.dependency.firebase.iid</extensionID>
     <extensionID>com.myflashlab.air.extensions.dependency.firebase.messaging</extensionID>
 
@@ -24,6 +26,7 @@ The dependencies in your App XML should look like this::
     <extensionID>com.myflashlab.air.extensions.dependency.googlePlayServices.base</extensionID>
     <extensionID>com.myflashlab.air.extensions.dependency.googlePlayServices.basement</extensionID>
     <extensionID>com.myflashlab.air.extensions.dependency.googlePlayServices.tasks</extensionID>
+    <extensionID>com.myflashlab.air.extensions.dependency.googlePlayServices.stats</extensionID>
 
 You will also need to manually add the following to your AIR app:
 
