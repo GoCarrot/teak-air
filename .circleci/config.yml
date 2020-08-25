@@ -1,4 +1,8 @@
-version: 2
+version: 2.1
+
+orbs:
+  teak: teak/sdk-utils@0.0.3
+
 jobs:
   build:
     macos:
@@ -9,22 +13,35 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: v0-{{ checksum "setup" }}-{{ checksum "Gemfile.lock" }}
+          key: v0-{{ checksum "setup" }}-{{ checksum "Gemfile.lock" }}-{{ .Environment.HOMEBREW_VERSION }}
+      - run:
+          name: Check Homebrew Version
+          command: |
+            echo "Checking for Homebrew version $HOMEBREW_VERSION"
+            [ `brew --version | sed -n 1p | sed 's/[^0-9.]*\([0-9.]*\).*/\1/'` = $HOMEBREW_VERSION ] || brew update
       - run:
           name: Homebrew Depenendcies
-          command: ./setup
+          command: HOMEBREW_NO_AUTO_UPDATE=1 ./setup
       - run:
-          name: Ruby Gems
-          command: bundle check || bundle install --path vendor/bundle
+          shell: /bin/bash -eo pipefail
+          name: Setup RVM
+          command: |
+            unset GEM_HOME
+            source /Users/distiller/.rvm/scripts/rvm
+            rvm autolibs enable
+            rvm list | grep 2.4 || rvm install ruby-2.4
+            rvm use default
       - run:
           name: AIR SDK
           command: rake sdk:setup
       - save_cache:
           paths:
-            - ~/Library/Caches/Homebrew/
+            - /usr/local/Homebrew/
+            - ~/Library/Caches/Homebrew
             - vendor/bundle
             - ~/adobe-air-sdk
-          key: v0-{{ checksum "setup" }}-{{ checksum "Gemfile.lock" }}
+            - ~/.rvm
+          key: v0-{{ checksum "setup" }}-{{ checksum "Gemfile.lock" }}-{{ .Environment.HOMEBREW_VERSION }}
       - run:
           name: Build Teak SDK
           command: ./compile
