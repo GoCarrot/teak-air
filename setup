@@ -4,6 +4,7 @@ IFS=$'\n\t'
 
 if [ "$(which ant)" == "" ]; then brew install ant; fi
 if [ "$(which aws)" == "" ]; then brew install awscli; fi
+if [ "$(which rvm)" == "" ]; then curl -sSL https://get.rvm.io | bash -s -- --autolibs=read-fail; fi
 # if [ "$(which compc)" == "" ]; then
 #   brew tap gocarrot/airversions
 #   brew cask install adobe-air-sdk@29.0
