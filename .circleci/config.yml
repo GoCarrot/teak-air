@@ -38,7 +38,7 @@ jobs:
             bundle check || bundle install --path vendor/bundle
       - run:
           name: AIR SDK
-          command: rake sdk:setup
+          command: bundle exec rake sdk:setup
       - save_cache:
           paths:
             - /usr/local/Homebrew/
