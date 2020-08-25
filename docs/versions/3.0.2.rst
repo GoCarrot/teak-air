@@ -1,0 +1,9 @@
+3.0.2
+-----
+:Breaking Changes:
+    * None
+:New Features:
+    * ARM64 support for Android
+    * AndroidX support
+:Bug Fixes:
+    * None
