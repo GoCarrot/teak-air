@@ -32,6 +32,11 @@ jobs:
             rvm list | grep 2.4 || rvm install ruby-2.4
             rvm use default
       - run:
+          name: Ruby Gems
+          command: |
+            gem update bundler
+            bundle check || bundle install --path vendor/bundle
+      - run:
           name: AIR SDK
           command: rake sdk:setup
       - save_cache:
