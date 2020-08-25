@@ -8,7 +8,7 @@ CLEAN.include '**/.DS_Store'
 
 KMS_KEY = `aws kms decrypt --ciphertext-blob fileb://kms/store_encryption_key.key --output text --query Plaintext | base64 --decode`.freeze
 CIRCLE_TOKEN = ENV.fetch('CIRCLE_TOKEN') { `openssl enc -md MD5 -d -aes-256-cbc -in kms/encrypted_circle_ci_key.data -k #{KMS_KEY}` }
-ADOBE_AIR_HOME = ENV.fetch('ADOBE_AIR_HOME', '~/adobe-air-sdk')
+ADOBE_AIR_HOME = File.expand_path(ENV.fetch('ADOBE_AIR_HOME', '~/adobe-air-sdk'))
 
 namespace :build do
   task :cleanroom do
@@ -28,7 +28,9 @@ end
 
 namespace :sdk do
   task :build do
-    `ADOBE_AIR_HOME=#{ADOBE_AIR_HOME} ./compile`
+    Dir.chdir('build') do
+      `ADOBE_AIR_HOME=#{ADOBE_AIR_HOME} ant`
+    end
   end
 
   task :setup do

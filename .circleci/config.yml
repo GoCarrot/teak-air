@@ -37,7 +37,7 @@ jobs:
             gem update bundler
             bundle check || bundle install --path vendor/bundle
       - run:
-          name: AIR SDK
+          name: Setup AIR SDK
           command: bundle exec rake sdk:setup
       - save_cache:
           paths:
@@ -49,7 +49,7 @@ jobs:
           key: v0-{{ checksum "setup" }}-{{ checksum "Gemfile.lock" }}-{{ .Environment.HOMEBREW_VERSION }}
       - run:
           name: Build Teak SDK
-          command: ./compile
+          command: bundle exec rake sdk:build
       - persist_to_workspace:
           root: bin/
           paths:
